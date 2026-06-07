@@ -1,0 +1,706 @@
+cat > /mnt/user-data/outputs/album.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Álbum Mundial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Barlow',sans-serif;
+  background:#0a0a1a;
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.bg {
+  position:fixed; inset:0; z-index:0;
+  background:linear-gradient(135deg,#0a0a1a 0%,#001a5c 40%,#8b0000 70%,#0a0a1a 100%);
+}
+.bg::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 15% 25%,rgba(0,61,165,0.4) 0%,transparent 50%),
+    radial-gradient(circle at 85% 75%,rgba(200,16,46,0.4) 0%,transparent 50%);
+}
+
+/* HEADER */
+.header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(10,10,26,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  padding:0.6rem 1rem;
+  display:flex; align-items:center; gap:0.8rem;
+}
+.header-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.3rem; letter-spacing:3px; color:#F5A623;
+  flex-shrink:0;
+}
+.header-stats {
+  display:flex; gap:0.8rem; flex:1;
+  font-size:0.75rem; color:rgba(255,255,255,0.55);
+}
+.header-stats span { display:flex; align-items:center; gap:4px; }
+.dot { width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.dot.g { background:#2ecc71; }
+.dot.y { background:#f1c40f; }
+.header-right { display:flex; align-items:center; gap:0.6rem; flex-shrink:0; }
+.user-badge { font-size:0.78rem; color:rgba(255,255,255,0.5); }
+.btn-tools {
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);
+  color:#fff; cursor:pointer; font-size:1rem;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.btn-tools:hover { background:rgba(255,255,255,0.18); }
+.btn-logout {
+  font-size:0.72rem; color:rgba(255,255,255,0.4);
+  background:none; border:none; cursor:pointer;
+  font-family:'Barlow',sans-serif; padding:0.25rem 0.5rem;
+  border-radius:6px; transition:all 0.2s;
+}
+.btn-logout:hover { color:#fff; background:rgba(255,255,255,0.08); }
+
+/* NAV */
+.nav-bar {
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0.7rem 1rem 0.4rem;
+}
+.nav-btn {
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  color:#fff; padding:0.45rem 1rem; border-radius:8px; cursor:pointer;
+  font-family:'Barlow',sans-serif; font-size:0.88rem; font-weight:600;
+  transition:all 0.2s;
+}
+.nav-btn:hover:not(:disabled) { background:rgba(255,255,255,0.18); }
+.nav-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.nav-info { font-size:0.82rem; color:rgba(255,255,255,0.5); text-align:center; }
+
+/* SPREAD */
+.spread-wrapper {
+  position:relative; z-index:1;
+  display:flex; justify-content:center;
+  padding:0 0.6rem 1.5rem;
+  gap:0;
+}
+
+/* PAGE — clave: usamos width fijo y overflow:hidden */
+.page {
+  background:#e8e0d0;
+  width: min(46vw, 460px);
+  min-height: min(75vh, 680px);
+  border-radius:3px;
+  padding:0.8rem 0.7rem 2rem;
+  position:relative;
+  display:flex; flex-direction:column;
+  overflow:hidden;            /* ← evita que láminas se salgan */
+}
+.page.left {
+  border-radius:4px 0 0 4px;
+  border-right:2px solid rgba(0,0,0,0.12);
+  box-shadow: inset -3px 0 8px rgba(0,0,0,0.15), 3px 3px 20px rgba(0,0,0,0.5);
+}
+.page.right {
+  border-radius:0 4px 4px 0;
+  border-left:2px solid rgba(0,0,0,0.12);
+  box-shadow: inset 3px 0 8px rgba(0,0,0,0.15), -3px 3px 20px rgba(0,0,0,0.5);
+}
+.page.single {
+  border-radius:4px;
+  width: min(46vw, 460px);
+}
+
+.page-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(0.75rem,1.5vw,1rem);
+  letter-spacing:2px; color:#333;
+  text-align:center;
+  margin-bottom:0.5rem;
+  padding-bottom:0.35rem;
+  border-bottom:2px solid rgba(0,0,0,0.15);
+  flex-shrink:0;
+}
+
+.page-num {
+  position:absolute; bottom:0.5rem;
+  left:0; right:0; text-align:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.7rem; color:rgba(0,0,0,0.38); letter-spacing:1px;
+}
+
+/* STICKER GRID — 5 columnas, sin overflow */
+.grid-pais {
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:4px;
+  flex:1;
+  /* importante: no overflow, que quepan las 10 láminas */
+  align-content: start;
+}
+
+.grid-fwc {
+  display:flex;
+  gap:6px;
+  justify-content:center;
+  align-items:stretch;
+  flex:1;
+  padding:0.3rem 0;
+}
+
+/* STICKER individual */
+.sticker {
+  aspect-ratio: 1 / 2;
+  border-radius:3px;
+  cursor:pointer;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-end;
+  padding-bottom:3px;
+  position:relative;
+  transition:transform 0.12s, box-shadow 0.12s;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  border:1px solid rgba(0,0,0,0.18);
+  min-width:0;          /* ← permite que flex/grid las comprima */
+  overflow:hidden;
+}
+.sticker:hover { transform:scale(1.07); box-shadow:0 4px 14px rgba(0,0,0,0.35); z-index:2; }
+.sticker:active { transform:scale(0.96); }
+
+.sticker.miss { background:#a8a8b0; }
+.sticker.have { background:#2ecc71; }
+.sticker.rep  { background:#f1c40f; }
+
+.s-code {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(0.42rem,0.9vw,0.62rem);
+  font-weight:700;
+  color:rgba(0,0,0,0.65);
+  letter-spacing:0.3px;
+  text-align:center;
+  line-height:1;
+  word-break:break-all;
+}
+
+.s-cnt {
+  position:absolute; top:2px; right:2px;
+  background:rgba(0,0,0,0.5); color:#fff;
+  font-size:0.5rem; font-weight:700;
+  border-radius:50%; width:13px; height:13px;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* INFO PAGE */
+.info-inner {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:0.8rem;
+}
+.info-emblem {
+  width:64px; height:64px; border-radius:50%;
+  background:linear-gradient(135deg,#C8102E,#003DA5);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:1.2rem; color:#fff; opacity:0.6;
+}
+.info-inner p { font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; color:rgba(0,0,0,0.35); text-align:center; letter-spacing:1px; }
+
+/* MODAL */
+.overlay {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,0.72);
+  display:flex; align-items:center; justify-content:center;
+  padding:1rem;
+  backdrop-filter:blur(4px);
+}
+.overlay.hidden { display:none; }
+.modal {
+  background:#14142a;
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:16px;
+  width:100%; max-width:540px;
+  max-height:88vh; overflow-y:auto;
+  padding:1.4rem;
+}
+.modal-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:1.1rem;
+}
+.modal-tit { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:2px; color:#F5A623; }
+.modal-cls {
+  width:28px; height:28px; border-radius:50%;
+  background:rgba(255,255,255,0.08); border:none; color:#fff;
+  cursor:pointer; font-size:0.9rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.sec-title {
+  font-family:'Bebas Neue',sans-serif; font-size:0.95rem; letter-spacing:2px;
+  color:rgba(255,255,255,0.6); margin:1rem 0 0.5rem;
+  padding-bottom:0.35rem; border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.search-row { display:flex; gap:0.5rem; }
+.search-row input {
+  flex:1; background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15); border-radius:8px;
+  padding:0.6rem 0.8rem; color:#fff;
+  font-family:'Barlow Condensed',sans-serif; font-size:0.95rem;
+  letter-spacing:2px; text-transform:uppercase; outline:none;
+}
+.search-row input:focus { border-color:#F5A623; }
+.search-row input::placeholder { color:rgba(255,255,255,0.3); text-transform:none; }
+.btn-sm {
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  color:#fff; padding:0.6rem 0.9rem; border-radius:8px; cursor:pointer;
+  font-family:'Barlow',sans-serif; font-size:0.85rem; font-weight:600; transition:all 0.2s;
+}
+.btn-sm:hover { background:rgba(255,255,255,0.2); }
+.btn-sm.red { background:rgba(200,16,46,0.25); border-color:#C8102E; }
+.btn-sm.red:hover { background:rgba(200,16,46,0.45); }
+#search-result { margin-top:0.5rem; font-size:0.82rem; color:rgba(255,255,255,0.55); min-height:1.2em; }
+
+.chips { display:flex; flex-wrap:wrap; gap:5px; }
+.chip {
+  background:#f1c40f; color:rgba(0,0,0,0.75);
+  font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700;
+  padding:2px 7px; border-radius:4px; letter-spacing:0.4px;
+}
+.chip .x { opacity:0.6; }
+
+.export-box {
+  background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px; padding:0.7rem 0.8rem;
+  font-family:'Barlow Condensed',monospace; font-size:0.78rem;
+  color:rgba(255,255,255,0.65); word-break:break-all; line-height:1.6;
+  max-height:130px; overflow-y:auto; white-space:pre-wrap;
+}
+.copy-row { display:flex; justify-content:flex-end; margin-top:0.4rem; }
+.empty { color:rgba(255,255,255,0.3); font-size:0.82rem; text-align:center; padding:0.6rem 0; }
+
+/* SAVING indicator */
+.saving {
+  position:fixed; bottom:1rem; right:1rem; z-index:150;
+  background:rgba(0,0,0,0.7); color:#F5A623;
+  font-size:0.75rem; padding:0.4rem 0.8rem; border-radius:20px;
+  font-family:'Barlow',sans-serif; letter-spacing:1px;
+  opacity:0; transition:opacity 0.3s; pointer-events:none;
+}
+.saving.show { opacity:1; }
+
+@media(max-width:700px){
+  .page { padding:0.5rem 0.4rem 1.6rem; }
+  .grid-pais { gap:2px; }
+  .header-stats { display:none; }
+  .header-title { font-size:1rem; }
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">⚽ MUNDIAL 2026</div>
+  <div class="header-stats" id="hstats"></div>
+  <div class="header-right">
+    <div class="user-badge">👤 <span id="huser"></span></div>
+    <button class="btn-tools" onclick="openModal()" title="Herramientas">☰</button>
+    <button class="btn-logout" onclick="logout()">Salir</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-bar">
+  <button class="nav-btn" id="btnPrev" onclick="nav(-1)">← Anterior</button>
+  <div class="nav-info" id="navInfo"></div>
+  <button class="nav-btn" id="btnNext" onclick="nav(1)">Siguiente →</button>
+</div>
+
+<!-- SPREAD -->
+<div class="spread-wrapper" id="spread"></div>
+
+<!-- SAVING -->
+<div class="saving" id="saving">Guardando...</div>
+
+<!-- MODAL HERRAMIENTAS -->
+<div class="overlay hidden" id="overlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-tit">☰ HERRAMIENTAS</div>
+      <button class="modal-cls" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="sec-title">Buscar lámina</div>
+    <div class="search-row">
+      <input type="text" id="sinput" placeholder="ej: MEX7, FWC3...">
+      <button class="btn-sm" onclick="buscar()">Buscar</button>
+    </div>
+    <div id="search-result"></div>
+
+    <div class="sec-title">Láminas repetidas</div>
+    <div class="chips" id="chips"><div class="empty">No tienes láminas repetidas</div></div>
+
+    <div class="sec-title">Exportar lista de repetidas</div>
+    <div class="export-box" id="exportbox">Sin repetidas para exportar</div>
+    <div class="copy-row">
+      <button class="btn-sm red" onclick="copiar()">Copiar lista</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATOS ─────────────────────────────────────────────────────
+const GRUPOS = [
+  ['A',['MEX','RSA','KOR','CZE']],
+  ['B',['CAN','BIH','QAT','SUI']],
+  ['C',['BRA','MAR','HAI','SCO']],
+  ['D',['USA','PAR','AUS','TUR']],
+  ['E',['GER','CUW','CIV','ECU']],
+  ['F',['NED','JPN','SWE','TUN']],
+  ['G',['BEL','EGY','IRN','NZL']],
+  ['H',['ESP','CPV','KSA','URU']],
+  ['I',['FRA','SEN','IRQ','NOR']],
+  ['J',['ARG','ALG','AUT','JOR']],
+  ['K',['POR','COD','UZB','COL']],
+  ['L',['ENG','CRO','GHA','PAN']]
+];
+const NOMBRES = {
+  MEX:'México',RSA:'Sudáfrica',KOR:'Corea del Sur',CZE:'Rep. Checa',
+  CAN:'Canadá',BIH:'Bosnia y Herz.',QAT:'Catar',SUI:'Suiza',
+  BRA:'Brasil',MAR:'Marruecos',HAI:'Haití',SCO:'Escocia',
+  USA:'Estados Unidos',PAR:'Paraguay',AUS:'Australia',TUR:'Turquía',
+  GER:'Alemania',CUW:'Curazao',CIV:'Costa de Marfil',ECU:'Ecuador',
+  NED:'Países Bajos',JPN:'Japón',SWE:'Suecia',TUN:'Túnez',
+  BEL:'Bélgica',EGY:'Egipto',IRN:'Irán',NZL:'Nueva Zelanda',
+  ESP:'España',CPV:'Cabo Verde',KSA:'Arabia Saudita',URU:'Uruguay',
+  FRA:'Francia',SEN:'Senegal',IRQ:'Irak',NOR:'Noruega',
+  ARG:'Argentina',ALG:'Argelia',AUT:'Austria',JOR:'Jordania',
+  POR:'Portugal',COD:'R.D. Congo',UZB:'Uzbekistán',COL:'Colombia',
+  ENG:'Inglaterra',CRO:'Croacia',GHA:'Ghana',PAN:'Panamá'
+};
+
+// ── CONSTRUIR PÁGINAS ──────────────────────────────────────────
+function buildPages() {
+  const P = {};
+  P[1]  = { n:1,  t:'fwc',  s:['FWC1','FWC2','FWC3','FWC4'] };
+  P[2]  = { n:2,  t:'fwc',  s:['FWC5','FWC6'] };
+  P[3]  = { n:3,  t:'fwc',  s:['FWC7','FWC8'] };
+  P[4]  = { n:4,  t:'info' };
+  P[5]  = { n:5,  t:'info' };
+  P[6]  = { n:6,  t:'info' };
+  P[7]  = { n:7,  t:'info' };
+  P[56] = { n:56, t:'info' };
+  P[57] = { n:57, t:'info' };
+
+  let pn = 8;
+  for (const [g, paises] of GRUPOS) {
+    for (const cod of paises) {
+      if (pn === 56) pn = 58;
+      P[pn] = { n:pn, t:'pais', cod, g, s: Array.from({length:10},(_,i)=>`${cod}${i+1}`) };
+      pn++;
+      if (pn === 56) pn = 58;
+      P[pn] = { n:pn, t:'pais', cod, g, s: Array.from({length:10},(_,i)=>`${cod}${i+11}`) };
+      pn++;
+    }
+  }
+
+  P[106] = { n:106, t:'fwc', s:['FWC9','FWC10'] };
+  P[107] = { n:107, t:'fwc', s:['FWC11','FWC12','FWC13'] };
+  P[108] = { n:108, t:'fwc', s:['FWC14','FWC15'] };
+  P[109] = { n:109, t:'fwc', s:['FWC16','FWC17','FWC18','FWC19'] };
+
+  return P;
+}
+
+function buildSpreads(P) {
+  const sp = [];
+  const nums = Object.keys(P).map(Number).sort((a,b)=>a-b);
+  // pág 1 = sola
+  sp.push({ single:true, L:P[1], R:null });
+  const rest = nums.filter(n=>n>1);
+  let i=0;
+  while(i<rest.length){
+    const n=rest[i];
+    if(n%2===0){
+      const nxt=rest[i+1];
+      sp.push({ single:false, L:P[n], R:nxt?P[nxt]:null });
+      i+=2;
+    } else {
+      sp.push({ single:false, L:null, R:P[n] });
+      i+=1;
+    }
+  }
+  return sp;
+}
+
+const PAGES   = buildPages();
+const SPREADS = buildSpreads(PAGES);
+const ALL_CODES = Object.values(PAGES).flatMap(p=>p.s||[]);
+
+// ── STATE ──────────────────────────────────────────────────────
+let album = {};
+let spreadIdx = 0;
+let saveTimer = null;
+const token = localStorage.getItem('gh_token');
+const owner = localStorage.getItem('gh_owner');
+const repo  = localStorage.getItem('gh_repo');
+let currentUser = sessionStorage.getItem('current_user');
+
+// ── INIT ───────────────────────────────────────────────────────
+window.onload = async () => {
+  if (!token || !currentUser) { window.location.href='login.html'; return; }
+  document.getElementById('huser').textContent = currentUser;
+  try {
+    const saved = await loadJSON(`album_${currentUser}.json`);
+    album = saved || {};
+  } catch(e) { album = {}; }
+  render();
+  updateStats();
+};
+
+function logout() {
+  sessionStorage.removeItem('current_user');
+  window.location.href = 'login.html';
+}
+
+// ── GITHUB API ─────────────────────────────────────────────────
+async function loadJSON(file) {
+  const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file}`,
+    { headers:{'Authorization':`token ${token}`,'Accept':'application/vnd.github.v3+json'} });
+  if (r.status===404) return null;
+  if (!r.ok) throw new Error(r.status);
+  const d = await r.json();
+  return JSON.parse(atob(d.content.replace(/\n/g,'')));
+}
+
+async function saveJSON(file, obj) {
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${file}`;
+  const ex = await fetch(url,{headers:{'Authorization':`token ${token}`}});
+  const sha = ex.ok ? (await ex.json()).sha : undefined;
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(obj,null,2))));
+  await fetch(url,{
+    method:'PUT',
+    headers:{'Authorization':`token ${token}`,'Content-Type':'application/json'},
+    body:JSON.stringify({message:`Actualizar ${file}`,content,...(sha?{sha}:{})})
+  });
+}
+
+// ── STICKER CLICK ──────────────────────────────────────────────
+function clickSticker(code,e) {
+  e && e.stopPropagation();
+  const v = album[code]||0;
+  album[code] = v===0?1:v+1;
+  refreshSticker(code);
+  updateStats();
+  scheduleSave();
+}
+function rightClick(code,e) {
+  e.preventDefault(); e.stopPropagation();
+  const v = album[code]||0;
+  if(v<=0) return;
+  album[code] = v-1;
+  refreshSticker(code);
+  updateStats();
+  scheduleSave();
+}
+function refreshSticker(code) {
+  const el = document.querySelector(`[data-code="${code}"]`);
+  if(!el) return;
+  const v = album[code]||0;
+  el.className = 'sticker '+(v===0?'miss':v===1?'have':'rep');
+  let cnt = el.querySelector('.s-cnt');
+  if(v>=2){
+    if(!cnt){ cnt=document.createElement('div'); cnt.className='s-cnt'; el.prepend(cnt); }
+    cnt.textContent=v;
+  } else if(cnt) cnt.remove();
+}
+
+function scheduleSave() {
+  const ind = document.getElementById('saving');
+  ind.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async()=>{
+    try { await saveJSON(`album_${currentUser}.json`,album); }
+    catch(e){ console.error('Error guardando:',e); }
+    ind.classList.remove('show');
+  },2000);
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────
+function nav(d) {
+  const nx = spreadIdx+d;
+  if(nx<0||nx>=SPREADS.length) return;
+  spreadIdx=nx; render();
+}
+
+function render() {
+  const sp = SPREADS[spreadIdx];
+  const wrap = document.getElementById('spread');
+  wrap.innerHTML='';
+
+  document.getElementById('btnPrev').disabled = spreadIdx===0;
+  document.getElementById('btnNext').disabled = spreadIdx===SPREADS.length-1;
+
+  const lNum = sp.L?.n;
+  const rNum = sp.R?.n;
+  document.getElementById('navInfo').textContent =
+    sp.single ? `Página ${sp.L.n}` :
+    lNum&&rNum ? `Páginas ${lNum} – ${rNum}` : `Página ${lNum||rNum}`;
+
+  if(sp.single){
+    wrap.appendChild(makePage(sp.L,'single'));
+  } else {
+    wrap.appendChild(sp.L ? makePage(sp.L,'left')  : blank('left'));
+    wrap.appendChild(sp.R ? makePage(sp.R,'right') : blank('right'));
+  }
+}
+
+function blank(side) {
+  const d=document.createElement('div');
+  d.className=`page ${side}`;
+  return d;
+}
+
+function makePage(pg, side) {
+  const d = document.createElement('div');
+  d.className=`page ${side}`;
+
+  if(pg.t==='info') {
+    d.innerHTML=`
+      <div class="info-inner">
+        <div class="info-emblem">2026</div>
+        <p>CONTENIDO INFORMATIVO</p>
+        <p style="font-size:0.68rem;opacity:.45">Esta página del álbum<br>no contiene láminas</p>
+      </div>
+      <div class="page-num">— ${pg.n} —</div>`;
+    return d;
+  }
+
+  // Título
+  const tit = document.createElement('div');
+  tit.className='page-title';
+  if(pg.t==='fwc') tit.textContent='FWC — COPA DEL MUNDO';
+  else tit.textContent=`${NOMBRES[pg.cod]||pg.cod} · Grupo ${pg.g}`;
+  d.appendChild(tit);
+
+  // Grid
+  if(pg.t==='pais') {
+    const grid = document.createElement('div');
+    grid.className='grid-pais';
+    for(const code of pg.s) grid.appendChild(makeSticker(code));
+    d.appendChild(grid);
+  } else {
+    const row = document.createElement('div');
+    row.className='grid-fwc';
+    for(const code of pg.s) {
+      const s = makeSticker(code);
+      s.style.flex='1';
+      s.style.maxWidth='90px';
+      row.appendChild(s);
+    }
+    d.appendChild(row);
+  }
+
+  const pn=document.createElement('div');
+  pn.className='page-num';
+  pn.textContent=`— ${pg.n} —`;
+  d.appendChild(pn);
+  return d;
+}
+
+function makeSticker(code) {
+  const v = album[code]||0;
+  const el = document.createElement('div');
+  el.className='sticker '+(v===0?'miss':v===1?'have':'rep');
+  el.dataset.code=code;
+  el.title=code;
+
+  if(v>=2){
+    const c=document.createElement('div');
+    c.className='s-cnt'; c.textContent=v;
+    el.appendChild(c);
+  }
+  const lbl=document.createElement('div');
+  lbl.className='s-code'; lbl.textContent=code;
+  el.appendChild(lbl);
+
+  el.addEventListener('click', e=>clickSticker(code,e));
+  el.addEventListener('contextmenu', e=>rightClick(code,e));
+  return el;
+}
+
+// ── STATS ──────────────────────────────────────────────────────
+function updateStats() {
+  const total = ALL_CODES.length;
+  let have=0, reps=0;
+  for(const c of ALL_CODES){ const v=album[c]||0; if(v>=1)have++; if(v>=2)reps++; }
+  document.getElementById('hstats').innerHTML=`
+    <span><span class="dot g"></span>${have}/${total} láminas</span>
+    <span><span class="dot y"></span>${reps} repetidas</span>`;
+}
+
+// ── MODAL ──────────────────────────────────────────────────────
+function openModal() {
+  renderModal();
+  document.getElementById('overlay').classList.remove('hidden');
+}
+function closeModal() {
+  document.getElementById('overlay').classList.add('hidden');
+}
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeModal(); });
+
+function renderModal() {
+  const reps = ALL_CODES.filter(c=>(album[c]||0)>=2);
+  const chips = document.getElementById('chips');
+  if(reps.length===0){
+    chips.innerHTML='<div class="empty">No tienes láminas repetidas</div>';
+  } else {
+    chips.innerHTML=reps.map(c=>`<div class="chip">${c} <span class="x">×${album[c]}</span></div>`).join('');
+  }
+  // export
+  const list=[];
+  for(const c of ALL_CODES){ const v=album[c]||0; for(let i=0;i<v-1;i++) list.push(c); }
+  const box=document.getElementById('exportbox');
+  box.textContent = list.length ? list.join(', ') : 'Sin repetidas para exportar';
+}
+
+function buscar() {
+  const q=document.getElementById('sinput').value.trim().toUpperCase();
+  const el=document.getElementById('search-result');
+  if(!q){el.textContent='';return;}
+  if(!ALL_CODES.includes(q)){
+    el.textContent=`❌ "${q}" no existe en el álbum`;
+    el.style.color='#ff6b6b'; return;
+  }
+  const v=album[q]||0;
+  if(v===0){el.textContent=`⬜ ${q}: No la tienes`; el.style.color='rgba(255,255,255,0.5)';}
+  else if(v===1){el.textContent=`🟩 ${q}: La tienes (1 unidad)`; el.style.color='#2ecc71';}
+  else{el.textContent=`🟨 ${q}: Tienes ${v} unidades (${v-1} de sobra)`; el.style.color='#f1c40f';}
+}
+
+function copiar() {
+  const txt=document.getElementById('exportbox').textContent;
+  if(txt==='Sin repetidas para exportar') return;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.querySelector('.copy-row .btn-sm');
+    const orig=b.textContent;
+    b.textContent='✓ Copiado!';
+    setTimeout(()=>b.textContent=orig,2000);
+  });
+}
+
+// Teclado
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('overlay').classList.contains('hidden')){
+    if(e.key==='ArrowRight') nav(1);
+    if(e.key==='ArrowLeft')  nav(-1);
+  }
+});
+</script>
+</body>
+</html>
+HTMLEOF
+echo "album.html done"
