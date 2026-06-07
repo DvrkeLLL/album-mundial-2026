@@ -172,6 +172,7 @@ body {
   border:1px solid rgba(0,0,0,0.18);
   min-width:0;
   overflow:visible;
+  will-change:transform;
 }
 .sticker:hover { transform:scale(1.07); box-shadow:0 4px 14px rgba(0,0,0,0.35); z-index:10; }
 .sticker:active { transform:scale(0.96); }
@@ -203,22 +204,26 @@ body {
 .s-reset {
   position:absolute;
   top:4px; left:4px;
-  width:14px; height:14px;
+  width:21px; height:21px;
   border-radius:50%;
   background:rgba(0,0,0,0.55);
   color:#fff;
-  font-size:0.6rem;
+  font-size:0.75rem;
   font-weight:900;
-  border:none;
+  border:1.5px solid rgba(255,255,255,0.3);
   cursor:pointer;
   display:flex; align-items:center; justify-content:center;
   z-index:20;
   line-height:1;
-  transition: background 0.15s, transform 0.15s;
+  /* Contrarresta el scale de la lámina padre para que la hitbox no se desplace */
+  transform-origin: top left;
+  transition: background 0.15s;
   -webkit-tap-highlight-color:transparent;
 }
-.s-reset:hover { background:rgba(200,16,46,0.85); transform:scale(1.2); }
-.s-reset:active { transform:scale(0.9); }
+/* Cuando la lámina hace scale(1.07), este botón hace scale(1/1.07) para mantenerse en su lugar */
+.sticker:hover .s-reset { transform: scale(calc(1 / 1.07)); }
+.s-reset:hover { background:rgba(200,16,46,0.88) !important; }
+.s-reset:active { opacity:0.7; }
 
 /* INFO PAGE */
 .info-inner {
@@ -510,7 +515,7 @@ const GRUPOS = [
   ['G',['BEL','EGY','IRN','NZL']],
   ['H',['ESP','CPV','KSA','URU']],
   ['I',['FRA','SEN','IRQ','NOR']],
-  ['J',['ALG','ARG','AUT','JOR']],   // ← ALG primero (pág 82-83), ARG segundo (pág 84-85)
+  ['J',['ARG','ALG','AUT','JOR']],   // ← ARG primero (pág 82-83), ALG segundo (pág 84-85)
   ['K',['POR','COD','UZB','COL']],
   ['L',['ENG','CRO','GHA','PAN']]
 ];
