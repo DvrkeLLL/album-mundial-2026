@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar sesión — Álbum Mundial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Barlow',sans-serif; min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg,#0a0a1a 0%,#001a5c 40%,#8b0000 70%,#0a0a1a 100%);
+    padding:2rem;
+  }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background:
+      radial-gradient(circle at 20% 30%,rgba(0,61,165,0.35) 0%,transparent 50%),
+      radial-gradient(circle at 80% 70%,rgba(200,16,46,0.35) 0%,transparent 50%);
+    pointer-events:none;
+  }
+  .card {
+    position:relative; z-index:1;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    border-radius:20px; padding:2.5rem;
+    width:100%; max-width:400px; text-align:center; color:#fff;
+  }
+  .logo { font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:4px; color:rgba(255,255,255,0.4); margin-bottom:0.4rem; }
+  h1 {
+    font-family:'Bebas Neue',sans-serif; font-size:3rem; letter-spacing:3px;
+    background:linear-gradient(135deg,#fff,#F5A623);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:0.2rem;
+  }
+  .sub { color:rgba(255,255,255,0.45); font-size:0.85rem; margin-bottom:2rem; }
+  .tabs { display:flex; background:rgba(0,0,0,0.3); border-radius:10px; padding:4px; margin-bottom:1.5rem; }
+  .tab {
+    flex:1; padding:0.55rem; border:none; background:transparent;
+    color:rgba(255,255,255,0.45); font-family:'Barlow',sans-serif;
+    font-size:0.9rem; font-weight:600; cursor:pointer; border-radius:8px; transition:all 0.2s;
+  }
+  .tab.active { background:rgba(255,255,255,0.12); color:#fff; }
+  input {
+    width:100%; background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.15); border-radius:10px;
+    padding:0.8rem 1rem; color:#fff; font-family:'Barlow',sans-serif;
+    font-size:0.95rem; margin-bottom:0.85rem; outline:none;
+  }
+  input:focus { border-color:#003DA5; }
+  input::placeholder { color:rgba(255,255,255,0.3); }
+  .err { color:#ff6b6b; font-size:0.82rem; margin-bottom:0.6rem; min-height:1.2em; }
+  .btn {
+    width:100%; background:linear-gradient(135deg,#C8102E,#8b0000);
+    border:none; border-radius:10px; padding:0.9rem;
+    color:#fff; font-family:'Bebas Neue',sans-serif;
+    font-size:1.1rem; letter-spacing:2px; cursor:pointer; transition:all 0.2s;
+  }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(200,16,46,0.4); }
+  .reset-link { margin-top:1.5rem; font-size:0.75rem; color:rgba(255,255,255,0.3); }
+  .reset-link a { color:rgba(255,255,255,0.45); cursor:pointer; text-decoration:underline; }
+  /* Auto-login banner */
+  .auto-banner {
+    background:rgba(46,204,113,0.12); border:1px solid rgba(46,204,113,0.3);
+    border-radius:12px; padding:1rem 1.2rem; margin-bottom:1.5rem; text-align:left;
+  }
+  .auto-banner p { font-size:0.82rem; color:rgba(255,255,255,0.6); margin-bottom:0.6rem; }
+  .auto-banner strong { color:#2ecc71; font-size:1rem; }
+  .auto-btns { display:flex; gap:0.5rem; margin-top:0.7rem; }
+  .auto-btns button {
+    flex:1; padding:0.5rem; border-radius:8px; border:none; cursor:pointer;
+    font-family:'Barlow',sans-serif; font-size:0.85rem; font-weight:600; transition:all 0.2s;
+  }
+  .btn-continue { background:linear-gradient(135deg,#2ecc71,#1a8a4a); color:#fff; }
+  .btn-continue:hover { opacity:0.88; }
+  .btn-switch { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.7); }
+  .btn-switch:hover { background:rgba(255,255,255,0.15); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">FIFA WORLD CUP</div>
+  <h1>MUNDIAL 2026</h1>
+  <div class="sub">Álbum de láminas virtual</div>
+
+  <!-- Banner auto-login (oculto por defecto) -->
+  <div class="auto-banner hidden" id="auto-banner">
+    <p>Sesión guardada como</p>
+    <strong id="auto-username"></strong>
+    <div class="auto-btns">
+      <button class="btn-continue" onclick="continueSession()">Continuar →</button>
+      <button class="btn-switch" onclick="showManual()">Cambiar cuenta</button>
+    </div>
+  </div>
+
+  <!-- Formulario manual -->
+  <div id="manual-form">
+    <div class="tabs">
+      <button class="tab active" onclick="setTab('login')">Iniciar sesión</button>
+      <button class="tab" onclick="setTab('register')">Registrarse</button>
+    </div>
+    <input type="text" id="user" placeholder="Usuario" autocapitalize="none" autocomplete="username">
+    <input type="password" id="pass" placeholder="Contraseña" autocomplete="current-password">
+    <div class="err" id="err"></div>
+    <button class="btn" onclick="doAuth()">ENTRAR AL ÁLBUM →</button>
+  </div>
+
+  <div class="reset-link">
+    ¿Cambias de dispositivo? <a onclick="resetToken()">Cambiar token</a>
+  </div>
+</div>
+
+<script>
+  let modo = 'login';
+
+  window.onload = () => {
+    if (!localStorage.getItem('gh_token')) { window.location.href = 'setup.html'; return; }
+    // Sesión persistente: si hay usuario guardado en localStorage, ofrecer continuar
+    const saved = localStorage.getItem('saved_user');
+    if (saved) {
+      document.getElementById('auto-username').textContent = saved;
+      document.getElementById('auto-banner').classList.remove('hidden');
+      document.getElementById('manual-form').classList.add('hidden');
+    }
+  };
+
+  function continueSession() {
+    const saved = localStorage.getItem('saved_user');
+    if (saved) {
+      sessionStorage.setItem('current_user', saved);
+      window.location.href = 'album.html';
+    }
+  }
+
+  function showManual() {
+    document.getElementById('auto-banner').classList.add('hidden');
+    document.getElementById('manual-form').classList.remove('hidden');
+  }
+
+  function setTab(m) {
+    modo = m;
+    document.querySelectorAll('.tab').forEach((t,i) => {
+      t.classList.toggle('active', (i===0&&m==='login')||(i===1&&m==='register'));
+    });
+    document.getElementById('err').textContent = '';
+  }
+
+  function resetToken() {
+    localStorage.removeItem('gh_token');
+    localStorage.removeItem('gh_owner');
+    localStorage.removeItem('gh_repo');
+    localStorage.removeItem('saved_user');
+    window.location.href = 'setup.html';
+  }
+
+  async function doAuth() {
+    const user = document.getElementById('user').value.trim().toLowerCase();
+    const pass = document.getElementById('pass').value.trim();
+    const err  = document.getElementById('err');
+    err.textContent = '';
+    if (!user || !pass) { err.textContent = 'Completa usuario y contraseña'; return; }
+    if (user.length < 3) { err.textContent = 'El usuario debe tener al menos 3 caracteres'; return; }
+    const token = localStorage.getItem('gh_token');
+    const owner = localStorage.getItem('gh_owner');
+    const repo  = localStorage.getItem('gh_repo');
+    try {
+      let users = await loadJSON(token, owner, repo, 'usuarios.json') || {};
+      if (modo === 'login') {
+        if (!users[user])         { err.textContent = 'Usuario no encontrado'; return; }
+        if (users[user] !== pass) { err.textContent = 'Contraseña incorrecta'; return; }
+      } else {
+        if (users[user]) { err.textContent = 'Ese usuario ya existe, elige otro'; return; }
+        users[user] = pass;
+        await saveJSON(token, owner, repo, 'usuarios.json', users);
+      }
+      // Guardar sesión persistente
+      localStorage.setItem('saved_user', user);
+      sessionStorage.setItem('current_user', user);
+      window.location.href = 'album.html';
+    } catch(e) {
+      console.error(e);
+      err.textContent = 'Error conectando con GitHub. Verifica el token.';
+    }
+  }
+
+  async function loadJSON(token, owner, repo, filename) {
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filename}`;
+    const r = await fetch(url, { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } });
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error(`GitHub error ${r.status}`);
+    const data = await r.json();
+    return JSON.parse(atob(data.content.replace(/\n/g,'')));
+  }
+
+  async function saveJSON(token, owner, repo, filename, obj) {
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filename}`;
+    const existing = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+    const sha = existing.ok ? (await existing.json()).sha : undefined;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
+    await fetch(url, {
+      method:'PUT',
+      headers:{ 'Authorization':`token ${token}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ message:`Actualizar ${filename}`, content, ...(sha?{sha}:{}) })
+    });
+  }
+</script>
+</body>
+</html>
