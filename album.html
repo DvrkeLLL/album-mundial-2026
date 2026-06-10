@@ -295,21 +295,7 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
       <textarea id="sinput" rows="2" placeholder="ej: MEX7  o  MEX7,ARG3  o pega formato externo con saltos de línea" style="resize:vertical;min-height:42px;line-height:1.4"></textarea>
       <button class="btn-sm" onclick="buscar()">Buscar</button>
     </div>
-    <div class="scale-group">
-      <label for="badgeScale">Esquinas</label>
-      <input id="badgeScale" type="range" min="1" max="100" value="75">
-      <span id="badgeValue">75</span>
-    </div>
-    <div class="scale-group">
-      <label for="nameScale">Nombre</label>
-      <input id="nameScale" type="range" min="1" max="100" value="75">
-      <span id="nameValue">75</span>
-    </div>
-    <div class="scale-group">
-      <label for="codeScale">Código</label>
-      <input id="codeScale" type="range" min="1" max="100" value="75">
-      <span id="codeValue">75</span>
-    </div>
+    <!-- Controles de escala movidos al final de Herramientas (ver botón "Personalizar tamaño") -->
     <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">Ajusta cada tertio por separado: esquinas, nombre y código.</div>
     <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.0rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
     <div id="search-result"></div>
@@ -325,6 +311,28 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
     <div class="sec-title">Comparar con otros usuarios</div>
     <div id="compare-users-row" class="compare-user-select"><div class="compare-loading">Cargando usuarios...</div></div>
     <div class="compare-block" id="compare-block"></div>
+    <!-- Personalizar tamaño (oculto por defecto, aparece al final de Herramientas) -->
+    <div style="margin-top:0.8rem;border-top:1px dashed rgba(255,255,255,0.06);padding-top:0.8rem;display:flex;flex-direction:column;gap:0.4rem;">
+      <button id="toggle-size-custom" class="btn-sm" style="align-self:flex-start;">Personalizar tamaño</button>
+      <div id="size-customizer" style="display:none;margin-top:0.6rem;">
+        <div class="scale-group">
+          <label for="badgeScale">Esquinas</label>
+          <input id="badgeScale" type="range" min="1" max="100" value="50">
+          <span id="badgeValue">50</span>
+        </div>
+        <div class="scale-group">
+          <label for="nameScale">Nombre</label>
+          <input id="nameScale" type="range" min="1" max="100" value="50">
+          <span id="nameValue">50</span>
+        </div>
+        <div class="scale-group">
+          <label for="codeScale">Código</label>
+          <input id="codeScale" type="range" min="1" max="100" value="50">
+          <span id="codeValue">50</span>
+        </div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.45);margin-top:0.3rem">Valores por defecto (internos) en 50 =&gt; esquinas:64, nombre:58, código:38. Los sliders muestran 50 por defecto y puedes aumentar/disminuir.</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -426,7 +434,9 @@ for(let i=0;i<SPREADS.length;i++){
 
 // ── STATE ──────────────────────────────────────────────────────
 let album={}, spreadIdx=0, saveTimer=null, mobileTab='left';
-let badgeScale=75, nameScale=75, codeScale=75;
+// Sliders muestran 50 por defecto. Internos por defecto: badge=64, name=58, code=38
+let badgeScale=50, nameScale=50, codeScale=50;
+const INTERNAL_DEFAULTS = { badge:64, name:58, code:38 };
 const token=localStorage.getItem('gh_token');
 const owner=localStorage.getItem('gh_owner');
 const repo =localStorage.getItem('gh_repo');
@@ -443,9 +453,18 @@ window.onload=async()=>{
   const badgeInput = document.getElementById('badgeScale');
   const nameInput = document.getElementById('nameScale');
   const codeInput = document.getElementById('codeScale');
-  if(badgeInput){ badgeInput.addEventListener('input', e=>updateBadgeScale(e.target.value)); updateBadgeScale(badgeInput.value); }
-  if(nameInput){ nameInput.addEventListener('input', e=>updateNameScale(e.target.value)); updateNameScale(nameInput.value); }
-  if(codeInput){ codeInput.addEventListener('input', e=>updateCodeScale(e.target.value)); updateCodeScale(codeInput.value); }
+  // Cargar valores guardados (si existen)
+  const savedBadge = localStorage.getItem('badgeSlider');
+  const savedName  = localStorage.getItem('nameSlider');
+  const savedCode  = localStorage.getItem('codeSlider');
+  if(badgeInput){ badgeInput.addEventListener('input', e=>updateBadgeScale(e.target.value)); badgeInput.value = savedBadge || badgeScale; updateBadgeScale(badgeInput.value); }
+  if(nameInput){ nameInput.addEventListener('input', e=>updateNameScale(e.target.value)); nameInput.value = savedName || nameScale; updateNameScale(nameInput.value); }
+  if(codeInput){ codeInput.addEventListener('input', e=>updateCodeScale(e.target.value)); codeInput.value = savedCode || codeScale; updateCodeScale(codeInput.value); }
+
+  // Toggle del personalizador (al fondo)
+  const toggleBtn = document.getElementById('toggle-size-custom');
+  const customBox = document.getElementById('size-customizer');
+  if(toggleBtn && customBox){ toggleBtn.addEventListener('click', ()=>{ customBox.style.display = customBox.style.display==='none'?'block':'none'; }); }
 };
 window.addEventListener('resize',()=>render());
 function logout(){
@@ -590,16 +609,26 @@ function makePage(pg,side){
 function updateBadgeScale(value){
   badgeScale = Number(value);
   document.getElementById('badgeValue').textContent = value;
+  // Guardar slider y valor interno mapeado (50 => INTERNAL_DEFAULTS.badge)
+  localStorage.setItem('badgeSlider', String(badgeScale));
+  const internal = Math.round(INTERNAL_DEFAULTS.badge * (badgeScale/50));
+  localStorage.setItem('badgeInternal', String(internal));
   document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
 }
 function updateNameScale(value){
   nameScale = Number(value);
   document.getElementById('nameValue').textContent = value;
+  localStorage.setItem('nameSlider', String(nameScale));
+  const internal = Math.round(INTERNAL_DEFAULTS.name * (nameScale/50));
+  localStorage.setItem('nameInternal', String(internal));
   document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
 }
 function updateCodeScale(value){
   codeScale = Number(value);
   document.getElementById('codeValue').textContent = value;
+  localStorage.setItem('codeSlider', String(codeScale));
+  const internal = Math.round(INTERNAL_DEFAULTS.code * (codeScale/50));
+  localStorage.setItem('codeInternal', String(internal));
   document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
 }
 
@@ -607,9 +636,10 @@ function updateCodeScale(value){
 function fitStickerText(el){
   const available = el.offsetWidth * 0.94;
   if(!available) return;
-  const badgeFactor = badgeScale / 75;
-  const nameFactor = nameScale / 75;
-  const codeFactor = codeScale / 75;
+  // Ahora el factor se deriva de slider/50 (50 = factor 1 que corresponde a los valores internos por defecto)
+  const badgeFactor = badgeScale / 50;
+  const nameFactor = nameScale / 50;
+  const codeFactor = codeScale / 50;
 
   // Ajustar tamaño de círculos en esquinas
   const badgeSize = Math.round(Math.max(14, Math.min(26, 24 * badgeFactor)));
