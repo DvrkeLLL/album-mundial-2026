@@ -15,7 +15,61 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 .header { position:sticky; top:0; z-index:100; background:rgba(10,10,26,0.92); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.1); padding:0.6rem 1rem; display:flex; align-items:center; gap:0.8rem; }
 .header-title { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:3px; color:#F5A623; flex-shrink:0; }
 .header-center { display:flex; align-items:center; gap:1rem; flex:1; }
+.header-stats { display:flex; gap:0.8rem; font-size:0.75rem; color:rgba(255,255,255,0.55); }
+.header-stats span { display:flex; align-items:center; gap:4px; }
+.dot { width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.dot.g { background:#2ecc71; } .dot.y { background:#f1c40f; }
 
+/* Barra de progreso en header */
+.progress-wrap { display:flex; align-items:center; gap:0.5rem; flex-shrink:0; }
+.progress-bar { width:80px; height:6px; background:rgba(255,255,255,0.12); border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg,#2ecc71,#F5A623); border-radius:3px; transition:width 0.4s; }
+.progress-pct { font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:1px; color:#F5A623; min-width:38px; text-align:right; }
+
+.header-right { display:flex; align-items:center; gap:0.6rem; flex-shrink:0; }
+.user-badge { font-size:0.78rem; color:rgba(255,255,255,0.5); }
+.btn-tools { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+.btn-tools:hover { background:rgba(255,255,255,0.18); }
+.btn-logout { font-size:0.72rem; color:rgba(255,255,255,0.4); background:none; border:none; cursor:pointer; font-family:'Barlow',sans-serif; padding:0.25rem 0.5rem; border-radius:6px; transition:all 0.2s; }
+.btn-logout:hover { color:#fff; background:rgba(255,255,255,0.08); }
+
+/* NAV */
+.nav-bar { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding:0.7rem 1rem 0.4rem; }
+.nav-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; padding:0.45rem 1rem; border-radius:8px; cursor:pointer; font-family:'Barlow',sans-serif; font-size:0.88rem; font-weight:600; transition:all 0.2s; touch-action:manipulation; -webkit-tap-highlight-color:transparent; user-select:none; }
+.nav-btn:hover:not(:disabled) { background:rgba(255,255,255,0.18); }
+.nav-btn:disabled { opacity:0.3; cursor:not-allowed; }
+
+/* MODAL RESET A CERO */
+.reset-zero-modal { background:#1a0e20; border:1px solid rgba(200,16,46,0.4); border-radius:16px; width:100%; max-width:320px; padding:1.6rem; text-align:center; }
+.reset-zero-modal h3 { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:2px; color:#ff6b6b; margin-bottom:0.4rem; }
+.reset-zero-modal p { font-size:0.82rem; color:rgba(255,255,255,0.5); margin-bottom:1rem; line-height:1.5; }
+.reset-zero-code { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; font-weight:700; color:#F5A623; letter-spacing:2px; background:rgba(255,255,255,0.06); padding:0.35rem 1rem; border-radius:8px; display:inline-block; margin-bottom:1.2rem; }
+.reset-zero-btns { display:flex; gap:0.6rem; }
+.reset-zero-btns button { flex:1; padding:0.65rem; border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:0.95rem; letter-spacing:1px; cursor:pointer; border:none; transition:all 0.2s; }
+.btn-rz-cancel { background:rgba(255,255,255,0.08); color:#fff; }
+.btn-rz-cancel:hover { background:rgba(255,255,255,0.16); }
+.btn-rz-confirm { background:linear-gradient(135deg,#C8102E,#8b0000); color:#fff; }
+.btn-rz-confirm:hover { opacity:0.85; }
+.nav-info { font-size:0.82rem; color:rgba(255,255,255,0.5); text-align:center; cursor:pointer; padding:0.3rem 0.8rem; border-radius:8px; border:1px solid rgba(255,255,255,0.1); transition:all 0.2s; user-select:none; }
+.nav-info:hover { background:rgba(255,255,255,0.08); color:#fff; }
+.nav-info-hint { font-size:0.65rem; color:rgba(255,255,255,0.3); display:block; }
+
+/* SPREAD */
+.spread-wrapper { position:relative; z-index:1; display:flex; justify-content:center; padding:0 0.6rem 1.5rem; gap:0; }
+.page { background:#e8e0d0; width:min(46vw,460px); min-height:min(75vh,680px); border-radius:3px; padding:0.8rem 0.7rem 2rem; position:relative; display:flex; flex-direction:column; overflow:visible; }
+.page.left { border-radius:4px 0 0 4px; border-right:2px solid rgba(0,0,0,0.12); box-shadow:inset -3px 0 8px rgba(0,0,0,0.15),3px 3px 20px rgba(0,0,0,0.5); }
+.page.right { border-radius:0 4px 4px 0; border-left:2px solid rgba(0,0,0,0.12); box-shadow:inset 3px 0 8px rgba(0,0,0,0.15),-3px 3px 20px rgba(0,0,0,0.5); }
+.page.single { border-radius:4px; width:min(46vw,460px); }
+.page-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(0.75rem,1.5vw,1rem); letter-spacing:2px; color:#333; text-align:center; margin-bottom:0.5rem; padding-bottom:0.35rem; border-bottom:2px solid rgba(0,0,0,0.15); flex-shrink:0; }
+.page-num { position:absolute; bottom:0.5rem; left:0; right:0; text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; color:rgba(0,0,0,0.38); letter-spacing:1px; }
+.grid-pais, .grid-fwc, .page { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+.grid-pais { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; flex:1; align-content:start; }
+.grid-fwc { display:flex; gap:8px; justify-content:center; align-items:center; flex:1; padding:0.5rem 0; }
+.grid-fwc .sticker { width:min(18%,70px); flex:none; }
+
+.sticker { container-type:inline-size; aspect-ratio:1/2; border-radius:3px; cursor:pointer; display:grid; grid-template-rows:1fr 1fr 1fr; align-items:center; position:relative; transition:transform 0.12s,box-shadow 0.12s; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; border:1px solid rgba(0,0,0,0.18); min-width:0; overflow:visible; will-change:transform; }
+.sticker:hover { transform:scale(1.07); box-shadow:0 4px 14px rgba(0,0,0,0.35); z-index:10; }
+.sticker:active { transform:scale(0.96); }
 .sticker.miss { background:#a8a8b0; }
 .sticker.have { background:#2ecc71; }
 .sticker.rep  { background:#f1c40f; }
@@ -241,7 +295,21 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
       <textarea id="sinput" rows="2" placeholder="ej: MEX7  o  MEX7,ARG3  o pega formato externo con saltos de línea" style="resize:vertical;min-height:42px;line-height:1.4"></textarea>
       <button class="btn-sm" onclick="buscar()">Buscar</button>
     </div>
-    <!-- Sliders removed: using fixed sizes -->
+    <div class="scale-group">
+      <label for="badgeScale">Esquinas</label>
+      <input id="badgeScale" type="range" min="1" max="100" value="75">
+      <span id="badgeValue">75</span>
+    </div>
+    <div class="scale-group">
+      <label for="nameScale">Nombre</label>
+      <input id="nameScale" type="range" min="1" max="100" value="75">
+      <span id="nameValue">75</span>
+    </div>
+    <div class="scale-group">
+      <label for="codeScale">Código</label>
+      <input id="codeScale" type="range" min="1" max="100" value="75">
+      <span id="codeValue">75</span>
+    </div>
     <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">Ajusta cada tertio por separado: esquinas, nombre y código.</div>
     <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.0rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
     <div id="search-result"></div>
@@ -257,9 +325,6 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
     <div class="sec-title">Comparar con otros usuarios</div>
     <div id="compare-users-row" class="compare-user-select"><div class="compare-loading">Cargando usuarios...</div></div>
     <div class="compare-block" id="compare-block"></div>
-    <div style="margin-top:0.9rem;display:flex;justify-content:center">
-      <button class="btn-sm green" onclick="openFillModal()" style="padding:0.6rem 1rem;font-weight:700">Rellenar álbum (todo verde)</button>
-    </div>
   </div>
 </div>
 
@@ -272,18 +337,6 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
     <div class="reset-zero-btns">
       <button class="btn-rz-cancel" onclick="closeResetZero()">Cancelar</button>
       <button class="btn-rz-confirm" onclick="confirmResetZero()">Sí, quitar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── MODAL RELLENAR ÁLBUM ── -->
-<div class="overlay hidden" id="overlay-fill">
-  <div class="reset-zero-modal" style="max-width:360px;">
-    <h3>✅ Rellenar álbum</h3>
-    <p>¿Quieres marcar todas las láminas como "tengo" (verde)? Esta acción no se puede deshacer fácilmente.</p>
-    <div class="reset-zero-btns">
-      <button class="btn-rz-cancel" onclick="closeFillModal()">Cancelar</button>
-      <button class="btn-rz-confirm" onclick="confirmFillAlbum()">Sí, rellenar</button>
     </div>
   </div>
 </div>
@@ -307,7 +360,73 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 
 
 <script>
+// ── DATOS ─────────────────────────────────────────────────────
+const GRUPOS = [
+  ['A',['MEX','RSA','KOR','CZE']],['B',['CAN','BIH','QAT','SUI']],
+  ['C',['BRA','MAR','HAI','SCO']],['D',['USA','PAR','AUS','TUR']],
+  ['E',['GER','CUW','CIV','ECU']],['F',['NED','JPN','SWE','TUN']],
+  ['G',['BEL','EGY','IRN','NZL']],['H',['ESP','CPV','KSA','URU']],
+  ['I',['FRA','SEN','IRQ','NOR']],['J',['ARG','ALG','AUT','JOR']],
+  ['K',['POR','COD','UZB','COL']],['L',['ENG','CRO','GHA','PAN']]
+];
+const NOMBRES = {
+  MEX:'México',RSA:'Sudáfrica',KOR:'Corea del Sur',CZE:'Rep. Checa',
+  CAN:'Canadá',BIH:'Bosnia y Herz.',QAT:'Catar',SUI:'Suiza',
+  BRA:'Brasil',MAR:'Marruecos',HAI:'Haití',SCO:'Escocia',
+  USA:'Estados Unidos',PAR:'Paraguay',AUS:'Australia',TUR:'Turquía',
+  GER:'Alemania',CUW:'Curazao',CIV:'Costa de Marfil',ECU:'Ecuador',
+  NED:'Países Bajos',JPN:'Japón',SWE:'Suecia',TUN:'Túnez',
+  BEL:'Bélgica',EGY:'Egipto',IRN:'Irán',NZL:'Nueva Zelanda',
+  ESP:'España',CPV:'Cabo Verde',KSA:'Arabia Saudita',URU:'Uruguay',
+  FRA:'Francia',SEN:'Senegal',IRQ:'Irak',NOR:'Noruega',
+  ALG:'Argelia',ARG:'Argentina',AUT:'Austria',JOR:'Jordania',
+  POR:'Portugal',COD:'R.D. Congo',UZB:'Uzbekistán',COL:'Colombia',
+  ENG:'Inglaterra',CRO:'Croacia',GHA:'Ghana',PAN:'Panamá'
+};
 
+function buildPages() {
+  const P = {};
+  P[1]={n:1,t:'fwc',s:['FWC1','FWC2','FWC3','FWC4']};
+  P[2]={n:2,t:'fwc',s:['FWC5','FWC6']};
+  P[3]={n:3,t:'fwc',s:['FWC7','FWC8']};
+  for(const n of [4,5,6,7,56,57]) P[n]={n,t:'info'};
+  let pn=8;
+  for(const [g,paises] of GRUPOS) for(const cod of paises){
+    if(pn===56) pn=58;
+    P[pn]={n:pn,t:'pais',cod,g,s:Array.from({length:10},(_,i)=>`${cod}${i+1}`)}; pn++;
+    if(pn===56) pn=58;
+    P[pn]={n:pn,t:'pais',cod,g,s:Array.from({length:10},(_,i)=>`${cod}${i+11}`)}; pn++;
+  }
+  P[106]={n:106,t:'fwc',s:['FWC9','FWC10']};
+  P[107]={n:107,t:'fwc',s:['FWC11','FWC12','FWC13']};
+  P[108]={n:108,t:'fwc',s:['FWC14','FWC15']};
+  P[109]={n:109,t:'fwc',s:['FWC16','FWC17','FWC18','FWC19']};
+  return P;
+}
+function buildSpreads(P) {
+  const sp=[]; const nums=Object.keys(P).map(Number).sort((a,b)=>a-b);
+  sp.push({single:true,L:P[1],R:null});
+  const rest=nums.filter(n=>n>1); let i=0;
+  while(i<rest.length){
+    const n=rest[i];
+    if(n%2===0){const nxt=rest[i+1]; sp.push({single:false,L:P[n],R:nxt?P[nxt]:null}); i+=2;}
+    else{sp.push({single:false,L:null,R:P[n]}); i+=1;}
+  }
+  return sp;
+}
+const PAGES=buildPages(), SPREADS=buildSpreads(PAGES);
+const ALL_CODES=Object.values(PAGES).flatMap(p=>p.s||[]);
+const PAIS_TO_SPREAD={}, PAGE_TO_SPREAD={};
+for(let i=0;i<SPREADS.length;i++){
+  const sp=SPREADS[i];
+  for(const side of [sp.L,sp.R]) if(side&&side.t==='pais'&&!PAIS_TO_SPREAD[side.cod]) PAIS_TO_SPREAD[side.cod]=i;
+  if(sp.L) PAGE_TO_SPREAD[sp.L.n]=i;
+  if(sp.R) PAGE_TO_SPREAD[sp.R.n]=i;
+}
+
+// ── STATE ──────────────────────────────────────────────────────
+let album={}, spreadIdx=0, saveTimer=null, mobileTab='left';
+let badgeScale=75, nameScale=75, codeScale=75;
 const token=localStorage.getItem('gh_token');
 const owner=localStorage.getItem('gh_owner');
 const repo =localStorage.getItem('gh_repo');
@@ -321,7 +440,12 @@ window.onload=async()=>{
   document.getElementById('huser').textContent=currentUser;
   try{ const s=await loadJSON(`album_${currentUser}.json`); album=s||{}; }catch(e){album={};}
   buildNavModal(); render(); updateStats();
-  // Sliders removed; sizes fixed to BADGE_PX/NAME_PX/CODE_PX
+  const badgeInput = document.getElementById('badgeScale');
+  const nameInput = document.getElementById('nameScale');
+  const codeInput = document.getElementById('codeScale');
+  if(badgeInput){ badgeInput.addEventListener('input', e=>updateBadgeScale(e.target.value)); updateBadgeScale(badgeInput.value); }
+  if(nameInput){ nameInput.addEventListener('input', e=>updateNameScale(e.target.value)); updateNameScale(nameInput.value); }
+  if(codeInput){ codeInput.addEventListener('input', e=>updateCodeScale(e.target.value)); updateCodeScale(codeInput.value); }
 };
 window.addEventListener('resize',()=>render());
 function logout(){
@@ -331,7 +455,74 @@ function logout(){
 }
 
 // ── GITHUB API ─────────────────────────────────────────────────
+async function loadJSON(file){
+  const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${file}`,
+    {headers:{'Authorization':`token ${token}`,'Accept':'application/vnd.github.v3+json'}});
+  if(r.status===404) return null;
+  if(!r.ok) throw new Error(r.status);
+  const d=await r.json();
+  return JSON.parse(atob(d.content.replace(/\n/g,'')));
+}
+async function saveJSON(file,obj){
+  const url=`https://api.github.com/repos/${owner}/${repo}/contents/${file}`;
+  const ex=await fetch(url,{headers:{'Authorization':`token ${token}`}});
+  const sha=ex.ok?(await ex.json()).sha:undefined;
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(obj,null,2))));
+  await fetch(url,{method:'PUT',headers:{'Authorization':`token ${token}`,'Content-Type':'application/json'},
+    body:JSON.stringify({message:`Actualizar ${file}`,content,...(sha?{sha}:{})})});
+}
 
+// ── STICKER ────────────────────────────────────────────────────
+function clickSticker(code,e){
+  e&&e.stopPropagation();
+  album[code]=(album[code]||0)+1;
+  refreshSticker(code); updateStats(); scheduleSave();
+}
+function minusSticker(code,e){
+  e&&e.stopPropagation();
+  const v=album[code]||0; if(v<=0) return;
+  album[code]=v-1;
+  refreshSticker(code); updateStats(); scheduleSave();
+}
+
+// ── RESET A CERO ───────────────────────────────────────────────
+let resetZeroCode=null;
+function openResetZero(code){
+  const v=album[code]||0; if(v<=0) return;
+  resetZeroCode=code;
+  document.getElementById('rz-code-label').textContent=code;
+  document.getElementById('overlay-reset-zero').classList.remove('hidden');
+}
+function closeResetZero(){
+  resetZeroCode=null;
+  document.getElementById('overlay-reset-zero').classList.add('hidden');
+}
+function confirmResetZero(){
+  if(!resetZeroCode) return;
+  album[resetZeroCode]=0;
+  refreshSticker(resetZeroCode); updateStats(); scheduleSave();
+  closeResetZero();
+}
+document.getElementById('overlay-reset-zero').addEventListener('click',e=>{
+  if(e.target===e.currentTarget) closeResetZero();
+});
+function refreshSticker(code){
+  const el=document.querySelector(`[data-code="${code}"]`); if(!el) return;
+  const v=album[code]||0;
+  el.className='sticker '+(v===0?'miss':v===1?'have':'rep');
+  // Limpiar y reconstruir tercio superior
+  const top=el.querySelector('.s-top');
+  if(!top) return;
+  top.innerHTML='';
+  if(v>=2){
+    const minus=document.createElement('button'); minus.className='s-minus'; minus.textContent='−'; minus.title='Restar una';
+    minus.addEventListener('click',    e=>{ e.stopPropagation(); minusSticker(code,e); });
+    minus.addEventListener('touchstart',e=>{ e.stopPropagation(); },{passive:true});
+    minus.addEventListener('touchend', e=>{ e.stopPropagation(); e.preventDefault(); minusSticker(code,e); });
+    const cnt=document.createElement('div'); cnt.className='s-cnt'; cnt.textContent=v;
+    top.appendChild(minus); top.appendChild(cnt);
+  }
+}
 function scheduleSave(){
   const ind=document.getElementById('saving'); ind.classList.add('show');
   clearTimeout(saveTimer);
@@ -341,14 +532,88 @@ function scheduleSave(){
   },2000);
 }
 
+// ── STATS + PROGRESO ───────────────────────────────────────────
+function updateStats(){
+  const total=ALL_CODES.length; let have=0,reps=0;
+  for(const c of ALL_CODES){const v=album[c]||0; if(v>=1)have++; if(v>=2)reps++;}
+  document.getElementById('hstats').innerHTML=`
+    <span><span class="dot g"></span>${have}/${total} láminas</span>
+    <span><span class="dot y"></span>${reps} repetidas</span>`;
+  const pct=Math.round((have/total)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+
+// ── NAV ────────────────────────────────────────────────────────
+function nav(d){
+  const nx=spreadIdx+d; if(nx<0||nx>=SPREADS.length) return;
+  spreadIdx=nx; render();
+}
+function render(){
+  const sp=SPREADS[spreadIdx];
+  const wrap=document.getElementById('spread');
+  const tabsC=document.getElementById('mobile-tabs-container');
+  wrap.innerHTML=''; tabsC.innerHTML='';
+  document.getElementById('btnPrev').disabled=spreadIdx===0;
+  document.getElementById('btnNext').disabled=spreadIdx===SPREADS.length-1;
+  const lNum=sp.L?.n, rNum=sp.R?.n;
+  const txt=sp.single?`Página ${sp.L.n}`:lNum&&rNum?`Páginas ${lNum} – ${rNum}`:`Página ${lNum||rNum}`;
+  document.getElementById('navInfoText').textContent=txt;
+  if(sp.single){wrap.appendChild(makePage(sp.L,'single'));return;}
+  // Desktop/landscape: lado a lado. Mobile portrait: apiladas (CSS flex-direction:column lo maneja)
+  wrap.appendChild(sp.L?makePage(sp.L,'left'):blankPage('left'));
+  wrap.appendChild(sp.R?makePage(sp.R,'right'):blankPage('right'));
+}
+function blankPage(side){const d=document.createElement('div');d.className=`page ${side}`;return d;}
+function makePage(pg,side){
+  const d=document.createElement('div'); d.className=`page ${side}`;
+  if(pg.t==='info'){
+    d.innerHTML=`<div class="info-inner"><div class="info-emblem">2026</div><p>CONTENIDO INFORMATIVO</p><p style="font-size:0.68rem;opacity:.45">Esta página del álbum<br>no contiene láminas</p></div><div class="page-num">— ${pg.n} —</div>`;
+    return d;
+  }
+  const tit=document.createElement('div'); tit.className='page-title';
+  tit.textContent=pg.t==='fwc'?'FWC — COPA DEL MUNDO':`${NOMBRES[pg.cod]||pg.cod} · Grupo ${pg.g}`;
+  d.appendChild(tit);
+  if(pg.t==='pais'){
+    const grid=document.createElement('div'); grid.className='grid-pais';
+    for(const code of pg.s) grid.appendChild(makeSticker(code));
+    d.appendChild(grid);
+  } else {
+    const row=document.createElement('div'); row.className='grid-fwc';
+    for(const code of pg.s){ row.appendChild(makeSticker(code)); }
+    d.appendChild(row);
+  }
+  const pn=document.createElement('div'); pn.className='page-num'; pn.textContent=`— ${pg.n} —`;
+  d.appendChild(pn); return d;
+}
+// ── AJUSTE DE ESCALA 1-100 ───────────────────────────────────
+function updateBadgeScale(value){
+  badgeScale = Number(value);
+  document.getElementById('badgeValue').textContent = value;
+  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
+}
+function updateNameScale(value){
+  nameScale = Number(value);
+  document.getElementById('nameValue').textContent = value;
+  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
+}
+function updateCodeScale(value){
+  codeScale = Number(value);
+  document.getElementById('codeValue').textContent = value;
+  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
+}
+
 // ── FIT TEXT: escala s-code y s-name al ancho disponible de la lámina ──
 function fitStickerText(el){
   const available = el.offsetWidth * 0.94;
   if(!available) return;
+  const badgeFactor = badgeScale / 75;
+  const nameFactor = nameScale / 75;
+  const codeFactor = codeScale / 75;
 
-  // Ajustar tamaño de círculos en esquinas (diámetro fijo)
-  const badgeSize = BADGE_PX;
-  const badgeFont = Math.max(10, Math.round(badgeSize * 0.28));
+  // Ajustar tamaño de círculos en esquinas
+  const badgeSize = Math.round(Math.max(14, Math.min(26, 24 * badgeFactor)));
+  const badgeFont = Math.round(Math.max(9, Math.min(14, 12 * badgeFactor)));
   el.querySelectorAll('.s-minus, .s-cnt').forEach(badge=>{
     badge.style.width = badge.style.height = badgeSize+'px';
     badge.style.minWidth = badge.style.minHeight = badgeSize+'px';
@@ -356,20 +621,22 @@ function fitStickerText(el){
     badge.style.fontSize = badgeFont+'px';
   });
 
-  // Código — tamaño base fijo (permitir reducción si no cabe)
+  // Código — debe ocupar el máximo del ancho disponible
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size = CODE_PX;
+    let size = Math.round(36 * codeFactor);
     codeEl.style.fontSize = size+'px';
     while(codeEl.scrollWidth > available && size > 9){ size -= 0.5; codeEl.style.fontSize = size+'px'; }
   }
 
-  // Nombre: tamaño base fijo (permitir reducción si no cabe)
+  // Nombre: ajustar cada línea (firstname y lastname) por separado
+  // Tomamos el ancho del más largo y escalamos desde ahí
   const nameEl = el.querySelector('.s-name');
   if(nameEl){
     const spans = nameEl.querySelectorAll('.s-firstname, .s-lastname');
-    let size = NAME_PX;
+    let size = Math.round(18 * nameFactor);
     nameEl.style.fontSize = size+'px';
+    // Reducir hasta que ambas líneas entren
     let tooWide = true;
     while(tooWide && size > 8){
       tooWide = false;
@@ -381,7 +648,7 @@ function fitStickerText(el){
   // s-special (Escudo/Foto)
   const spEl = el.querySelector('.s-special');
   if(spEl){
-    let size = NAME_PX;
+    let size = Math.round(18 * nameFactor);
     spEl.style.fontSize = size+'px';
     while(spEl.scrollWidth > available && size > 8){ size -= 0.5; spEl.style.fontSize = size+'px'; }
   }
@@ -391,16 +658,6 @@ function fitStickerText(el){
 window.addEventListener('resize', ()=>{
   document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
 });
-
-// ── RELLENAR ÁLBUM: modal handlers
-function openFillModal(){ document.getElementById('overlay-fill').classList.remove('hidden'); }
-function closeFillModal(){ document.getElementById('overlay-fill').classList.add('hidden'); }
-function confirmFillAlbum(){
-  for(const c of ALL_CODES) album[c]=1;
-  render(); updateStats(); scheduleSave();
-  closeFillModal();
-}
-document.getElementById('overlay-fill').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeFillModal(); });
 
 const PLAYERS={"ALG2": {"n": "Alexis", "a": "Guendouz"}, "ALG3": {"n": "Ramy", "a": "Bensebaini"}, "ALG4": {"n": "Youcef", "a": "Atal"}, "ALG5": {"n": "Rayan", "a": "Aït-Nouri"}, "ALG6": {"n": "Mohamed Amine", "a": "Tougai"}, "ALG7": {"n": "Aïssa", "a": "Mandi"}, "ALG8": {"n": "Ismael", "a": "Bennacer"}, "ALG9": {"n": "Houssem", "a": "Aquar"}, "ALG10": {"n": "Hicham", "a": "Boudaoui"}, "ALG11": {"n": "Ramiz", "a": "Zerrouki"}, "ALG12": {"n": "Nabil", "a": "Bentalab"}, "ALG14": {"n": "Farés", "a": "Chaibi"}, "ALG15": {"n": "Riyad", "a": "Mahrez"}, "ALG16": {"n": "Said", "a": "Benrahma"}, "ALG17": {"n": "Anis Hadj", "a": "Moussa"}, "ALG18": {"n": "Amine", "a": "Gouiri"}, "ALG19": {"n": "Baghdad", "a": "Bounedjah"}, "ALG20": {"n": "Mohammed", "a": "Amoura"}, "ARG2": {"n": "Emiliano", "a": "Martinez"}, "ARG3": {"n": "Nahuel", "a": "Molina"}, "ARG4": {"n": "Cristian", "a": "Romero"}, "ARG5": {"n": "Nicolas", "a": "Otamendi"}, "ARG6": {"n": "Nicolas", "a": "Tagliafico"}, "ARG7": {"n": "Leonardo", "a": "Balerdi"}, "ARG8": {"n": "Enzo", "a": "Fernandez"}, "ARG9": {"n": "Alexis Mac", "a": "Allister"}, "ARG10": {"n": "Rodrigo De", "a": "Paul"}, "ARG11": {"n": "Exequiel", "a": "Palacios"}, "ARG12": {"n": "Leandro", "a": "Paredes"}, "ARG14": {"n": "Nico", "a": "Paz"}, "ARG15": {"n": "Franco", "a": "Mastantuono"}, "ARG16": {"n": "Nico", "a": "Gonzalez"}, "ARG17": {"n": "Lionel", "a": "Messi"}, "ARG18": {"n": "Lautaro", "a": "Martinez"}, "ARG19": {"n": "Julian", "a": "Alvarez"}, "ARG20": {"n": "Giuliano", "a": "Simeone"}, "AUS2": {"n": "Mathew", "a": "Ryan"}, "AUS3": {"n": "Joe", "a": "Gauci"}, "AUS4": {"n": "Harry", "a": "Souttar"}, "AUS5": {"n": "Alessandro", "a": "Circati"}, "AUS6": {"n": "Jordan", "a": "Bos"}, "AUS7": {"n": "Aziz", "a": "Behich"}, "AUS8": {"n": "Cameron", "a": "Burgess"}, "AUS9": {"n": "Lewis", "a": "Miller"}, "AUS10": {"n": "Milos", "a": "Degenek"}, "AUS11": {"n": "Jackson", "a": "Irvine"}, "AUS12": {"n": "Riley", "a": "McGree"}, "AUS14": {"n": "Aiden", "a": "O'Neill"}, "AUS15": {"n": "Connor", "a": "Metcalfe"}, "AUS16": {"n": "Patrick", "a": "Yazbek"}, "AUS17": {"n": "Craig", "a": "Goodwin"}, "AUS18": {"n": "Kusini", "a": "Vengi"}, "AUS19": {"n": "Nestory", "a": "Irankunda"}, "AUS20": {"n": "Mohamed", "a": "Touré"}, "AUT2": {"n": "Alexander", "a": "Schlager"}, "AUT3": {"n": "Patrick", "a": "Pentz"}, "AUT4": {"n": "David", "a": "Alaba"}, "AUT5": {"n": "Kevin", "a": "Danso"}, "AUT6": {"n": "Philipp", "a": "Lienhart"}, "AUT7": {"n": "Stefan", "a": "Posch"}, "AUT8": {"n": "Phillipp", "a": "Mwene"}, "AUT9": {"n": "Alexander", "a": "Prass"}, "AUT10": {"n": "Xaver", "a": "Schlager"}, "AUT11": {"n": "Marcel", "a": "Sabitzer"}, "AUT12": {"n": "Konrad", "a": "Laimer"}, "AUT14": {"n": "Florian", "a": "Grillitsch"}, "AUT15": {"n": "Nicolas", "a": "Seiwald"}, "AUT16": {"n": "Romano", "a": "Schmid"}, "AUT17": {"n": "Patrick", "a": "Wimmer"}, "AUT18": {"n": "Christoph", "a": "Baumgartner"}, "AUT19": {"n": "Michael", "a": "Gregoritsch"}, "AUT20": {"n": "Marko", "a": "Arnautović"}, "BEL2": {"n": "Thibaut", "a": "Courtois"}, "BEL3": {"n": "Arthur", "a": "Theate"}, "BEL4": {"n": "Timothy", "a": "Castagne"}, "BEL5": {"n": "Zeno", "a": "Debast"}, "BEL6": {"n": "Brandon", "a": "Mechele"}, "BEL7": {"n": "Maxim De", "a": "Cuyper"}, "BEL8": {"n": "Thomas", "a": "Meunier"}, "BEL9": {"n": "Youri", "a": "Tielemans"}, "BEL10": {"n": "Amadou", "a": "Onana"}, "BEL11": {"n": "Nicolas", "a": "Raskin"}, "BEL12": {"n": "Alexis", "a": "Saelemaekers"}, "BEL14": {"n": "Hans", "a": "Vanaken"}, "BEL15": {"n": "Kevin De", "a": "Bruyne"}, "BEL16": {"n": "Jérémy", "a": "Doku"}, "BEL17": {"n": "Charles De", "a": "Ketelaere"}, "BEL18": {"n": "Leandro", "a": "Trossard"}, "BEL19": {"n": "Loïs", "a": "Openda"}, "BEL20": {"n": "Romelu", "a": "Lukaku"}, "BIH2": {"n": "Nikola", "a": "Vasilj"}, "BIH3": {"n": "Amer", "a": "Dedic"}, "BIH4": {"n": "Sead", "a": "Kolasinac"}, "BIH5": {"n": "Tarik", "a": "Muharemovic"}, "BIH6": {"n": "Nihad", "a": "Mujakic"}, "BIH7": {"n": "Nikola", "a": "Katic"}, "BIH8": {"n": "Amir", "a": "Hadziahmetovic"}, "BIH9": {"n": "Benjamin", "a": "Tahirovic"}, "BIH10": {"n": "Armin", "a": "Gigovic"}, "BIH11": {"n": "Ivan", "a": "Sunjic"}, "BIH12": {"n": "Ivan", "a": "Basic"}, "BIH14": {"n": "Dzenis", "a": "Burnic"}, "BIH15": {"n": "Esmir", "a": "Bajraktarevic"}, "BIH16": {"n": "Amar", "a": "Memic"}, "BIH17": {"n": "Ermedin", "a": "Demirovic"}, "BIH18": {"n": "Edin", "a": "Dzeko"}, "BIH19": {"n": "Samed", "a": "Bazdar"}, "BIH20": {"n": "Haris", "a": "Tabakovic"}, "BRA2": {"n": "", "a": "Alisson"}, "BRA3": {"n": "", "a": "Bento"}, "BRA4": {"n": "", "a": "Marquinhos"}, "BRA5": {"n": "Éder", "a": "Militão"}, "BRA6": {"n": "Gabriel", "a": "Magalhães"}, "BRA7": {"n": "", "a": "Danilo"}, "BRA8": {"n": "", "a": "Wesley"}, "BRA9": {"n": "Lucas", "a": "Paquetá"}, "BRA10": {"n": "", "a": "Casemiro"}, "BRA11": {"n": "Bruno", "a": "Guimarães"}, "BRA12": {"n": "Luiz", "a": "Henrique"}, "BRA14": {"n": "Vinicius", "a": "Júnior"}, "BRA15": {"n": "", "a": "Rodrygo"}, "BRA16": {"n": "João", "a": "Pedro"}, "BRA17": {"n": "Matheus", "a": "Cunha"}, "BRA18": {"n": "Gabriel", "a": "Martinelli"}, "BRA19": {"n": "", "a": "Raphinha"}, "BRA20": {"n": "", "a": "Estévão"}, "CAN2": {"n": "Dayne", "a": "St.Clair"}, "CAN3": {"n": "Alphonso", "a": "Davies"}, "CAN4": {"n": "Alistair", "a": "Johnston"}, "CAN5": {"n": "Samuel", "a": "Adekugbe"}, "CAN6": {"n": "Riche", "a": "Larvea"}, "CAN7": {"n": "Derek", "a": "Cornelius"}, "CAN8": {"n": "Moïse", "a": "Bombito"}, "CAN9": {"n": "Kamal", "a": "Miller"}, "CAN10": {"n": "Stephen", "a": "Eustáquio"}, "CAN11": {"n": "Ismaël", "a": "Koné"}, "CAN12": {"n": "Jonathan", "a": "Osorio"}, "CAN14": {"n": "Jacob", "a": "Shaffelburg"}, "CAN15": {"n": "Mathieu", "a": "Choinière"}, "CAN16": {"n": "Niko", "a": "Sigur"}, "CAN17": {"n": "Tajon", "a": "Buchanan"}, "CAN18": {"n": "Liam", "a": "Millar"}, "CAN19": {"n": "Cyle", "a": "Larin"}, "CAN20": {"n": "Jonathan", "a": "David"}, "CPV2": {"n": "", "a": "Vozinha"}, "CPV3": {"n": "Logan", "a": "Costa"}, "CPV4": {"n": "", "a": "Pico"}, "CPV5": {"n": "", "a": "Diney"}, "CPV6": {"n": "Steven", "a": "Moreira"}, "CPV7": {"n": "Wagner", "a": "Pina"}, "CPV8": {"n": "Joao", "a": "Paulo"}, "CPV9": {"n": "Yannick", "a": "Semedo"}, "CPV10": {"n": "Kevin", "a": "Pina"}, "CPV11": {"n": "Patrick", "a": "Andrade"}, "CPV12": {"n": "Jamiro", "a": "Monteiro"}, "CPV14": {"n": "Deroy", "a": "Duarte"}, "CPV15": {"n": "Garry", "a": "Rodrigues"}, "CPV16": {"n": "Jovane", "a": "Cabral"}, "CPV17": {"n": "Ryan", "a": "Mendes"}, "CPV18": {"n": "Dailon", "a": "Livramento"}, "CPV19": {"n": "Willy", "a": "Semedo"}, "CPV20": {"n": "", "a": "Bebe"}, "COL2": {"n": "Camilo", "a": "Vargas"}, "COL3": {"n": "David", "a": "Ospina"}, "COL4": {"n": "Dávinson", "a": "Sánchez"}, "COL5": {"n": "Yerry", "a": "Mina"}, "COL6": {"n": "Daniel", "a": "Munoz"}, "COL7": {"n": "Johan", "a": "Mojica"}, "COL8": {"n": "Jhon", "a": "Lucumí"}, "COL9": {"n": "Santiago", "a": "Arias"}, "COL10": {"n": "Jefferson", "a": "Lerma"}, "COL11": {"n": "Kevin", "a": "Castaño"}, "COL12": {"n": "Richard", "a": "Rios"}, "COL14": {"n": "James", "a": "Rodriguez"}, "COL15": {"n": "Juan Fernando", "a": "Quintero"}, "COL16": {"n": "Jorge", "a": "Carrascal"}, "COL17": {"n": "Jon", "a": "Arias"}, "COL18": {"n": "Jhon", "a": "Cordova"}, "COL19": {"n": "Luis", "a": "Suarez"}, "COL20": {"n": "Luis", "a": "Diaz"}, "CIV2": {"n": "Yahia", "a": "Fofana"}, "CIV3": {"n": "Ghislain", "a": "Konan"}, "CIV4": {"n": "Wilfried", "a": "Singo"}, "CIV5": {"n": "Odilon", "a": "Kossounou"}, "CIV6": {"n": "Evan", "a": "Ndicka"}, "CIV7": {"n": "Willy", "a": "Boly"}, "CIV8": {"n": "Emmanuel", "a": "Agbadou"}, "CIV9": {"n": "Ousmane", "a": "Diomande"}, "CIV10": {"n": "Franck", "a": "Kessie"}, "CIV11": {"n": "Seko", "a": "Fofana"}, "CIV12": {"n": "Ibrahim", "a": "Sangare"}, "CIV14": {"n": "Jean-Philippe", "a": "Gbamin"}, "CIV15": {"n": "Amad", "a": "Diallo"}, "CIV16": {"n": "Sébastien", "a": "Haller"}, "CIV17": {"n": "Simon", "a": "Adingra"}, "CIV18": {"n": "Yan", "a": "Diomande"}, "CIV19": {"n": "Evann", "a": "Guessand"}, "CIV20": {"n": "Oumar", "a": "Diakite"}, "CRO2": {"n": "Dominik", "a": "Livaković"}, "CRO3": {"n": "Duje", "a": "Caleta-Car"}, "CRO4": {"n": "Josko", "a": "Gvardiol"}, "CRO5": {"n": "Josip", "a": "Stanišić"}, "CRO6": {"n": "Luka", "a": "Vušković"}, "CRO7": {"n": "Josip", "a": "Sutalo"}, "CRO8": {"n": "Kristijan", "a": "Jakic"}, "CRO9": {"n": "Luka", "a": "Modrić"}, "CRO10": {"n": "Mateo", "a": "Kovacic"}, "CRO11": {"n": "Martin", "a": "Baturina"}, "CRO12": {"n": "Lovro", "a": "Majer"}, "CRO14": {"n": "Mario", "a": "Pasalic"}, "CRO15": {"n": "Petar", "a": "Sucic"}, "CRO16": {"n": "Ivan", "a": "Perišić"}, "CRO17": {"n": "Marco", "a": "Pasalic"}, "CRO18": {"n": "Ante", "a": "Budimir"}, "CRO19": {"n": "Andrej", "a": "Kramarić"}, "CRO20": {"n": "Franjo", "a": "Ivanovic"}, "CUW2": {"n": "Eloy", "a": "Room"}, "CUW3": {"n": "Armando", "a": "Obispo"}, "CUW4": {"n": "Sherel", "a": "Floranus"}, "CUW5": {"n": "Jurien", "a": "Gaari"}, "CUW6": {"n": "Joshua", "a": "Brenet"}, "CUW7": {"n": "Roshon Van", "a": "Eijma"}, "CUW8": {"n": "Shurandy", "a": "Sambo"}, "CUW9": {"n": "Livano", "a": "Comenencia"}, "CUW10": {"n": "Godfried", "a": "Roemeratoe"}, "CUW11": {"n": "Juninho", "a": "Bacuna"}, "CUW12": {"n": "Leandro", "a": "Bacuna"}, "CUW14": {"n": "Tahith", "a": "Chong"}, "CUW15": {"n": "Kenji", "a": "Gorre"}, "CUW16": {"n": "Jearl", "a": "Margaritha"}, "CUW17": {"n": "Jurgen", "a": "Locadia"}, "CUW18": {"n": "Jeremy", "a": "Antonisse"}, "CUW19": {"n": "Gervane", "a": "Kastaneer"}, "CUW20": {"n": "Sontje", "a": "Hansen"}, "CZE2": {"n": "Matej", "a": "Kovar"}, "CZE3": {"n": "Jindrich", "a": "Stanek"}, "CZE4": {"n": "Ladislav", "a": "Krejci"}, "CZE5": {"n": "Vladimir", "a": "Coufal"}, "CZE6": {"n": "Jaroslav", "a": "Zeleny"}, "CZE7": {"n": "Tomas", "a": "Holes"}, "CZE8": {"n": "David", "a": "Zima"}, "CZE9": {"n": "Michal", "a": "Sadilek"}, "CZE10": {"n": "Lukas", "a": "Provod"}, "CZE11": {"n": "Lukas", "a": "Cerv"}, "CZE12": {"n": "Tomas", "a": "Soucek"}, "CZE14": {"n": "Pavel", "a": "Sulc"}, "CZE15": {"n": "Matej", "a": "Vydra"}, "CZE16": {"n": "Vasil", "a": "Kusej"}, "CZE17": {"n": "Tomas", "a": "Chory"}, "CZE18": {"n": "Vaclav", "a": "Cerny"}, "CZE19": {"n": "Adam", "a": "Hlozek"}, "CZE20": {"n": "Patrik", "a": "Schick"}, "COD2": {"n": "Lionel", "a": "Mpasi"}, "COD3": {"n": "Aaron", "a": "Wan-Bissaka"}, "COD4": {"n": "Axel", "a": "Tuanzebe"}, "COD5": {"n": "Arthur", "a": "Masuaku"}, "COD6": {"n": "Chancel", "a": "Mbemba"}, "COD7": {"n": "Joris", "a": "Kayembe"}, "COD8": {"n": "Charles", "a": "Pickel"}, "COD9": {"n": "Ngal'ayel", "a": "Mukau"}, "COD10": {"n": "Edo", "a": "Kayembe"}, "COD11": {"n": "Samuel", "a": "Moutoussamy"}, "COD12": {"n": "Noah", "a": "Sadiki"}, "COD14": {"n": "Théo", "a": "Bongonda"}, "COD15": {"n": "Meschak", "a": "Elia"}, "COD16": {"n": "Yoane", "a": "Wissa"}, "COD17": {"n": "Brian", "a": "Cipenga"}, "COD18": {"n": "Fiston", "a": "Mayele"}, "COD19": {"n": "Cédric", "a": "Bakambu"}, "COD20": {"n": "Nathanaël", "a": "Mbuku"}, "ECU2": {"n": "Hernán", "a": "Galíndez"}, "ECU3": {"n": "Gonzalo", "a": "Valle"}, "ECU4": {"n": "Piero", "a": "Hincapié"}, "ECU5": {"n": "Pervis", "a": "Estupiñán"}, "ECU6": {"n": "Willian", "a": "Pacho"}, "ECU7": {"n": "Ángelo", "a": "Preciado"}, "ECU8": {"n": "Joel", "a": "Ordóñez"}, "ECU9": {"n": "Moises", "a": "Caicedo"}, "ECU10": {"n": "Alan", "a": "Franco"}, "ECU11": {"n": "Kendry", "a": "Paez"}, "ECU12": {"n": "Pedro", "a": "Vite"}, "ECU14": {"n": "John", "a": "Veboah"}, "ECU15": {"n": "Leonardo", "a": "Campana"}, "ECU16": {"n": "Gonzalo", "a": "Plata"}, "ECU17": {"n": "Nilson", "a": "Angulo"}, "ECU18": {"n": "Alan", "a": "Minda"}, "ECU19": {"n": "Kevin", "a": "Rodriguez"}, "ECU20": {"n": "Enner", "a": "Valencia"}, "EGY2": {"n": "Mohamed El", "a": "Shenawy"}, "EGY3": {"n": "Mohamed", "a": "Hany"}, "EGY4": {"n": "Mohamed", "a": "Hamdy"}, "EGY5": {"n": "Yasser", "a": "Ibrahim"}, "EGY6": {"n": "Khaled", "a": "Sobhi"}, "EGY7": {"n": "Ramy", "a": "Rabia"}, "EGY8": {"n": "Hossam", "a": "Abdelmaguid"}, "EGY9": {"n": "Ahmed", "a": "Fatouh"}, "EGY10": {"n": "Marwan", "a": "Attia"}, "EGY11": {"n": "", "a": "Zizo"}, "EGY12": {"n": "Hamdy", "a": "Fathy"}, "EGY14": {"n": "Mohamed", "a": "Lasheen"}, "EGY15": {"n": "Emam", "a": "Ashour"}, "EGY16": {"n": "Osama", "a": "Faisal"}, "EGY17": {"n": "Mohamed", "a": "Salah"}, "EGY18": {"n": "Mostafa", "a": "Mohamed"}, "EGY19": {"n": "", "a": "Trezeguet"}, "EGY20": {"n": "Omar", "a": "Marmoush"}, "ENG2": {"n": "Jordan", "a": "Pickford"}, "ENG3": {"n": "John", "a": "Stones"}, "ENG4": {"n": "Marc", "a": "Guéhi"}, "ENG5": {"n": "Ezri", "a": "Konsa"}, "ENG6": {"n": "Trent", "a": "Alexander-Arnold"}, "ENG7": {"n": "Reece", "a": "James"}, "ENG8": {"n": "Dan", "a": "Burn"}, "ENG9": {"n": "Jordan", "a": "Henderson"}, "ENG10": {"n": "Declan", "a": "Rice"}, "ENG11": {"n": "Jude", "a": "Bellingham"}, "ENG12": {"n": "Cole", "a": "Palmer"}, "ENG14": {"n": "Morgan", "a": "Rogers"}, "ENG15": {"n": "Anthony", "a": "Gordon"}, "ENG16": {"n": "Phil", "a": "Foden"}, "ENG17": {"n": "Bukayo", "a": "Saka"}, "ENG18": {"n": "Harry", "a": "Kane"}, "ENG19": {"n": "Marcus", "a": "Rashford"}, "ENG20": {"n": "Ollie", "a": "Watkins"}, "FRA2": {"n": "Mike", "a": "Maignan"}, "FRA3": {"n": "Theo", "a": "Hernandez"}, "FRA4": {"n": "William", "a": "Saliba"}, "FRA5": {"n": "Jules", "a": "Kounde"}, "FRA6": {"n": "Ibrahima", "a": "Konate"}, "FRA7": {"n": "Dayot", "a": "Upamecano"}, "FRA8": {"n": "Lucas", "a": "Digne"}, "FRA9": {"n": "Aurélien", "a": "Tchouaméni"}, "FRA10": {"n": "Eduardo", "a": "Camavinga"}, "FRA11": {"n": "Manu", "a": "Kone"}, "FRA12": {"n": "Adrien", "a": "Rabiot"}, "FRA14": {"n": "Michael", "a": "Olise"}, "FRA15": {"n": "Ousmane", "a": "Dembele"}, "FRA16": {"n": "Bradley", "a": "Barcola"}, "FRA17": {"n": "Désiré", "a": "Doué"}, "FRA18": {"n": "Kingsley", "a": "Coman"}, "FRA19": {"n": "Hugo", "a": "Ekitike"}, "FRA20": {"n": "Kylian", "a": "Mbappe"}, "GER2": {"n": "Marc-André ter", "a": "Stegen"}, "GER3": {"n": "Jonathan", "a": "Tah"}, "GER4": {"n": "David", "a": "Raum"}, "GER5": {"n": "Nico", "a": "Schlotterbeck"}, "GER6": {"n": "Antonio", "a": "Rüdiger"}, "GER7": {"n": "Waldemar", "a": "Anton"}, "GER8": {"n": "Ridle", "a": "Baku"}, "GER9": {"n": "Maximilian", "a": "Mittelstadt"}, "GER10": {"n": "Joshua", "a": "Kimmich"}, "GER11": {"n": "Florian", "a": "Wirtz"}, "GER12": {"n": "Felix", "a": "Nmecha"}, "GER14": {"n": "Leon", "a": "Goretzka"}, "GER15": {"n": "Jamal", "a": "Musiala"}, "GER16": {"n": "Serge", "a": "Gnabry"}, "GER17": {"n": "Kai", "a": "Havertz"}, "GER18": {"n": "Leroy", "a": "Sane"}, "GER19": {"n": "Karim", "a": "Adeyemi"}, "GER20": {"n": "Nick", "a": "Woltemade"}, "GHA2": {"n": "Lawrence Ati", "a": "Zigi"}, "GHA3": {"n": "Tariq", "a": "Lamptey"}, "GHA4": {"n": "Mohammed", "a": "Salisu"}, "GHA5": {"n": "Alidu", "a": "Seidu"}, "GHA6": {"n": "Alexander", "a": "Djiku"}, "GHA7": {"n": "Gideon", "a": "Mensah"}, "GHA8": {"n": "Caleb", "a": "Yirenkyi"}, "GHA9": {"n": "Abdul Issahaku", "a": "Fatawu"}, "GHA10": {"n": "Thomas", "a": "Partey"}, "GHA11": {"n": "Salis Abdul", "a": "Samed"}, "GHA12": {"n": "Kamaldeen", "a": "Sulemana"}, "GHA14": {"n": "Mohammed", "a": "Kudus"}, "GHA15": {"n": "Inaki", "a": "Williams"}, "GHA16": {"n": "Jordan", "a": "Ayew"}, "GHA17": {"n": "Andrew", "a": "Ayew"}, "GHA18": {"n": "Joseph", "a": "Paintsil"}, "GHA19": {"n": "Osman", "a": "Bukari"}, "GHA20": {"n": "Antoine", "a": "Semenyo"}, "HAI2": {"n": "Johny", "a": "Placide"}, "HAI3": {"n": "Carlens", "a": "Arcus"}, "HAI4": {"n": "Martin", "a": "Expérience"}, "HAI5": {"n": "Jean-Kevin", "a": "Duverne"}, "HAI6": {"n": "Ricardo", "a": "Adé"}, "HAI7": {"n": "Duke", "a": "Lacroix"}, "HAI8": {"n": "Garven", "a": "Metusala"}, "HAI9": {"n": "Hannes", "a": "Delcroix"}, "HAI10": {"n": "Leverton", "a": "Pierre"}, "HAI11": {"n": "Danley Jean", "a": "Jacques"}, "HAI12": {"n": "Jean-Ricner", "a": "Bellegarde"}, "HAI14": {"n": "Christopher", "a": "Attys"}, "HAI15": {"n": "Derrick Etienne", "a": "Jr"}, "HAI16": {"n": "Josue", "a": "Casimir"}, "HAI17": {"n": "Ruben", "a": "Providence"}, "HAI18": {"n": "Duckens", "a": "Nazon"}, "HAI19": {"n": "Louicius", "a": "Deedson"}, "HAI20": {"n": "Frantzdy", "a": "Pierrot"}, "IRN2": {"n": "Alireza", "a": "Beiranvand"}, "IRN3": {"n": "Morteza", "a": "Pouraliganji"}, "IRN4": {"n": "Ehsan", "a": "Hajsafi"}, "IRN5": {"n": "Milad", "a": "Mohammadi"}, "IRN6": {"n": "Shojae", "a": "Khalilzadeh"}, "IRN7": {"n": "Ramin", "a": "Rezaeian"}, "IRN8": {"n": "Hossein", "a": "Kanaani"}, "IRN9": {"n": "Sadegh", "a": "Moharrami"}, "IRN10": {"n": "Saleh", "a": "Hardani"}, "IRN11": {"n": "Saeed", "a": "Ezatolahi"}, "IRN12": {"n": "Saman", "a": "Ghoddos"}, "IRN14": {"n": "Omid", "a": "Noorafkan"}, "IRN15": {"n": "Roozbeh", "a": "Cheshmi"}, "IRN16": {"n": "Mohammad", "a": "Mohebi"}, "IRN17": {"n": "Sardar", "a": "Azmoun"}, "IRN18": {"n": "Mehdi", "a": "Taremi"}, "IRN19": {"n": "Alireza", "a": "Jahanbakhsh"}, "IRN20": {"n": "Ali", "a": "Gholizadeh"}, "IRQ2": {"n": "Jalal", "a": "Hassan"}, "IRQ3": {"n": "Rebin", "a": "Sulaka"}, "IRQ4": {"n": "Hussein", "a": "Ali"}, "IRQ5": {"n": "Akam", "a": "Hashem"}, "IRQ6": {"n": "Merchas", "a": "Doski"}, "IRQ7": {"n": "Zaid", "a": "Tahseen"}, "IRQ8": {"n": "Manaf", "a": "Younis"}, "IRQ9": {"n": "Zidane", "a": "Iqbal"}, "IRQ10": {"n": "Amir", "a": "Al-Ammari"}, "IRQ11": {"n": "Ibrahim", "a": "Bavesh"}, "IRQ12": {"n": "Ali", "a": "Jasim"}, "IRQ14": {"n": "Youssef", "a": "Amyn"}, "IRQ15": {"n": "Aimar", "a": "Sher"}, "IRQ16": {"n": "Marko", "a": "Farji"}, "IRQ17": {"n": "Osama", "a": "Rashid"}, "IRQ18": {"n": "Ali", "a": "Al-Hamadi"}, "IRQ19": {"n": "Aymen", "a": "Hussein"}, "IRQ20": {"n": "Mohanad", "a": "Ali"}, "JPN2": {"n": "Zion", "a": "Suzuki"}, "JPN3": {"n": "Henry Heroki", "a": "Mochizuki"}, "JPN4": {"n": "Ayumu", "a": "Seko"}, "JPN5": {"n": "Junnosuke", "a": "Suzuki"}, "JPN6": {"n": "Shogo", "a": "Taniguchi"}, "JPN7": {"n": "Tsuyoshi", "a": "Watanabe"}, "JPN8": {"n": "Kaishu", "a": "Sano"}, "JPN9": {"n": "Yuki", "a": "Soma"}, "JPN10": {"n": "Ao", "a": "Tanaka"}, "JPN11": {"n": "Daichi", "a": "Kamada"}, "JPN12": {"n": "Takefusa", "a": "Kubo"}, "JPN14": {"n": "Ritsu", "a": "Doan"}, "JPN15": {"n": "Keito", "a": "Nakamura"}, "JPN16": {"n": "Takumi", "a": "Minamino"}, "JPN17": {"n": "Shuto", "a": "Machino"}, "JPN18": {"n": "Junya", "a": "Ito"}, "JPN19": {"n": "Koki", "a": "Ogawa"}, "JPN20": {"n": "Ayase", "a": "Ueda"}, "JOR2": {"n": "Yazeed", "a": "Abulaila"}, "JOR3": {"n": "Ihsan", "a": "Haddad"}, "JOR4": {"n": "Mohammad Abu", "a": "Hashish"}, "JOR5": {"n": "Yazan", "a": "Al-Arab"}, "JOR6": {"n": "Abdallah", "a": "Nasib"}, "JOR7": {"n": "Saleem", "a": "Obaid"}, "JOR8": {"n": "Mohammad", "a": "Abualnadi"}, "JOR9": {"n": "Ibrahim", "a": "Saadeh"}, "JOR10": {"n": "Nizar", "a": "Al-Rashdan"}, "JOR11": {"n": "Noor", "a": "Al-Rawabdeh"}, "JOR12": {"n": "Mohannad Abu", "a": "Taha"}, "JOR14": {"n": "Amer", "a": "Jamous"}, "JOR15": {"n": "Musa", "a": "Al-Taamari"}, "JOR16": {"n": "Yazan", "a": "Al-Naimat"}, "JOR17": {"n": "Mahmoud", "a": "Al-Mardi"}, "JOR18": {"n": "Ali", "a": "Olwan"}, "JOR19": {"n": "Mohammad Abu", "a": "Zrayq"}, "JOR20": {"n": "Ibrahim", "a": "Sabra"}, "MEX2": {"n": "Luis", "a": "Malagón"}, "MEX3": {"n": "Johan", "a": "Vasquez"}, "MEX4": {"n": "Jorge", "a": "Sánchez"}, "MEX5": {"n": "Cesar", "a": "Montes"}, "MEX6": {"n": "Jesus", "a": "Gallardo"}, "MEX7": {"n": "Israel", "a": "Reyes"}, "MEX8": {"n": "Diego", "a": "Lainez"}, "MEX9": {"n": "Carlos", "a": "Rodriguez"}, "MEX10": {"n": "Edson", "a": "Alvarez"}, "MEX11": {"n": "Orbelin", "a": "Pineda"}, "MEX12": {"n": "Marcel", "a": "Ruiz"}, "MEX14": {"n": "Érick", "a": "Sánchez"}, "MEX15": {"n": "Hirving", "a": "Lozano"}, "MEX16": {"n": "Santiago", "a": "Giménez"}, "MEX17": {"n": "Raúl", "a": "Jiménez"}, "MEX18": {"n": "Alexis", "a": "Vega"}, "MEX19": {"n": "Roberto", "a": "Alvarado"}, "MEX20": {"n": "Cesar", "a": "Huerta"}, "MAR2": {"n": "Yassine", "a": "Bounou"}, "MAR3": {"n": "Munir El", "a": "Kajoui"}, "MAR4": {"n": "Achraf", "a": "Hakimi"}, "MAR5": {"n": "Noussair", "a": "Mazraoui"}, "MAR6": {"n": "Nayef", "a": "Aguerd"}, "MAR7": {"n": "Roman", "a": "Saiss"}, "MAR8": {"n": "Jawad El", "a": "Yamio"}, "MAR9": {"n": "Adam", "a": "Masina"}, "MAR10": {"n": "Sofyan", "a": "Amrabat"}, "MAR11": {"n": "Azzedine", "a": "Ounahi"}, "MAR12": {"n": "Eliesse Ben", "a": "Seghir"}, "MAR14": {"n": "Bilal El", "a": "Khannouss"}, "MAR15": {"n": "Ismael", "a": "Saibari"}, "MAR16": {"n": "Youssef", "a": "En-Nesyri"}, "MAR17": {"n": "Abde", "a": "Ezzalzouli"}, "MAR18": {"n": "Soufiane", "a": "Rahimi"}, "MAR19": {"n": "Brahim", "a": "Diaz"}, "MAR20": {"n": "Ayoub El", "a": "Kaabi"}, "NED2": {"n": "Bart", "a": "Verbruggen"}, "NED3": {"n": "Virgil van", "a": "Dijk"}, "NED4": {"n": "Micky van de", "a": "Ven"}, "NED5": {"n": "Jurrien", "a": "Timber"}, "NED6": {"n": "Denzel", "a": "Dumfries"}, "NED7": {"n": "Nathan", "a": "Aké"}, "NED8": {"n": "Jeremie", "a": "Frimpong"}, "NED9": {"n": "Jan Paul van", "a": "Hecke"}, "NED10": {"n": "Tijjani", "a": "Reijnders"}, "NED11": {"n": "Ryan", "a": "Gravenberch"}, "NED12": {"n": "Teun", "a": "Koopmeiners"}, "NED14": {"n": "Frenkie de", "a": "Jong"}, "NED15": {"n": "Xavi", "a": "Simons"}, "NED16": {"n": "Justin", "a": "Kluivert"}, "NED17": {"n": "Memphis", "a": "Depay"}, "NED18": {"n": "Donyell", "a": "Malen"}, "NED19": {"n": "Wout", "a": "Weghorst"}, "NED20": {"n": "Cody", "a": "Gakpo"}, "NZL2": {"n": "Max Crocombe", "a": "Payne"}, "NZL3": {"n": "Alex", "a": "Paulsen"}, "NZL4": {"n": "Michael", "a": "Boxall"}, "NZL5": {"n": "Liberato", "a": "Cacace"}, "NZL6": {"n": "Tim", "a": "Payne"}, "NZL7": {"n": "Tyler", "a": "Bindon"}, "NZL8": {"n": "Francis de", "a": "Vries"}, "NZL9": {"n": "Finn", "a": "Surman"}, "NZL10": {"n": "Joe", "a": "Bell"}, "NZL11": {"n": "Sarpreet", "a": "Singh"}, "NZL12": {"n": "Ryan", "a": "Thomas"}, "NZL14": {"n": "Matthew", "a": "Garbett"}, "NZL15": {"n": "Marko", "a": "Stamenić"}, "NZL16": {"n": "Ben", "a": "Old"}, "NZL17": {"n": "Chris", "a": "Wood"}, "NZL18": {"n": "Elijah", "a": "Just"}, "NZL19": {"n": "Callum", "a": "McCowatt"}, "NZL20": {"n": "Kosta", "a": "Barbarouses"}, "NOR2": {"n": "Orjan", "a": "Nyland"}, "NOR3": {"n": "Julian", "a": "Ryerson"}, "NOR4": {"n": "Leo", "a": "Ostigård"}, "NOR5": {"n": "Kristoffer Vassbakk", "a": "Ajer"}, "NOR6": {"n": "Marcus Holmgren", "a": "Pedersen"}, "NOR7": {"n": "David Møller", "a": "Wolfe"}, "NOR8": {"n": "Torbjørn", "a": "Heggem"}, "NOR9": {"n": "Morten", "a": "Thorsby"}, "NOR10": {"n": "Martin", "a": "Ødegaard"}, "NOR11": {"n": "Sander", "a": "Berge"}, "NOR12": {"n": "Andreas", "a": "Schjelderup"}, "NOR14": {"n": "Patrick", "a": "Berg"}, "NOR15": {"n": "Erling", "a": "Haaland"}, "NOR16": {"n": "Alexander", "a": "Sørloth"}, "NOR17": {"n": "Aron", "a": "Dønnum"}, "NOR18": {"n": "Jorgen Strand", "a": "Larsen"}, "NOR19": {"n": "Antonio", "a": "Nusa"}, "NOR20": {"n": "Oscar", "a": "Bobb"}, "PAN2": {"n": "Orlando", "a": "Mosquera"}, "PAN3": {"n": "Luis", "a": "Mejia"}, "PAN4": {"n": "Fidel", "a": "Escobar"}, "PAN5": {"n": "Andres", "a": "Andrade"}, "PAN6": {"n": "Michael Amir", "a": "Murillo"}, "PAN7": {"n": "Eric", "a": "Davis"}, "PAN8": {"n": "Jose", "a": "Cordoba"}, "PAN9": {"n": "Cesar", "a": "Blackman"}, "PAN10": {"n": "Cristian", "a": "Martinez"}, "PAN11": {"n": "Aníbal", "a": "Godoy"}, "PAN12": {"n": "Adalberto", "a": "Carrasquilla"}, "PAN14": {"n": "Édgar", "a": "Bárcenas"}, "PAN15": {"n": "Carlos", "a": "Harvey"}, "PAN16": {"n": "Ismael", "a": "Díaz"}, "PAN17": {"n": "Jose", "a": "Fajardo"}, "PAN18": {"n": "Cecilio", "a": "Waterman"}, "PAN19": {"n": "Jose Luiz", "a": "Rodriguez"}, "PAN20": {"n": "Alberto", "a": "Quintero"}, "PAR2": {"n": "Roberto", "a": "Fernandez"}, "PAR3": {"n": "Orlando", "a": "Gill"}, "PAR4": {"n": "Gustavo", "a": "Gomez"}, "PAR5": {"n": "Fabián", "a": "Balbuena"}, "PAR6": {"n": "Juan José", "a": "Cáceres"}, "PAR7": {"n": "Omar", "a": "Alderete"}, "PAR8": {"n": "Junior", "a": "Alonso"}, "PAR9": {"n": "Mathías", "a": "Villasanti"}, "PAR10": {"n": "Diego", "a": "Gomez"}, "PAR11": {"n": "Damián", "a": "Bobadilla"}, "PAR12": {"n": "Andres", "a": "Cubas"}, "PAR14": {"n": "Matias Galarza", "a": "Fonda"}, "PAR15": {"n": "Julio", "a": "Enciso"}, "PAR16": {"n": "Alejandro Romero", "a": "Gamarra"}, "PAR17": {"n": "Miguel", "a": "Almirón"}, "PAR18": {"n": "Ramon", "a": "Sosa"}, "PAR19": {"n": "Angel", "a": "Romero"}, "PAR20": {"n": "Antonio", "a": "Sanabria"}, "POR2": {"n": "Diogo", "a": "Costa"}, "POR3": {"n": "Jose", "a": "Sa"}, "POR4": {"n": "Ruben", "a": "Dias"}, "POR5": {"n": "João", "a": "Cancelo"}, "POR6": {"n": "Diogo", "a": "Dalot"}, "POR7": {"n": "Nuno", "a": "Mendes"}, "POR8": {"n": "Gonçalo", "a": "Inácio"}, "POR9": {"n": "Bernardo", "a": "Silva"}, "POR10": {"n": "Bruno", "a": "Fernandes"}, "POR11": {"n": "Ruben", "a": "Neves"}, "POR12": {"n": "", "a": "Vitinha"}, "POR14": {"n": "João", "a": "Neves"}, "POR15": {"n": "Cristiano", "a": "Ronaldo"}, "POR16": {"n": "Francisco", "a": "Trincao"}, "POR17": {"n": "João", "a": "Felix"}, "POR18": {"n": "Gonçalo", "a": "Ramos"}, "POR19": {"n": "Pedro", "a": "Neto"}, "POR20": {"n": "Rafael", "a": "Leão"}, "QAT2": {"n": "Meshaal", "a": "Barsham"}, "QAT3": {"n": "Sultan", "a": "Albrake"}, "QAT4": {"n": "Lucas", "a": "Mendes"}, "QAT5": {"n": "Homam", "a": "Ahmed"}, "QAT6": {"n": "Boualem", "a": "Khoukhi"}, "QAT7": {"n": "Pedro", "a": "Miguel"}, "QAT8": {"n": "Tarek", "a": "Salman"}, "QAT9": {"n": "Mohamed", "a": "Al-Mannai"}, "QAT10": {"n": "Karim", "a": "Boudiaf"}, "QAT11": {"n": "Assim", "a": "Madibo"}, "QAT12": {"n": "Ahmed", "a": "Fatehi"}, "QAT14": {"n": "Mohammed", "a": "Waad"}, "QAT15": {"n": "Abdulaziz", "a": "Hatem"}, "QAT16": {"n": "Hassan", "a": "Al-Haydos"}, "QAT17": {"n": "Edmilson", "a": "Junior"}, "QAT18": {"n": "Akram Hassan", "a": "Afif"}, "QAT19": {"n": "Ahmed Al", "a": "Ganehi"}, "QAT20": {"n": "Almoez", "a": "Ali"}, "KSA2": {"n": "Nawaf", "a": "Alaqidi"}, "KSA3": {"n": "Abdulrahman", "a": "Al-Sanbi"}, "KSA4": {"n": "Saud", "a": "Abdulhamid"}, "KSA5": {"n": "Nawaf", "a": "Bouwashl"}, "KSA6": {"n": "Jihad", "a": "Thakri"}, "KSA7": {"n": "Moteb", "a": "Al-Harbi"}, "KSA8": {"n": "Hassan", "a": "Altambakti"}, "KSA9": {"n": "Musab", "a": "Aljuwayr"}, "KSA10": {"n": "Ziyad", "a": "Aljohani"}, "KSA11": {"n": "Abdullah", "a": "Alkhaibari"}, "KSA12": {"n": "Nasser", "a": "Aldawsari"}, "KSA14": {"n": "Saleh Abu", "a": "Alshamat"}, "KSA15": {"n": "Marwan", "a": "Alsahafi"}, "KSA16": {"n": "Salem", "a": "Aldawsari"}, "KSA17": {"n": "Abdulrahman", "a": "Al-Aboud"}, "KSA18": {"n": "Feras", "a": "Akbrikan"}, "KSA19": {"n": "Saleh", "a": "Alshehri"}, "KSA20": {"n": "Abdullah", "a": "Al-Hamdan"}, "SCO2": {"n": "Angus", "a": "Gunn"}, "SCO3": {"n": "Jack", "a": "Hendry"}, "SCO4": {"n": "Kieran", "a": "Tierney"}, "SCO5": {"n": "Aaron", "a": "Hickey"}, "SCO6": {"n": "Andrew", "a": "Robertson"}, "SCO7": {"n": "Scott", "a": "McKenna"}, "SCO8": {"n": "John", "a": "Souttar"}, "SCO9": {"n": "Anthony", "a": "Ralston"}, "SCO10": {"n": "Grant", "a": "Hanley"}, "SCO11": {"n": "Scott", "a": "McTominay"}, "SCO12": {"n": "Billy", "a": "Gilmour"}, "SCO14": {"n": "Lewis", "a": "Ferguson"}, "SCO15": {"n": "Ryan", "a": "Christie"}, "SCO16": {"n": "Kenny", "a": "McLean"}, "SCO17": {"n": "John", "a": "McGinn"}, "SCO18": {"n": "Lyndon", "a": "Dykes"}, "SCO19": {"n": "Che", "a": "Adams"}, "SCO20": {"n": "Ben", "a": "Gannon-Doak"}, "SEN2": {"n": "Edouard", "a": "Mendy"}, "SEN3": {"n": "Yehvann", "a": "Diouf"}, "SEN4": {"n": "Moussa", "a": "Niakhaté"}, "SEN5": {"n": "Abdoulaye", "a": "Seck"}, "SEN6": {"n": "Ismail", "a": "Jakobs"}, "SEN7": {"n": "El Hadji Malick", "a": "Diouf"}, "SEN8": {"n": "Kalidou", "a": "Koulibaly"}, "SEN9": {"n": "Idrissa Gana", "a": "Gueye"}, "SEN10": {"n": "Pape Matar", "a": "Sarr"}, "SEN11": {"n": "Pape", "a": "Gueye"}, "SEN12": {"n": "Habib", "a": "Diarra"}, "SEN14": {"n": "Lamine", "a": "Camara"}, "SEN15": {"n": "Sadio", "a": "Mane"}, "SEN16": {"n": "Ismaïla", "a": "Sarr"}, "SEN17": {"n": "Boulaye", "a": "Dia"}, "SEN18": {"n": "Iliman", "a": "Ndiaye"}, "SEN19": {"n": "Nicolas", "a": "Jackson"}, "SEN20": {"n": "Krepin", "a": "Diatta"}, "RSA2": {"n": "Ronwen", "a": "Williams"}, "RSA3": {"n": "Sipho", "a": "Chaine"}, "RSA4": {"n": "Aubrey", "a": "Modiba"}, "RSA5": {"n": "Samukele", "a": "Kabini"}, "RSA6": {"n": "Mbekezeli", "a": "Mbokazi"}, "RSA7": {"n": "Khulumani", "a": "Ndamane"}, "RSA8": {"n": "Siyabonga", "a": "Ngezana"}, "RSA9": {"n": "Khuliso", "a": "Mudau"}, "RSA10": {"n": "Nkosinathi", "a": "Sibisi"}, "RSA11": {"n": "Teboho", "a": "Mokoena"}, "RSA12": {"n": "Thalente", "a": "Mbatha"}, "RSA14": {"n": "Bathasi", "a": "Aubaas"}, "RSA15": {"n": "Yaya", "a": "Sithole"}, "RSA16": {"n": "Sipho", "a": "Mbule"}, "RSA17": {"n": "Lyle", "a": "Foster"}, "RSA18": {"n": "Iqraam", "a": "Rayners"}, "RSA19": {"n": "Mohau", "a": "Nkota"}, "RSA20": {"n": "Oswin", "a": "Appollis"}, "KOR2": {"n": "Hyeon-woo", "a": "Jo"}, "KOR3": {"n": "Seung-Gyu", "a": "Kim"}, "KOR4": {"n": "Min-jae", "a": "Kim"}, "KOR5": {"n": "Yu-min", "a": "Cho"}, "KOR6": {"n": "Young-woo", "a": "Seol"}, "KOR7": {"n": "Han-beom", "a": "Lee"}, "KOR8": {"n": "Tae-seok", "a": "Lee"}, "KOR9": {"n": "Myung-jae", "a": "Lee"}, "KOR10": {"n": "Jae-sung", "a": "Lee"}, "KOR11": {"n": "In-beom", "a": "Hwang"}, "KOR12": {"n": "Kang-in", "a": "Lee"}, "KOR14": {"n": "Seung-ho", "a": "Paik"}, "KOR15": {"n": "Jens", "a": "Castrop"}, "KOR16": {"n": "Dongg-yeong", "a": "Lee"}, "KOR17": {"n": "Gue-sung", "a": "Cho"}, "KOR18": {"n": "Heung-min", "a": "Son"}, "KOR19": {"n": "Hee-chan", "a": "Hwang"}, "KOR20": {"n": "Hyeon-Gyu", "a": "Oh"}, "ESP2": {"n": "Unai", "a": "Simon"}, "ESP3": {"n": "Robin Le", "a": "Normand"}, "ESP4": {"n": "Aymeric", "a": "Laporte"}, "ESP5": {"n": "Dean", "a": "Huijsen"}, "ESP6": {"n": "Pedro", "a": "Porro"}, "ESP7": {"n": "Dani", "a": "Carvajal"}, "ESP8": {"n": "Marc", "a": "Cucurella"}, "ESP9": {"n": "Martín", "a": "Zubimendi"}, "ESP10": {"n": "", "a": "Rodri"}, "ESP11": {"n": "", "a": "Pedri"}, "ESP12": {"n": "Fabian", "a": "Ruiz"}, "ESP14": {"n": "Mikel", "a": "Merino"}, "ESP15": {"n": "Lamine", "a": "Yamal"}, "ESP16": {"n": "Dani", "a": "Olmo"}, "ESP17": {"n": "Nico", "a": "Williams"}, "ESP18": {"n": "Ferran", "a": "Torres"}, "ESP19": {"n": "Álvaro", "a": "Morata"}, "ESP20": {"n": "Mikel", "a": "Oyarzabal"}, "SWE2": {"n": "Victor", "a": "Johansson"}, "SWE3": {"n": "Isak", "a": "Hien"}, "SWE4": {"n": "Gabriel", "a": "Gudmundsson"}, "SWE5": {"n": "Emil", "a": "Holm"}, "SWE6": {"n": "Victor Nilsson", "a": "Lindelöf"}, "SWE7": {"n": "Gustaf", "a": "Lagerbielke"}, "SWE8": {"n": "Lucas", "a": "Bergvall"}, "SWE9": {"n": "Hugo", "a": "Larsson"}, "SWE10": {"n": "Jesper", "a": "Karlström"}, "SWE11": {"n": "Yasin", "a": "Ayari"}, "SWE12": {"n": "Mattias", "a": "Svanberg"}, "SWE14": {"n": "Daniel", "a": "Svensson"}, "SWE15": {"n": "Ken", "a": "Sema"}, "SWE16": {"n": "Roony", "a": "Bardghji"}, "SWE17": {"n": "Dejan", "a": "Kulusevski"}, "SWE18": {"n": "Anthony", "a": "Elanga"}, "SWE19": {"n": "Alexander", "a": "Isak"}, "SWE20": {"n": "Viktor", "a": "Gyökeres"}, "SUI2": {"n": "Gregor", "a": "Kobel"}, "SUI3": {"n": "Yvon", "a": "Mvogo"}, "SUI4": {"n": "Manuel", "a": "Akanji"}, "SUI5": {"n": "Ricardo", "a": "Rodriguez"}, "SUI6": {"n": "Nico", "a": "Elvedi"}, "SUI7": {"n": "Aurèle", "a": "Amenda"}, "SUI8": {"n": "Silvan", "a": "Widmer"}, "SUI9": {"n": "Granit", "a": "Xhaka"}, "SUI10": {"n": "Denis", "a": "Zakaria"}, "SUI11": {"n": "Remo", "a": "Freuler"}, "SUI12": {"n": "Fabian", "a": "Rieder"}, "SUI14": {"n": "Ardon", "a": "Jashari"}, "SUI15": {"n": "Johan", "a": "Manzambi"}, "SUI16": {"n": "Michel", "a": "Aebischer"}, "SUI17": {"n": "Breel", "a": "Embolo"}, "SUI18": {"n": "Ruben", "a": "Vargas"}, "SUI19": {"n": "Dan", "a": "Ndoye"}, "SUI20": {"n": "Zeki", "a": "Amdouni"}, "TUN2": {"n": "Bechir Ben", "a": "Said"}, "TUN3": {"n": "Aymen", "a": "Dahmen"}, "TUN4": {"n": "Yan", "a": "Valery"}, "TUN5": {"n": "Montassar", "a": "Talbi"}, "TUN6": {"n": "Yassine", "a": "Meriah"}, "TUN7": {"n": "Ali", "a": "Abdi"}, "TUN8": {"n": "Dylan", "a": "Bronn"}, "TUN9": {"n": "Ellyes", "a": "Skhiri"}, "TUN10": {"n": "Aissa", "a": "Laidouni"}, "TUN11": {"n": "Ferjani", "a": "Sassi"}, "TUN12": {"n": "Mohamed Ali Ben", "a": "Romdhane"}, "TUN14": {"n": "Hannibal", "a": "Mejbri"}, "TUN15": {"n": "Elias", "a": "Achouri"}, "TUN16": {"n": "Elias", "a": "Saad"}, "TUN17": {"n": "Hazem", "a": "Mastouri"}, "TUN18": {"n": "Ismael", "a": "Gharbi"}, "TUN19": {"n": "Sayfallah", "a": "Ltaief"}, "TUN20": {"n": "Naim", "a": "Sliti"}, "TUR2": {"n": "Ugurcan", "a": "Cakir"}, "TUR3": {"n": "Mert", "a": "Muldur"}, "TUR4": {"n": "Zeki", "a": "Celik"}, "TUR5": {"n": "Abdulkerim", "a": "Bardakci"}, "TUR6": {"n": "Caglar", "a": "Soyuncu"}, "TUR7": {"n": "Merih", "a": "Demiral"}, "TUR8": {"n": "Ferdi", "a": "Kadioglu"}, "TUR9": {"n": "Kaan", "a": "Ayhan"}, "TUR10": {"n": "Ismail", "a": "Yuksek"}, "TUR11": {"n": "Hakan", "a": "Calhanoglu"}, "TUR12": {"n": "Orkun", "a": "Kokcu"}, "TUR14": {"n": "Arda", "a": "Guler"}, "TUR15": {"n": "Irfan Can", "a": "Kahveci"}, "TUR16": {"n": "Yunus", "a": "Akgun"}, "TUR17": {"n": "Can", "a": "Uzun"}, "TUR18": {"n": "Baris Alper", "a": "Yilmaz"}, "TUR19": {"n": "Kerem", "a": "Akturkoglu"}, "TUR20": {"n": "Kenan", "a": "Yildiz"}, "USA2": {"n": "Math", "a": "Freese"}, "USA3": {"n": "Chris", "a": "Richards"}, "USA4": {"n": "Tim", "a": "Ream"}, "USA5": {"n": "Mark", "a": "McKenzie"}, "USA6": {"n": "Alex", "a": "Freeman"}, "USA7": {"n": "Antonee", "a": "Robinson"}, "USA8": {"n": "Tyler", "a": "Adams"}, "USA9": {"n": "Tanner", "a": "Tessmann"}, "USA10": {"n": "Weston", "a": "McKenny"}, "USA11": {"n": "Christian", "a": "Roldan"}, "USA12": {"n": "Timothy", "a": "Weah"}, "USA14": {"n": "Diego", "a": "Luna"}, "USA15": {"n": "Malik", "a": "Tillman"}, "USA16": {"n": "Christian", "a": "Pulisic"}, "USA17": {"n": "Brenden", "a": "Aaronson"}, "USA18": {"n": "Ricardo", "a": "Pepi"}, "USA19": {"n": "Haji", "a": "Wright"}, "USA20": {"n": "Folarin", "a": "Balogun"}, "URU2": {"n": "Sergio", "a": "Rochet"}, "URU3": {"n": "Santiago", "a": "Mele"}, "URU4": {"n": "Ronald", "a": "Araujo"}, "URU5": {"n": "José María", "a": "Giménez"}, "URU6": {"n": "Sebastian", "a": "Caceres"}, "URU7": {"n": "Mathias", "a": "Olivera"}, "URU8": {"n": "Guillermo", "a": "Varela"}, "URU9": {"n": "Nahitan", "a": "Nandez"}, "URU10": {"n": "Federico", "a": "Valverde"}, "URU11": {"n": "Giorgian De", "a": "Arrascaeta"}, "URU12": {"n": "Rodrigo", "a": "Bentancur"}, "URU14": {"n": "Manuel", "a": "Ugarte"}, "URU15": {"n": "Nicolás de la", "a": "Cruz"}, "URU16": {"n": "Maxi", "a": "Araujo"}, "URU17": {"n": "Darwin", "a": "Núñez"}, "URU18": {"n": "Federico", "a": "Viñas"}, "URU19": {"n": "Rodrigo", "a": "Aguirre"}, "URU20": {"n": "Facundo", "a": "Pellistri"}, "UZB2": {"n": "Utkir", "a": "Yusupov"}, "UZB3": {"n": "Farrukh", "a": "Savfiev"}, "UZB4": {"n": "Sherzod", "a": "Nasrullaev"}, "UZB5": {"n": "Umar", "a": "Eshmurodov"}, "UZB6": {"n": "Husniddin", "a": "Aliqulov"}, "UZB7": {"n": "Rustamjon", "a": "Ashurmatov"}, "UZB8": {"n": "Khojiakbar", "a": "Alijonov"}, "UZB9": {"n": "Abdukodir", "a": "Khusanov"}, "UZB10": {"n": "Odiljon", "a": "Hamrobekov"}, "UZB11": {"n": "Otabek", "a": "Shukurov"}, "UZB12": {"n": "Jamshid", "a": "Iskanderov"}, "UZB14": {"n": "Azizbek", "a": "Turgunboev"}, "UZB15": {"n": "Khojimat", "a": "Erkinov"}, "UZB16": {"n": "Eldor", "a": "Shomurodov"}, "UZB17": {"n": "Oston", "a": "Urunov"}, "UZB18": {"n": "Jaloliddin", "a": "Masharipov"}, "UZB19": {"n": "Igor", "a": "Sergeev"}, "UZB20": {"n": "Abbosbek", "a": "Fayzullaev"}};
 function makeSticker(code){
