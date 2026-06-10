@@ -561,7 +561,7 @@ function fitStickerText(el){
   // Ajustar código (tercio inferior)
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size=32;
+    let size=38;
     codeEl.style.fontSize=size+'px';
     while(codeEl.scrollWidth>available && size>7){ size-=0.5; codeEl.style.fontSize=size+'px'; }
   }
@@ -569,7 +569,7 @@ function fitStickerText(el){
   // Ajustar nombre o especial (tercio medio)
   const nameEl = el.querySelector('.s-name, .s-special');
   if(nameEl){
-    let size=26;
+    let size=32;
     nameEl.style.fontSize=size+'px';
     while(nameEl.scrollWidth>available && size>6){ size-=0.5; nameEl.style.fontSize=size+'px'; }
   }
