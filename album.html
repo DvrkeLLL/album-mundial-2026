@@ -145,6 +145,9 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 .sec-title { font-family:'Bebas Neue',sans-serif; font-size:0.95rem; letter-spacing:2px; color:rgba(255,255,255,0.6); margin:1rem 0 0.5rem; padding-bottom:0.35rem; border-bottom:1px solid rgba(255,255,255,0.1); }
 .search-row { display:flex; gap:0.5rem; }
 .search-row input, .search-row textarea { flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:0.6rem 0.8rem; color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; letter-spacing:1px; outline:none; }
+.scale-row { display:flex; align-items:center; gap:0.6rem; margin-top:0.8rem; }
+.scale-row input[type=range] { flex:1; }
+.scale-row span { width:3rem; text-align:right; color:rgba(255,255,255,0.8); font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; }
 .search-row input:focus, .search-row textarea:focus { border-color:#F5A623; }
 .search-row input::placeholder, .search-row textarea::placeholder { color:rgba(255,255,255,0.3); }
 .btn-sm { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:0.6rem 0.9rem; border-radius:8px; cursor:pointer; font-family:'Barlow',sans-serif; font-size:0.85rem; font-weight:600; transition:all 0.2s; }
@@ -291,7 +294,12 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
       <textarea id="sinput" rows="2" placeholder="ej: MEX7  o  MEX7,ARG3  o pega formato externo con saltos de línea" style="resize:vertical;min-height:42px;line-height:1.4"></textarea>
       <button class="btn-sm" onclick="buscar()">Buscar</button>
     </div>
-    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
+    <div class="scale-row">
+      <input id="stickerScale" type="range" min="1" max="100" value="75">
+      <span id="scaleValue">75</span>
+    </div>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">Ajusta la escala 1-100 y revisa el tamaño de nombre, código y badges.</div>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.0rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
     <div id="search-result"></div>
 
     <!-- Repetidas -->
@@ -406,6 +414,7 @@ for(let i=0;i<SPREADS.length;i++){
 
 // ── STATE ──────────────────────────────────────────────────────
 let album={}, spreadIdx=0, saveTimer=null, mobileTab='left';
+let stickerScale=75;
 const token=localStorage.getItem('gh_token');
 const owner=localStorage.getItem('gh_owner');
 const repo =localStorage.getItem('gh_repo');
@@ -419,6 +428,11 @@ window.onload=async()=>{
   document.getElementById('huser').textContent=currentUser;
   try{ const s=await loadJSON(`album_${currentUser}.json`); album=s||{}; }catch(e){album={};}
   buildNavModal(); render(); updateStats();
+  const scaleInput = document.getElementById('stickerScale');
+  if(scaleInput){
+    scaleInput.addEventListener('input', e=>updateStickerScale(e.target.value));
+    updateStickerScale(scaleInput.value);
+  }
 };
 window.addEventListener('resize',()=>render());
 function logout(){
@@ -559,17 +573,25 @@ function makePage(pg,side){
   const pn=document.createElement('div'); pn.className='page-num'; pn.textContent=`— ${pg.n} —`;
   d.appendChild(pn); return d;
 }
+// ── AJUSTE DE ESCALA 1-100 ───────────────────────────────────
+function updateStickerScale(value){
+  stickerScale = Number(value);
+  document.getElementById('scaleValue').textContent = value;
+  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
+}
+
 // ── FIT TEXT: escala s-code y s-name al ancho disponible de la lámina ──
 function fitStickerText(el){
   const available = el.offsetWidth * 0.94;
   if(!available) return;
+  const scale = stickerScale / 75;
 
   // Código — debe ocupar el máximo del ancho disponible
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size=27;
-    codeEl.style.fontSize=size+'px';
-    while(codeEl.scrollWidth > available && size > 9){ size-=0.5; codeEl.style.fontSize=size+'px'; }
+    let size = Math.round(36 * scale);
+    codeEl.style.fontSize = size+'px';
+    while(codeEl.scrollWidth > available && size > 9){ size -= 0.5; codeEl.style.fontSize = size+'px'; }
   }
 
   // Nombre: ajustar cada línea (firstname y lastname) por separado
@@ -577,23 +599,23 @@ function fitStickerText(el){
   const nameEl = el.querySelector('.s-name');
   if(nameEl){
     const spans = nameEl.querySelectorAll('.s-firstname, .s-lastname');
-    let size = 18;
+    let size = Math.round(18 * scale);
     nameEl.style.fontSize = size+'px';
     // Reducir hasta que ambas líneas entren
     let tooWide = true;
     while(tooWide && size > 8){
       tooWide = false;
       spans.forEach(s=>{ if(s.scrollWidth > available) tooWide=true; });
-      if(tooWide){ size-=0.5; nameEl.style.fontSize=size+'px'; }
+      if(tooWide){ size -= 0.5; nameEl.style.fontSize = size+'px'; }
     }
   }
 
   // s-special (Escudo/Foto)
   const spEl = el.querySelector('.s-special');
   if(spEl){
-    let size=18;
-    spEl.style.fontSize=size+'px';
-    while(spEl.scrollWidth > available && size > 8){ size-=0.5; spEl.style.fontSize=size+'px'; }
+    let size = Math.round(18 * scale);
+    spEl.style.fontSize = size+'px';
+    while(spEl.scrollWidth > available && size > 8){ size -= 0.5; spEl.style.fontSize = size+'px'; }
   }
 }
 
