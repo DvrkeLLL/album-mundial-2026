@@ -87,9 +87,9 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 /* Botón − : esquina superior izquierda */
 .s-minus {
   position:absolute; top:8%; left:6%;
-  width:1.9rem; height:1.9rem; min-width:24px; min-height:24px; max-width:26px; max-height:26px;
+  width:1.425rem; height:1.425rem; min-width:18px; min-height:18px; max-width:19.5px; max-height:19.5px;
   border-radius:50%; background:rgba(0,0,0,0.6); color:#fff;
-  font-size:1rem; font-weight:900;
+  font-size:0.75rem; font-weight:900;
   border:1.5px solid rgba(255,255,255,0.35);
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   z-index:20; line-height:1; flex-shrink:0;
@@ -103,9 +103,9 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 /* Contador: esquina superior derecha, mismo tamaño que botón − */
 .s-cnt {
   position:absolute; top:8%; right:6%;
-  width:1.9rem; height:1.9rem; min-width:24px; min-height:24px; max-width:26px; max-height:26px;
+  width:1.425rem; height:1.425rem; min-width:18px; min-height:18px; max-width:19.5px; max-height:19.5px;
   border-radius:50%; background:rgba(0,0,0,0.5); color:#fff;
-  font-size:0.95rem; font-weight:700;
+  font-size:0.72rem; font-weight:700;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
 
@@ -116,14 +116,14 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
   color:rgba(0,0,0,0.6); text-align:center;
   line-height:1.15; width:100%; display:block;
   overflow:hidden; white-space:normal;  /* permite salto de línea */
-  font-size:1.05rem; /* fitStickerText lo ajusta */
+  font-size:0.8rem; /* fitStickerText lo ajusta */
 }
 .s-name .s-firstname { display:block; font-weight:400; }
 .s-name .s-lastname  { display:block; font-weight:800; color:rgba(0,0,0,0.82); }
-.s-special { font-family:'Bebas Neue',sans-serif; font-size:0.98rem; color:rgba(0,0,0,0.65); text-align:center; line-height:1.2; width:100%; display:block; letter-spacing:0.5px; }
+.s-special { font-family:'Bebas Neue',sans-serif; font-size:0.75rem; color:rgba(0,0,0,0.65); text-align:center; line-height:1.2; width:100%; display:block; letter-spacing:0.5px; }
 
 /* Código — tercio inferior, se ajusta al ancho con fitStickerText */
-.s-code { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1rem; color:rgba(0,0,0,0.72); letter-spacing:0.2px; text-align:center; line-height:1; width:100%; display:block; overflow:hidden; white-space:nowrap; }
+.s-code { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.75rem; color:rgba(0,0,0,0.72); letter-spacing:0.2px; text-align:center; line-height:1; width:100%; display:block; overflow:hidden; white-space:nowrap; }
 .s-label { display:contents; }
 
 /* INFO PAGE */
@@ -567,9 +567,9 @@ function fitStickerText(el){
   // Código — debe ocupar el máximo del ancho disponible
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size=36;
+    let size=27;
     codeEl.style.fontSize=size+'px';
-    while(codeEl.scrollWidth > available && size > 12){ size-=0.5; codeEl.style.fontSize=size+'px'; }
+    while(codeEl.scrollWidth > available && size > 9){ size-=0.5; codeEl.style.fontSize=size+'px'; }
   }
 
   // Nombre: ajustar cada línea (firstname y lastname) por separado
@@ -577,11 +577,11 @@ function fitStickerText(el){
   const nameEl = el.querySelector('.s-name');
   if(nameEl){
     const spans = nameEl.querySelectorAll('.s-firstname, .s-lastname');
-    let size = 24;
+    let size = 18;
     nameEl.style.fontSize = size+'px';
     // Reducir hasta que ambas líneas entren
     let tooWide = true;
-    while(tooWide && size > 10){
+    while(tooWide && size > 8){
       tooWide = false;
       spans.forEach(s=>{ if(s.scrollWidth > available) tooWide=true; });
       if(tooWide){ size-=0.5; nameEl.style.fontSize=size+'px'; }
@@ -591,9 +591,9 @@ function fitStickerText(el){
   // s-special (Escudo/Foto)
   const spEl = el.querySelector('.s-special');
   if(spEl){
-    let size=24;
+    let size=18;
     spEl.style.fontSize=size+'px';
-    while(spEl.scrollWidth > available && size > 10){ size-=0.5; spEl.style.fontSize=size+'px'; }
+    while(spEl.scrollWidth > available && size > 8){ size-=0.5; spEl.style.fontSize=size+'px'; }
   }
 }
 
