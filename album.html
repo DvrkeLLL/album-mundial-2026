@@ -67,42 +67,59 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 .grid-fwc { display:flex; gap:8px; justify-content:center; align-items:center; flex:1; padding:0.5rem 0; }
 .grid-fwc .sticker { width:min(18%,70px); flex:none; }
 
-.sticker { container-type:inline-size; aspect-ratio:1/2; border-radius:3px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding-bottom:3px; position:relative; transition:transform 0.12s,box-shadow 0.12s; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; border:1px solid rgba(0,0,0,0.18); min-width:0; overflow:visible; will-change:transform; }
+.sticker { container-type:inline-size; aspect-ratio:1/2; border-radius:3px; cursor:pointer; display:grid; grid-template-rows:1fr 1fr 1fr; align-items:center; position:relative; transition:transform 0.12s,box-shadow 0.12s; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; border:1px solid rgba(0,0,0,0.18); min-width:0; overflow:visible; will-change:transform; }
 .sticker:hover { transform:scale(1.07); box-shadow:0 4px 14px rgba(0,0,0,0.35); z-index:10; }
 .sticker:active { transform:scale(0.96); }
 .sticker.miss { background:#a8a8b0; }
 .sticker.have { background:#2ecc71; }
 .sticker.rep  { background:#f1c40f; }
-/* STICKER label area — texto auto-ajustado al ancho */
-.s-label { display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; padding:0 3% 3px; gap:1px; }
-.s-code {
-  font-family:'Barlow Condensed',sans-serif; font-weight:700;
-  color:rgba(0,0,0,0.72); letter-spacing:0.2px; text-align:center;
-  line-height:1; width:94%; display:block;
-  /* Se escala via JS fitText */
-  font-size: 1rem;
-  overflow:hidden; white-space:nowrap;
+
+/* Tercio superior: botón − y contador, mismo tamaño */
+.s-top { display:flex; align-items:center; justify-content:center; gap:3px; width:100%; padding:0 6%; }
+/* Tercio medio: nombre centrado */
+.s-mid { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; }
+/* Tercio inferior: código */
+.s-bot { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; }
+
+/* Tercio superior: contenedor relativo para posicionar los círculos en esquinas */
+.s-top { position:relative; width:100%; height:100%; }
+
+/* Botón − : esquina superior izquierda */
+.s-minus {
+  position:absolute; top:8%; left:6%;
+  width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
+  border-radius:50%; background:rgba(0,0,0,0.6); color:#fff;
+  font-size:2.4cqw; font-weight:900;
+  border:1.5px solid rgba(255,255,255,0.35);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  z-index:20; line-height:1; flex-shrink:0;
+  transition:background 0.15s; -webkit-tap-highlight-color:transparent;
+  padding-bottom:1px;
 }
-.s-name {
-  font-family:'Barlow Condensed',sans-serif;
-  color:rgba(0,0,0,0.6); text-align:center;
-  line-height:1.1; width:94%; display:block;
-  font-size: 0.85rem;
-  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
-}
-.s-name strong { font-weight:800; color:rgba(0,0,0,0.78); }
-.s-special {
-  font-family:'Bebas Neue',sans-serif;
-  color:rgba(0,0,0,0.65); text-align:center;
-  line-height:1.2; width:94%; display:block;
-  font-size:0.85rem; letter-spacing:0.5px;
-}
-.sticker { container-type:inline-size; }
-.s-cnt { position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.5); color:#fff; font-size:0.5rem; font-weight:700; border-radius:50%; width:13px; height:13px; display:flex; align-items:center; justify-content:center; }
-.s-minus { position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:rgba(0,0,0,0.6); color:#fff; font-size:0.85rem; font-weight:900; border:1.5px solid rgba(255,255,255,0.35); cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:20; line-height:1; transform-origin:top left; transition:background 0.15s; -webkit-tap-highlight-color:transparent; padding-bottom:1px; }
-.sticker:hover .s-minus { transform:scale(calc(1/1.07)); }
+.sticker:hover .s-minus { transform:scale(calc(1/1.07)); transform-origin:top left; }
 .s-minus:hover { background:rgba(200,16,46,0.88) !important; }
 .s-minus:active { opacity:0.7; }
+
+/* Contador: esquina superior derecha, mismo tamaño que botón − */
+.s-cnt {
+  position:absolute; top:8%; right:6%;
+  width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
+  border-radius:50%; background:rgba(0,0,0,0.5); color:#fff;
+  font-size:2.6cqw; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  line-height:1;
+}
+
+/* Nombre — tercio medio, tamaño moderado */
+.s-name { font-family:'Barlow Condensed',sans-serif; font-size:1rem; color:rgba(0,0,0,0.6); text-align:center; line-height:1.1; width:100%; display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.s-name strong { font-weight:800; color:rgba(0,0,0,0.78); }
+.s-special { font-family:'Bebas Neue',sans-serif; font-size:0.85rem; color:rgba(0,0,0,0.65); text-align:center; line-height:1.2; width:100%; display:block; letter-spacing:0.5px; }
+
+/* Código — tercio inferior, un poco más pequeño que el nombre */
+.s-code { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.85rem; color:rgba(0,0,0,0.72); letter-spacing:0.2px; text-align:center; line-height:1; width:100%; display:block; overflow:hidden; white-space:nowrap; }
+
+/* s-label ya no se usa pero lo dejamos vacío por si acaso */
+.s-label { display:contents; }
 
 /* INFO PAGE */
 .info-inner { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.8rem; }
@@ -461,16 +478,18 @@ function refreshSticker(code){
   const el=document.querySelector(`[data-code="${code}"]`); if(!el) return;
   const v=album[code]||0;
   el.className='sticker '+(v===0?'miss':v===1?'have':'rep');
-  let cnt=el.querySelector('.s-cnt');
-  if(v>=2){ if(!cnt){cnt=document.createElement('div');cnt.className='s-cnt';el.appendChild(cnt);} cnt.textContent=v; }
-  else if(cnt) cnt.remove();
-  let minus=el.querySelector('.s-minus');
+  // Limpiar y reconstruir tercio superior
+  const top=el.querySelector('.s-top');
+  if(!top) return;
+  top.innerHTML='';
   if(v>=2){
-    if(!minus){ minus=document.createElement('button'); minus.className='s-minus'; minus.textContent='−'; minus.title='Restar una';
-      minus.addEventListener('click',e=>{e.stopPropagation();minusSticker(code,e);});
-      minus.addEventListener('touchend',e=>{e.stopPropagation();e.preventDefault();minusSticker(code,e);});
-      el.appendChild(minus); }
-  } else if(minus) minus.remove();
+    const minus=document.createElement('button'); minus.className='s-minus'; minus.textContent='−'; minus.title='Restar una';
+    minus.addEventListener('click',    e=>{ e.stopPropagation(); minusSticker(code,e); });
+    minus.addEventListener('touchstart',e=>{ e.stopPropagation(); },{passive:true});
+    minus.addEventListener('touchend', e=>{ e.stopPropagation(); e.preventDefault(); minusSticker(code,e); });
+    const cnt=document.createElement('div'); cnt.className='s-cnt'; cnt.textContent=v;
+    top.appendChild(minus); top.appendChild(cnt);
+  }
 }
 function scheduleSave(){
   const ind=document.getElementById('saving'); ind.classList.add('show');
@@ -537,29 +556,23 @@ function makePage(pg,side){
 }
 // ── FIT TEXT: escala s-code y s-name al ancho disponible de la lámina ──
 function fitStickerText(el){
-  const available = el.offsetWidth * 0.92; // 4% margen a cada lado
+  const available = el.offsetWidth * 0.88;
   if(!available) return;
 
-  // Ajustar s-code
+  // Ajustar código (tercio inferior)
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size = 28; // px máximo inicial
-    codeEl.style.fontSize = size + 'px';
-    while(codeEl.scrollWidth > available && size > 8){
-      size -= 0.5;
-      codeEl.style.fontSize = size + 'px';
-    }
+    let size=38;
+    codeEl.style.fontSize=size+'px';
+    while(codeEl.scrollWidth>available && size>7){ size-=0.5; codeEl.style.fontSize=size+'px'; }
   }
 
-  // Ajustar s-name o s-special
+  // Ajustar nombre o especial (tercio medio)
   const nameEl = el.querySelector('.s-name, .s-special');
   if(nameEl){
-    let size = 22;
-    nameEl.style.fontSize = size + 'px';
-    while(nameEl.scrollWidth > available && size > 6){
-      size -= 0.5;
-      nameEl.style.fontSize = size + 'px';
-    }
+    let size=32;
+    nameEl.style.fontSize=size+'px';
+    while(nameEl.scrollWidth>available && size>6){ size-=0.5; nameEl.style.fontSize=size+'px'; }
   }
 }
 
@@ -575,51 +588,47 @@ function makeSticker(code){
   el.className='sticker '+(v===0?'miss':v===1?'have':'rep');
   el.dataset.code=code; el.title=code;
 
+  // ── Tercio superior: botón − y contador (solo cuando v>=2) ──
+  const top=document.createElement('div'); top.className='s-top';
   if(v>=2){
-    const c=document.createElement('div'); c.className='s-cnt'; c.textContent=v; el.appendChild(c);
     const minus=document.createElement('button'); minus.className='s-minus'; minus.textContent='−'; minus.title='Restar una';
-    minus.addEventListener('click',   e=>{ e.stopPropagation(); minusSticker(code,e); });
-    minus.addEventListener('touchstart', e=>{ e.stopPropagation(); }, {passive:true}); // cancela long press del padre
-    minus.addEventListener('touchend',   e=>{ e.stopPropagation(); e.preventDefault(); minusSticker(code,e); });
-    el.appendChild(minus);
+    minus.addEventListener('click',    e=>{ e.stopPropagation(); minusSticker(code,e); });
+    minus.addEventListener('touchstart',e=>{ e.stopPropagation(); },{passive:true});
+    minus.addEventListener('touchend', e=>{ e.stopPropagation(); e.preventDefault(); minusSticker(code,e); });
+    const cnt=document.createElement('div'); cnt.className='s-cnt'; cnt.textContent=v;
+    top.appendChild(minus); top.appendChild(cnt);
   }
+  el.appendChild(top);
 
-  // Extraer código país y número
-  const m = code.match(/^([A-Z]+)(\d+)$/);
-  const lbl = document.createElement('div');
-  lbl.className='s-label';
-
+  // ── Tercio medio: nombre del jugador o escudo/foto ──
+  const mid=document.createElement('div'); mid.className='s-mid';
+  const m=code.match(/^([A-Z]+)(\d+)$/);
   if(m){
-    const pais=m[1], num=parseInt(m[2]);
-    const isFWC = pais==='FWC';
-    const codeLbl=document.createElement('div');
-    codeLbl.className='s-code'; codeLbl.textContent=code;
-    lbl.appendChild(codeLbl);
-
+    const pais=m[1], num=parseInt(m[2]), isFWC=pais==='FWC';
     if(!isFWC && num===1){
-      const sp=document.createElement('div'); sp.className='s-special';
-      sp.innerHTML=`<b>Escudo</b>`;
-      lbl.appendChild(sp);
+      const sp=document.createElement('div'); sp.className='s-special'; sp.innerHTML='<b>Escudo</b>';
+      mid.appendChild(sp);
     } else if(!isFWC && num===13){
-      const sp=document.createElement('div'); sp.className='s-special';
-      sp.innerHTML=`<b>Foto</b>`;
-      lbl.appendChild(sp);
+      const sp=document.createElement('div'); sp.className='s-special'; sp.innerHTML='<b>Foto</b>';
+      mid.appendChild(sp);
     } else {
       const p=PLAYERS[code];
       if(p){
         const nm=document.createElement('div'); nm.className='s-name';
         nm.innerHTML=(p.n?`${p.n} `:'')+'<strong>'+p.a+'</strong>';
-        lbl.appendChild(nm);
+        mid.appendChild(nm);
       }
     }
-  } else {
-    const codeLbl=document.createElement('div'); codeLbl.className='s-code'; codeLbl.textContent=code;
-    lbl.appendChild(codeLbl);
   }
+  el.appendChild(mid);
 
-  el.appendChild(lbl);
+  // ── Tercio inferior: código ──
+  const bot=document.createElement('div'); bot.className='s-bot';
+  const codeLbl=document.createElement('div'); codeLbl.className='s-code'; codeLbl.textContent=code;
+  bot.appendChild(codeLbl);
+  el.appendChild(bot);
 
-  // Escalar texto al ancho real de la lámina una vez renderizada
+  // Escalar texto al ancho real una vez renderizada
   requestAnimationFrame(()=>fitStickerText(el));
 
   el.addEventListener('click',e=>clickSticker(code,e));
@@ -666,16 +675,13 @@ function renderModal(){
 // ── BUSCAR UNIFICADO — detecta formato propio y externo ────────
 function buscar(){
   const raw = document.getElementById('sinput').value.trim();
-
-  const codesSet = new Set(ALL_CODES);
-  // Orden de aparición en el álbum para ordenar resultados
-  const albumOrder = {};
-  ALL_CODES.forEach((c,i)=>albumOrder[c]=i);
-
-  const raw = document.getElementById('sinput').value.trim();
   const el  = document.getElementById('search-result');
   el.innerHTML = '';
   if(!raw) return;
+
+  const codesSet = new Set(ALL_CODES);
+  const albumOrder = {};
+  ALL_CODES.forEach((c,i)=>albumOrder[c]=i);
 
   // Detectar formato externo: tiene saltos de línea O contiene ":"
   const isExternal = raw.includes('\n') || raw.includes(':');
@@ -770,13 +776,43 @@ function buscar(){
   }
 }
 
-// ── COPIAR REPETIDAS ───────────────────────────────────────────
+// ── COPIAR REPETIDAS — formato resultado.txt ──────────────────
 function copiarRepetidas(){
-  const list=[];
-  for(const c of ALL_CODES){ const v=album[c]||0; for(let i=0;i<v-1;i++) list.push(c); }
-  if(list.length===0) return;
-  const btn=document.querySelector('.sec-title .btn-sm.red');
-  navigator.clipboard.writeText(list.join(', ')).then(()=>{
+  // Agrupar repetidas por país/prefijo en orden de álbum
+  const grupos = {}; // cod -> { num -> cantidad_extra }
+  for(const c of ALL_CODES){
+    const v = album[c]||0;
+    if(v < 2) continue;
+    const m = c.match(/^([A-Z]+)(\d+)$/);
+    if(!m) continue;
+    const [, pais, num] = m;
+    if(!grupos[pais]) grupos[pais] = {};
+    grupos[pais][parseInt(num)] = v - 1; // extras
+  }
+
+  if(Object.keys(grupos).length === 0) return;
+
+  // Ordenar países por orden de aparición en el álbum
+  const paisOrder = {};
+  ALL_CODES.forEach(c => {
+    const m = c.match(/^([A-Z]+)\d+$/);
+    if(m && !(m[1] in paisOrder)) paisOrder[m[1]] = ALL_CODES.indexOf(c);
+  });
+
+  const lineas = Object.keys(grupos)
+    .sort((a,b) => (paisOrder[a]??999) - (paisOrder[b]??999))
+    .map(pais => {
+      const nums = Object.keys(grupos[pais]).map(Number).sort((a,b)=>a-b);
+      const partes = nums.map(n => {
+        const extra = grupos[pais][n];
+        return extra === 1 ? `${n}` : `${n} (×${extra})`;
+      });
+      return `${pais}: ${partes.join(', ')}`;
+    });
+
+  const texto = lineas.join('\n');
+  const btn = document.querySelector('.sec-title .btn-sm.red');
+  navigator.clipboard.writeText(texto).then(()=>{
     if(btn){ const orig=btn.textContent; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent=orig,2000); }
   });
 }
