@@ -75,21 +75,21 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 .sticker.rep  { background:#f1c40f; }
 
 /* Tercio superior: botón − y contador, mismo tamaño */
-.s-top { display:flex; align-items:center; justify-content:center; gap:3px; width:100%; padding:0 4%; }
+.s-top { display:flex; align-items:center; justify-content:center; gap:3px; width:100%; padding:0 6%; }
 /* Tercio medio: nombre centrado */
-.s-mid { display:flex; align-items:center; justify-content:center; width:100%; padding:0 3%; }
+.s-mid { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; }
 /* Tercio inferior: código */
-.s-bot { display:flex; align-items:center; justify-content:center; width:100%; padding:0 3%; }
+.s-bot { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; }
 
-/* Tercio superior: contenedor relativo para los círculos en esquinas */
+/* Tercio superior: contenedor relativo para posicionar los círculos en esquinas */
 .s-top { position:relative; width:100%; height:100%; }
 
 /* Botón − : esquina superior izquierda */
 .s-minus {
   position:absolute; top:8%; left:6%;
-  width:1.425rem; height:1.425rem; min-width:18px; min-height:18px; max-width:19.5px; max-height:19.5px;
+  width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
   border-radius:50%; background:rgba(0,0,0,0.6); color:#fff;
-  font-size:0.75rem; font-weight:900;
+  font-size:2.4cqw; font-weight:900;
   border:1.5px solid rgba(255,255,255,0.35);
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   z-index:20; line-height:1; flex-shrink:0;
@@ -103,27 +103,21 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 /* Contador: esquina superior derecha, mismo tamaño que botón − */
 .s-cnt {
   position:absolute; top:8%; right:6%;
-  width:1.425rem; height:1.425rem; min-width:18px; min-height:18px; max-width:19.5px; max-height:19.5px;
+  width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
   border-radius:50%; background:rgba(0,0,0,0.5); color:#fff;
-  font-size:0.72rem; font-weight:700;
+  font-size:2.2cqw; font-weight:700;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
 
-/* Tercio medio: nombre en dos líneas (nombre arriba, apellido abajo) */
-.s-mid { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; }
-.s-name {
-  font-family:'Barlow Condensed',sans-serif;
-  color:rgba(0,0,0,0.6); text-align:center;
-  line-height:1.15; width:100%; display:block;
-  overflow:hidden; white-space:normal;  /* permite salto de línea */
-  font-size:0.8rem; /* fitStickerText lo ajusta */
-}
-.s-name .s-firstname { display:block; font-weight:400; }
-.s-name .s-lastname  { display:block; font-weight:800; color:rgba(0,0,0,0.82); }
-.s-special { font-family:'Bebas Neue',sans-serif; font-size:0.75rem; color:rgba(0,0,0,0.65); text-align:center; line-height:1.2; width:100%; display:block; letter-spacing:0.5px; }
+/* Nombre — tercio medio, tamaño moderado */
+.s-name { font-family:'Barlow Condensed',sans-serif; font-size:1rem; color:rgba(0,0,0,0.6); text-align:center; line-height:1.1; width:100%; display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.s-name strong { font-weight:800; color:rgba(0,0,0,0.78); }
+.s-special { font-family:'Bebas Neue',sans-serif; font-size:0.85rem; color:rgba(0,0,0,0.65); text-align:center; line-height:1.2; width:100%; display:block; letter-spacing:0.5px; }
 
-/* Código — tercio inferior, se ajusta al ancho con fitStickerText */
-.s-code { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.75rem; color:rgba(0,0,0,0.72); letter-spacing:0.2px; text-align:center; line-height:1; width:100%; display:block; overflow:hidden; white-space:nowrap; }
+/* Código — tercio inferior, un poco más pequeño que el nombre */
+.s-code { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.85rem; color:rgba(0,0,0,0.72); letter-spacing:0.2px; text-align:center; line-height:1; width:100%; display:block; overflow:hidden; white-space:nowrap; }
+
+/* s-label ya no se usa pero lo dejamos vacío por si acaso */
 .s-label { display:contents; }
 
 /* INFO PAGE */
@@ -145,10 +139,6 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 .sec-title { font-family:'Bebas Neue',sans-serif; font-size:0.95rem; letter-spacing:2px; color:rgba(255,255,255,0.6); margin:1rem 0 0.5rem; padding-bottom:0.35rem; border-bottom:1px solid rgba(255,255,255,0.1); }
 .search-row { display:flex; gap:0.5rem; }
 .search-row input, .search-row textarea { flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:0.6rem 0.8rem; color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; letter-spacing:1px; outline:none; }
-.scale-group { display:flex; align-items:center; gap:0.6rem; margin-top:0.6rem; }
-.scale-group label { width:7.2rem; color:rgba(255,255,255,0.85); font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; }
-.scale-group input[type=range] { flex:1; }
-.scale-group span { width:3rem; text-align:right; color:rgba(255,255,255,0.8); font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; }
 .search-row input:focus, .search-row textarea:focus { border-color:#F5A623; }
 .search-row input::placeholder, .search-row textarea::placeholder { color:rgba(255,255,255,0.3); }
 .btn-sm { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:0.6rem 0.9rem; border-radius:8px; cursor:pointer; font-family:'Barlow',sans-serif; font-size:0.85rem; font-weight:600; transition:all 0.2s; }
@@ -295,23 +285,7 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
       <textarea id="sinput" rows="2" placeholder="ej: MEX7  o  MEX7,ARG3  o pega formato externo con saltos de línea" style="resize:vertical;min-height:42px;line-height:1.4"></textarea>
       <button class="btn-sm" onclick="buscar()">Buscar</button>
     </div>
-    <div class="scale-group">
-      <label for="badgeScale">Esquinas</label>
-      <input id="badgeScale" type="range" min="1" max="100" value="64">
-      <span id="badgeValue">64</span>
-    </div>
-    <div class="scale-group">
-      <label for="nameScale">Nombre</label>
-      <input id="nameScale" type="range" min="1" max="100" value="58">
-      <span id="nameValue">58</span>
-    </div>
-    <div class="scale-group">
-      <label for="codeScale">Código</label>
-      <input id="codeScale" type="range" min="1" max="100" value="38">
-      <span id="codeValue">38</span>
-    </div>
-    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">Ajusta cada tertio por separado: esquinas, nombre y código.</div>
-    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.0rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
     <div id="search-result"></div>
 
     <!-- Repetidas -->
@@ -426,8 +400,6 @@ for(let i=0;i<SPREADS.length;i++){
 
 // ── STATE ──────────────────────────────────────────────────────
 let album={}, spreadIdx=0, saveTimer=null, mobileTab='left';
-// Valores por defecto solicitados: esquinas=64, nombre=58, código=38
-let badgeScale=64, nameScale=58, codeScale=38;
 const token=localStorage.getItem('gh_token');
 const owner=localStorage.getItem('gh_owner');
 const repo =localStorage.getItem('gh_repo');
@@ -441,16 +413,6 @@ window.onload=async()=>{
   document.getElementById('huser').textContent=currentUser;
   try{ const s=await loadJSON(`album_${currentUser}.json`); album=s||{}; }catch(e){album={};}
   buildNavModal(); render(); updateStats();
-  const badgeInput = document.getElementById('badgeScale');
-  const nameInput = document.getElementById('nameScale');
-  const codeInput = document.getElementById('codeScale');
-  // Cargar valores guardados si existen, sino usar los defaults iniciales
-  const savedBadge = localStorage.getItem('badgeSlider');
-  const savedName  = localStorage.getItem('nameSlider');
-  const savedCode  = localStorage.getItem('codeSlider');
-  if(badgeInput){ if(savedBadge) badgeInput.value = savedBadge; badgeInput.addEventListener('input', e=>updateBadgeScale(e.target.value)); updateBadgeScale(badgeInput.value); }
-  if(nameInput){ if(savedName) nameInput.value = savedName; nameInput.addEventListener('input', e=>updateNameScale(e.target.value)); updateNameScale(nameInput.value); }
-  if(codeInput){ if(savedCode) codeInput.value = savedCode; codeInput.addEventListener('input', e=>updateCodeScale(e.target.value)); updateCodeScale(codeInput.value); }
 };
 window.addEventListener('resize',()=>render());
 function logout(){
@@ -591,74 +553,25 @@ function makePage(pg,side){
   const pn=document.createElement('div'); pn.className='page-num'; pn.textContent=`— ${pg.n} —`;
   d.appendChild(pn); return d;
 }
-// ── AJUSTE DE ESCALA 1-100 ───────────────────────────────────
-function updateBadgeScale(value){
-  badgeScale = Number(value);
-  document.getElementById('badgeValue').textContent = value;
-  try{ localStorage.setItem('badgeSlider', String(badgeScale)); }catch(e){}
-  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
-}
-function updateNameScale(value){
-  nameScale = Number(value);
-  document.getElementById('nameValue').textContent = value;
-  try{ localStorage.setItem('nameSlider', String(nameScale)); }catch(e){}
-  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
-}
-function updateCodeScale(value){
-  codeScale = Number(value);
-  document.getElementById('codeValue').textContent = value;
-  try{ localStorage.setItem('codeSlider', String(codeScale)); }catch(e){}
-  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
-}
-
 // ── FIT TEXT: escala s-code y s-name al ancho disponible de la lámina ──
 function fitStickerText(el){
-  const available = el.offsetWidth * 0.94;
+  const available = el.offsetWidth * 0.88;
   if(!available) return;
-  const badgeFactor = badgeScale / 75;
-  const nameFactor = nameScale / 75;
-  const codeFactor = codeScale / 75;
 
-  // Ajustar tamaño de círculos en esquinas
-  const badgeSize = Math.round(Math.max(14, Math.min(26, 24 * badgeFactor)));
-  const badgeFont = Math.round(Math.max(9, Math.min(14, 12 * badgeFactor)));
-  el.querySelectorAll('.s-minus, .s-cnt').forEach(badge=>{
-    badge.style.width = badge.style.height = badgeSize+'px';
-    badge.style.minWidth = badge.style.minHeight = badgeSize+'px';
-    badge.style.maxWidth = badge.style.maxHeight = badgeSize+'px';
-    badge.style.fontSize = badgeFont+'px';
-  });
-
-  // Código — debe ocupar el máximo del ancho disponible
+  // Ajustar código (tercio inferior)
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size = Math.round(36 * codeFactor);
-    codeEl.style.fontSize = size+'px';
-    while(codeEl.scrollWidth > available && size > 9){ size -= 0.5; codeEl.style.fontSize = size+'px'; }
+    let size=38;
+    codeEl.style.fontSize=size+'px';
+    while(codeEl.scrollWidth>available && size>7){ size-=0.5; codeEl.style.fontSize=size+'px'; }
   }
 
-  // Nombre: ajustar cada línea (firstname y lastname) por separado
-  // Tomamos el ancho del más largo y escalamos desde ahí
-  const nameEl = el.querySelector('.s-name');
+  // Ajustar nombre o especial (tercio medio)
+  const nameEl = el.querySelector('.s-name, .s-special');
   if(nameEl){
-    const spans = nameEl.querySelectorAll('.s-firstname, .s-lastname');
-    let size = Math.round(18 * nameFactor);
-    nameEl.style.fontSize = size+'px';
-    // Reducir hasta que ambas líneas entren
-    let tooWide = true;
-    while(tooWide && size > 8){
-      tooWide = false;
-      spans.forEach(s=>{ if(s.scrollWidth > available) tooWide=true; });
-      if(tooWide){ size -= 0.5; nameEl.style.fontSize = size+'px'; }
-    }
-  }
-
-  // s-special (Escudo/Foto)
-  const spEl = el.querySelector('.s-special');
-  if(spEl){
-    let size = Math.round(18 * nameFactor);
-    spEl.style.fontSize = size+'px';
-    while(spEl.scrollWidth > available && size > 8){ size -= 0.5; spEl.style.fontSize = size+'px'; }
+    let size=32;
+    nameEl.style.fontSize=size+'px';
+    while(nameEl.scrollWidth>available && size>6){ size-=0.5; nameEl.style.fontSize=size+'px'; }
   }
 }
 
@@ -692,24 +605,16 @@ function makeSticker(code){
   if(m){
     const pais=m[1], num=parseInt(m[2]), isFWC=pais==='FWC';
     if(!isFWC && num===1){
-      const sp=document.createElement('div'); sp.className='s-special';
-      sp.innerHTML=`Escudo <strong>${NOMBRES[pais]||pais}</strong>`;
+      const sp=document.createElement('div'); sp.className='s-special'; sp.innerHTML='<b>Escudo</b>';
       mid.appendChild(sp);
     } else if(!isFWC && num===13){
-      const sp=document.createElement('div'); sp.className='s-special';
-      sp.innerHTML=`Foto <strong>${NOMBRES[pais]||pais}</strong>`;
+      const sp=document.createElement('div'); sp.className='s-special'; sp.innerHTML='<b>Foto</b>';
       mid.appendChild(sp);
     } else {
       const p=PLAYERS[code];
       if(p){
         const nm=document.createElement('div'); nm.className='s-name';
-        // Nombre en línea separada del apellido
-        if(p.n){
-          const fn=document.createElement('span'); fn.className='s-firstname'; fn.textContent=p.n;
-          nm.appendChild(fn);
-        }
-        const ln=document.createElement('span'); ln.className='s-lastname'; ln.textContent=p.a;
-        nm.appendChild(ln);
+        nm.innerHTML=(p.n?`${p.n} `:'')+'<strong>'+p.a+'</strong>';
         mid.appendChild(nm);
       }
     }
