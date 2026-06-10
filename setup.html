@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuración — Álbum Mundial 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Barlow',sans-serif; min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,#0a0a1a 0%,#001a5c 40%,#8b0000 70%,#0a0a1a 100%);
+    padding:2rem;
+  }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background:
+      radial-gradient(circle at 20% 30%,rgba(0,61,165,0.35) 0%,transparent 50%),
+      radial-gradient(circle at 80% 70%,rgba(200,16,46,0.35) 0%,transparent 50%);
+    pointer-events:none;
+  }
+  .card {
+    position:relative; z-index:1;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    border-radius:20px; padding:2.5rem;
+    width:100%; max-width:420px; text-align:center; color:#fff;
+  }
+  .icon { font-size:2.8rem; margin-bottom:1rem; }
+  h1 { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:3px; color:#F5A623; margin-bottom:0.4rem; }
+  p.sub { color:rgba(255,255,255,0.55); font-size:0.88rem; margin-bottom:2rem; line-height:1.6; }
+
+  .token-wrap { position:relative; margin-bottom:1rem; }
+  .token-prefix {
+    position:absolute; left:1rem; top:50%; transform:translateY(-50%);
+    font-family:'Barlow Condensed',sans-serif; font-size:0.95rem;
+    color:rgba(255,255,255,0.45); letter-spacing:1px; pointer-events:none;
+    user-select:none;
+  }
+  .token-input {
+    width:100%;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:10px;
+    padding:0.8rem 1rem 0.8rem 3.2rem; /* espacio para el prefijo */
+    color:#fff; font-family:'Barlow Condensed',sans-serif;
+    font-size:0.95rem; letter-spacing:1px;
+    outline:none;
+  }
+  .token-input:focus { border-color:#F5A623; }
+  .token-input::placeholder { color:rgba(255,255,255,0.25); letter-spacing:0.5px; }
+
+  .err { color:#ff6b6b; font-size:0.82rem; margin-bottom:0.6rem; min-height:1.2em; }
+  .btn {
+    width:100%; margin-top:0.3rem;
+    background:linear-gradient(135deg,#C8102E,#8b0000);
+    border:none; border-radius:10px; padding:0.9rem;
+    color:#fff; font-family:'Bebas Neue',sans-serif;
+    font-size:1.1rem; letter-spacing:2px; cursor:pointer; transition:all 0.2s;
+    touch-action:manipulation;
+  }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(200,16,46,0.4); }
+  .note { font-size:0.75rem; color:rgba(255,255,255,0.3); margin-top:1.2rem; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">🔑</div>
+  <h1>ACCESO AL ÁLBUM</h1>
+  <p class="sub">Ingresa tu token de acceso para sincronizar el álbum entre dispositivos. Solo se hace una vez por dispositivo.</p>
+
+  <div class="token-wrap">
+    <span class="token-prefix">ghp_</span>
+    <input class="token-input" type="password" id="token-suffix"
+      placeholder="tu token aquí..."
+      autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+  </div>
+
+  <div class="err" id="err"></div>
+  <button class="btn" onclick="guardar()">ENTRAR →</button>
+  <p class="note">El token se guarda solo en este navegador y nunca se sube a internet.</p>
+</div>
+
+<script>
+  // Config hardcodeada — no hace falta que el usuario la ingrese
+  const GH_OWNER = 'DvrkeLLL';
+  const GH_REPO  = 'album-mundial-2026';
+
+  window.onload = () => {
+    if (localStorage.getItem('gh_token') && localStorage.getItem('gh_owner')) {
+      window.location.href = 'login.html';
+    }
+  };
+
+  function guardar() {
+    const suffix = document.getElementById('token-suffix').value.trim();
+    const err    = document.getElementById('err');
+    err.textContent = '';
+
+    if (!suffix) { err.textContent = 'Pega tu token (la parte después de ghp_)'; return; }
+    if (suffix.startsWith('ghp_')) {
+      err.textContent = 'Solo pega la parte después de "ghp_", sin incluirlo'; return;
+    }
+
+    const fullToken = 'ghp_' + suffix;
+
+    localStorage.setItem('gh_token', fullToken);
+    localStorage.setItem('gh_owner', GH_OWNER);
+    localStorage.setItem('gh_repo',  GH_REPO);
+    window.location.href = 'login.html';
+  }
+
+  // Permitir Enter para confirmar
+  document.addEventListener('keydown', e => { if(e.key === 'Enter') guardar(); });
+</script>
+</body>
+</html>
