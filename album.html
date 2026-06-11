@@ -592,62 +592,68 @@ function makePage(pg,side){
 }
 
 // ── FIT TEXT ──────────────────────────────────────────────────
-function fitStickerText(el){
+// Cuando el panel está activo, aplica directo sin bucle.
+// El bucle solo corre en render normal (sin panel).
+function fitStickerText(el, forceCode, forceName){
   const available = el.offsetWidth * 0.88;
   if(!available) return;
-  const startCode = parseInt(document.getElementById('sz-code')?.value) || 38;
-  const startName = parseInt(document.getElementById('sz-name')?.value) || 32;
 
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size=startCode;
-    codeEl.style.fontSize=size+'px';
-    while(codeEl.scrollWidth>available && size>7){ size-=0.5; codeEl.style.fontSize=size+'px'; }
+    if(forceCode !== undefined){
+      // Panel activo: aplica el valor directo, sin bucle
+      codeEl.style.fontSize = forceCode + 'px';
+    } else {
+      let size = 38;
+      codeEl.style.fontSize = size + 'px';
+      while(codeEl.scrollWidth > available && size > 7){ size -= 0.5; codeEl.style.fontSize = size + 'px'; }
+    }
   }
+
   const nameEl = el.querySelector('.s-name, .s-special');
   if(nameEl){
-    let size=startName;
-    nameEl.style.fontSize=size+'px';
-    while(nameEl.scrollWidth>available && size>6){ size-=0.5; nameEl.style.fontSize=size+'px'; }
+    if(forceName !== undefined){
+      nameEl.style.fontSize = forceName + 'px';
+    } else {
+      let size = 32;
+      nameEl.style.fontSize = size + 'px';
+      while(nameEl.scrollWidth > available && size > 6){ size -= 0.5; nameEl.style.fontSize = size + 'px'; }
+    }
   }
 }
 
 window.addEventListener('resize', ()=>{
-  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
+  document.querySelectorAll('.sticker').forEach(el => fitStickerText(el));
 });
 
-// ── PANEL DE TAMAÑOS — aplica en tiempo real ──────────────────
+// ── PANEL DE TAMAÑOS — aplica con debounce para no congelarse ─
+let sizeDebounce = null;
 function applySize(){
-  const circlesPx = parseInt(document.getElementById('sz-circles').value) || 20;
-  applyCircleSize(circlesPx);
-  document.querySelectorAll('.sticker').forEach(el=>fitStickerText(el));
+  clearTimeout(sizeDebounce);
+  sizeDebounce = setTimeout(()=>{
+    const circlesPx = parseInt(document.getElementById('sz-circles').value) || 20;
+    const namePx    = parseInt(document.getElementById('sz-name').value)    || 32;
+    const codePx    = parseInt(document.getElementById('sz-code').value)    || 38;
+    applyCircleSize(circlesPx);
+    document.querySelectorAll('.sticker').forEach(el => fitStickerText(el, codePx, namePx));
+  }, 300); // espera 300ms después del último cambio antes de aplicar
 }
 
 function applyCircleSize(px){
-  if(px===undefined) px = parseInt(document.getElementById('sz-circles').value) || 20;
-  const style = document.getElementById('dynamic-sizes') || (() => {
-    const s = document.createElement('style');
-    s.id = 'dynamic-sizes';
-    document.head.appendChild(s);
-    return s;
-  })();
+  if(px === undefined) px = parseInt(document.getElementById('sz-circles').value) || 20;
+  let style = document.getElementById('dynamic-sizes');
+  if(!style){ style = document.createElement('style'); style.id = 'dynamic-sizes'; document.head.appendChild(style); }
   style.textContent = `
     .s-minus {
-      width:  ${px}px !important;
-      height: ${px}px !important;
-      max-width:  ${px}px !important;
-      max-height: ${px}px !important;
-      min-width:  ${px}px !important;
-      min-height: ${px}px !important;
+      width:  ${px}px !important; height: ${px}px !important;
+      max-width: ${px}px !important; max-height: ${px}px !important;
+      min-width: ${px}px !important; min-height: ${px}px !important;
       font-size: ${Math.round(px * 0.6)}px !important;
     }
     .s-cnt {
-      width:  ${px}px !important;
-      height: ${px}px !important;
-      max-width:  ${px}px !important;
-      max-height: ${px}px !important;
-      min-width:  ${px}px !important;
-      min-height: ${px}px !important;
+      width:  ${px}px !important; height: ${px}px !important;
+      max-width: ${px}px !important; max-height: ${px}px !important;
+      min-width: ${px}px !important; min-height: ${px}px !important;
       font-size: ${Math.round(px * 0.65)}px !important;
     }
   `;
