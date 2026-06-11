@@ -592,34 +592,16 @@ function makePage(pg,side){
 }
 
 // ── FIT TEXT ──────────────────────────────────────────────────
-// Cuando el panel está activo, aplica directo sin bucle.
-// El bucle solo corre en render normal (sin panel).
-function fitStickerText(el, forceCode, forceName){
-  const available = el.offsetWidth * 0.88;
-  if(!available) return;
+// Siempre lee los valores del panel; aplica directo sin bucle.
+function fitStickerText(el){
+  const codePx = parseInt(document.getElementById('sz-code').value) || 38;
+  const namePx = parseInt(document.getElementById('sz-name').value) || 32;
 
   const codeEl = el.querySelector('.s-code');
-  if(codeEl){
-    if(forceCode !== undefined){
-      // Panel activo: aplica el valor directo, sin bucle
-      codeEl.style.fontSize = forceCode + 'px';
-    } else {
-      let size = 38;
-      codeEl.style.fontSize = size + 'px';
-      while(codeEl.scrollWidth > available && size > 7){ size -= 0.5; codeEl.style.fontSize = size + 'px'; }
-    }
-  }
+  if(codeEl) codeEl.style.fontSize = codePx + 'px';
 
   const nameEl = el.querySelector('.s-name, .s-special');
-  if(nameEl){
-    if(forceName !== undefined){
-      nameEl.style.fontSize = forceName + 'px';
-    } else {
-      let size = 32;
-      nameEl.style.fontSize = size + 'px';
-      while(nameEl.scrollWidth > available && size > 6){ size -= 0.5; nameEl.style.fontSize = size + 'px'; }
-    }
-  }
+  if(nameEl) nameEl.style.fontSize = namePx + 'px';
 }
 
 window.addEventListener('resize', ()=>{
@@ -632,11 +614,9 @@ function applySize(){
   clearTimeout(sizeDebounce);
   sizeDebounce = setTimeout(()=>{
     const circlesPx = parseInt(document.getElementById('sz-circles').value) || 20;
-    const namePx    = parseInt(document.getElementById('sz-name').value)    || 32;
-    const codePx    = parseInt(document.getElementById('sz-code').value)    || 38;
     applyCircleSize(circlesPx);
-    document.querySelectorAll('.sticker').forEach(el => fitStickerText(el, codePx, namePx));
-  }, 300); // espera 300ms después del último cambio antes de aplicar
+    document.querySelectorAll('.sticker').forEach(el => fitStickerText(el));
+  }, 300);
 }
 
 function applyCircleSize(px){
