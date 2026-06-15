@@ -9,37 +9,15 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-height:100vh; overflow-x:hidden; }
 .bg { position:fixed; inset:0; z-index:0; background:#0d122d; overflow:hidden; }
-.bg::before {
-  content:'';
-  position:absolute;
-  width:75vw;
-  height:75vw;
-  top:-20vw;
-  left:-18vw;
-  background:#6d00d4;
-  border-radius:48%;
-  transform:rotate(-16deg);
-}
-.bg::after {
-  content:'';
-  position:absolute;
-  width:110vw;
-  height:95vh;
-  right:-18vw;
-  bottom:-14vh;
-  background:#00923f;
-  clip-path:polygon(0 0,100% 0,100% 44%,68% 42%,52% 96%,0 100%);
-}
-.body-shape {
-  content:'';
-  position:absolute;
-  width:60vw;
-  height:52vh;
-  top:18vh;
-  right:-10vw;
-  background:#d11813;
-  clip-path:polygon(0 0,100% 0,100% 62%,60% 58%,58% 100%,0 100%);
-}
+.bg-shape { position:absolute; z-index:0; pointer-events:none; }
+.bg-shape.shape1 { top:5vh; left:-4vw; width:4vw; height:40vh; background:#003DA5; transform:skewX(-12deg); border-radius:24px; }
+.bg-shape.shape2 { top:12vh; right:-3vw; width:3.5vw; height:34vh; background:#C8102E; transform:skewX(12deg); border-radius:24px; }
+.bg-shape.shape3 { top:18vh; left:12vw; width:2.8vw; height:44vh; background:#FFCC00; border-radius:999px; }
+.bg-shape.shape4 { top:10vh; right:18vw; width:4.5vw; height:38vh; background:#00923f; transform:skewY(-10deg); border-radius:20px; }
+.bg-shape.shape5 { top:30vh; left:32vw; width:18vw; height:7vh; background:#6d00d4; border-radius:0 24px 0 0; }
+.bg-shape.shape6 { top:50vh; left:6vw; width:16vw; height:6.5vh; background:#FFCC00; transform:skewX(-10deg); border-radius:24px; }
+.bg-shape.shape7 { bottom:18vh; right:16vw; width:10vw; height:30vh; background:#003DA5; clip-path:polygon(0 0,100% 10%,100% 100%,0 100%); border-radius:24px; }
+.bg-shape.shape8 { bottom:12vh; left:22vw; width:24vw; height:6.5vh; background:#C8102E; border-radius:32px 0 0 32px; }
 
 /* HEADER */
 .header { position:sticky; top:0; z-index:100; background:#111b34; border-bottom:1px solid #233358; padding:0.6rem 1rem; display:flex; align-items:center; gap:0.8rem; }
@@ -272,6 +250,14 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 </head>
 <body>
 <div class="bg"></div>
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+<div class="bg-shape shape3"></div>
+<div class="bg-shape shape4"></div>
+<div class="bg-shape shape5"></div>
+<div class="bg-shape shape6"></div>
+<div class="bg-shape shape7"></div>
+<div class="bg-shape shape8"></div>
 
 <div class="header">
   <div class="header-title">⚽ MUNDIAL 2026</div>
