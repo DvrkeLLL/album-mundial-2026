@@ -237,6 +237,19 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
   .header-stats { display:none; }
   .header-title { font-size:1rem; }
 }
+/* ── MODAL LLENAR ÁLBUM ── */
+.fill-modal { background:#0f1a12; border:1px solid rgba(46,204,113,0.3); border-radius:16px; width:100%; max-width:340px; padding:1.6rem; text-align:center; }
+.fill-modal h3 { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:2px; color:#2ecc71; margin-bottom:0.4rem; }
+.fill-modal p { font-size:0.82rem; color:rgba(255,255,255,0.5); margin-bottom:1.4rem; line-height:1.5; }
+.fill-modal-btns { display:flex; gap:0.7rem; }
+.btn-fill-cancel { flex:1; padding:0.7rem; border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:1px; cursor:pointer; border:none; background:rgba(200,16,46,0.25); color:#ff6b6b; border:1px solid rgba(200,16,46,0.4); transition:all 0.2s; }
+.btn-fill-cancel:hover { background:rgba(200,16,46,0.45); }
+/* Botón hold */
+.btn-fill-hold { flex:1.4; position:relative; padding:0.7rem; border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:0.95rem; letter-spacing:1px; cursor:pointer; border:none; background:rgba(46,204,113,0.15); color:#2ecc71; border:1px solid rgba(46,204,113,0.4); overflow:hidden; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; transition:color 0.2s; }
+.btn-fill-hold-progress { position:absolute; inset:0; background:rgba(46,204,113,0.35); transform:scaleX(0); transform-origin:left; transition:none; border-radius:10px; pointer-events:none; }
+.btn-fill-hold.filling { color:#fff; }
+.btn-fill-hold.done { background:rgba(46,204,113,0.7); color:#fff; }
+
 .hidden { display:none !important; }
 </style>
 </head>
@@ -300,6 +313,27 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
     <div class="sec-title">Comparar con otros usuarios</div>
     <div id="compare-users-row" class="compare-user-select"><div class="compare-loading">Cargando usuarios...</div></div>
     <div class="compare-block" id="compare-block"></div>
+
+    <!-- Llenar álbum completo -->
+    <div class="sec-title">Peligro</div>
+    <button class="btn-sm green" style="width:100%;padding:0.65rem;font-size:0.88rem" onclick="openFillModal()">✅ Llenar álbum completo</button>
+  </div>
+</div>
+
+<!-- ── MODAL LLENAR ÁLBUM ── -->
+<div class="overlay hidden" id="overlay-fill">
+  <div class="fill-modal">
+    <h3>✅ Llenar álbum</h3>
+    <p>Esto marcará <strong>todas las láminas</strong> como obtenidas (valor 1). Las que ya tengas repetidas no se tocan.<br><br>Mantén presionado el botón verde 5 segundos para confirmar.</p>
+    <div class="fill-modal-btns">
+      <button class="btn-fill-cancel" onclick="closeFillModal()">✕ Cancelar</button>
+      <button class="btn-fill-hold" id="btn-fill-hold"
+        onmousedown="startFillHold()" onmouseup="cancelFillHold()" onmouseleave="cancelFillHold()"
+        ontouchstart="startFillHold(event)" ontouchend="cancelFillHold()" ontouchcancel="cancelFillHold()">
+        <div class="btn-fill-hold-progress" id="fill-hold-progress"></div>
+        <span id="fill-hold-label">Mantener 5s</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -986,6 +1020,68 @@ function copyList(arr, btn){
   lpGenerate();
   window.addEventListener('resize',lpGenerate);
 })();
+
+// ── LLENAR ÁLBUM ───────────────────────────────────────────────
+let fillHoldTimer=null, fillHoldRAF=null, fillHoldStart=null;
+const FILL_HOLD_MS=5000;
+
+function openFillModal(){
+  closeModal();
+  resetFillHoldUI();
+  document.getElementById('overlay-fill').classList.remove('hidden');
+}
+function closeFillModal(){
+  cancelFillHold();
+  document.getElementById('overlay-fill').classList.add('hidden');
+}
+document.getElementById('overlay-fill').addEventListener('click',e=>{
+  if(e.target===e.currentTarget) closeFillModal();
+});
+
+function resetFillHoldUI(){
+  const btn=document.getElementById('btn-fill-hold');
+  const bar=document.getElementById('fill-hold-progress');
+  const lbl=document.getElementById('fill-hold-label');
+  btn.classList.remove('filling','done');
+  bar.style.transition='none';
+  bar.style.transform='scaleX(0)';
+  lbl.textContent='Mantener 5s';
+}
+function startFillHold(e){ if(e) e.preventDefault();
+  const btn=document.getElementById('btn-fill-hold');
+  const bar=document.getElementById('fill-hold-progress');
+  const lbl=document.getElementById('fill-hold-label');
+  btn.classList.add('filling');
+  fillHoldStart=performance.now();
+  // Animar la barra con rAF para precisión
+  function tick(now){
+    const elapsed=now-fillHoldStart;
+    const pct=Math.min(elapsed/FILL_HOLD_MS,1);
+    bar.style.transform=`scaleX(${pct})`;
+    const rem=Math.ceil((FILL_HOLD_MS-elapsed)/1000);
+    lbl.textContent=pct<1?`Mantener ${rem}s…`:'✓ Listo';
+    if(pct<1){ fillHoldRAF=requestAnimationFrame(tick); }
+    else{ btn.classList.add('done'); fillAlbum(); }
+  }
+  fillHoldRAF=requestAnimationFrame(tick);
+}
+function cancelFillHold(){
+  if(fillHoldRAF){ cancelAnimationFrame(fillHoldRAF); fillHoldRAF=null; }
+  clearTimeout(fillHoldTimer);
+  const btn=document.getElementById('btn-fill-hold');
+  if(btn&&!btn.classList.contains('done')) resetFillHoldUI();
+}
+function fillAlbum(){
+  for(const c of ALL_CODES){ if(!(album[c]>=1)) album[c]=1; }
+  updateStats();
+  // Refrescar visualmente los stickers visibles
+  document.querySelectorAll('.sticker[data-code]').forEach(el=>{
+    const code=el.dataset.code; const v=album[code]||0;
+    el.className='sticker '+(v===0?'miss':v===1?'have':'rep');
+  });
+  scheduleSave();
+  setTimeout(()=>{ closeFillModal(); },700);
+}
 
 // ── MODAL NAVEGACIÓN RÁPIDA ────────────────────────────────────
 function buildNavModal(){
