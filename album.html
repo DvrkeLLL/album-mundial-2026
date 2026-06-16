@@ -6,6 +6,11 @@
 <title>Álbum Mundial 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+:root {
+  --top-size-scale: 1;
+  --mid-size-scale: 1;
+  --bot-size-scale: 1;
+}
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:100vh; overflow-x:hidden; }
 .bg { position:fixed; inset:0; z-index:0; }
@@ -89,7 +94,7 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
   position:absolute; top:8%; left:6%;
   width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
   border-radius:50%; background:rgba(0,0,0,0.6); color:#fff;
-  font-size:2.4cqw; font-weight:900;
+  font-size:calc(0.78rem * var(--top-size-scale)); font-weight:900;
   border:1.5px solid rgba(255,255,255,0.35);
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   z-index:20; line-height:1; flex-shrink:0;
@@ -105,18 +110,52 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
   position:absolute; top:8%; right:6%;
   width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
   border-radius:50%; background:rgba(0,0,0,0.5); color:#fff;
-  font-size:2.6cqw; font-weight:700;
+  font-size:calc(0.78rem * var(--top-size-scale)); font-weight:700;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
   line-height:1;
 }
 
 /* Nombre — tercio medio, tamaño moderado */
-.s-name { font-family:'Barlow Condensed',sans-serif; font-size:1rem; color:rgba(0,0,0,0.6); text-align:center; line-height:1.1; width:100%; display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.s-name {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:calc(1rem * var(--mid-size-scale));
+  color:rgba(0,0,0,0.6);
+  text-align:center;
+  line-height:1.05;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0.1em;
+}
+.s-name .s-name-line { display:block; }
 .s-name strong { font-weight:800; color:rgba(0,0,0,0.78); }
-.s-special { font-family:'Bebas Neue',sans-serif; font-size:0.85rem; color:rgba(0,0,0,0.65); text-align:center; line-height:1.2; width:100%; display:block; letter-spacing:0.5px; }
+.s-special {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:calc(0.85rem * var(--mid-size-scale));
+  color:rgba(0,0,0,0.65);
+  text-align:center;
+  line-height:1.2;
+  width:100%;
+  display:block;
+  letter-spacing:0.5px;
+}
 
 /* Código — tercio inferior, un poco más pequeño que el nombre */
-.s-code { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.85rem; color:rgba(0,0,0,0.72); letter-spacing:0.2px; text-align:center; line-height:1; width:100%; display:block; overflow:hidden; white-space:nowrap; }
+.s-code {
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;
+  font-size:calc(0.85rem * var(--bot-size-scale));
+  color:rgba(0,0,0,0.72);
+  letter-spacing:0.2px;
+  text-align:center;
+  line-height:1;
+  width:100%;
+  display:block;
+  overflow:hidden;
+  white-space:nowrap;
+}
 
 /* s-label ya no se usa pero lo dejamos vacío por si acaso */
 .s-label { display:contents; }
@@ -301,6 +340,28 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
     </div>
     <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
     <div id="search-result"></div>
+
+    <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Tamaño temporal</span>
+      <button class="btn-sm" onclick="resetTextSizeControls()" style="padding:0.3rem 0.7rem;font-size:0.78rem">Restablecer</button>
+    </div>
+    <div style="display:grid;gap:0.45rem">
+      <label style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;font-size:0.78rem;color:rgba(255,255,255,0.65)">
+        <span>Superior</span>
+        <span id="top-size-label">1.00×</span>
+      </label>
+      <input id="top-size-range" type="range" min="0.7" max="1.6" step="0.05" value="1" oninput="setTextSizeScale('top', this.value)">
+      <label style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;font-size:0.78rem;color:rgba(255,255,255,0.65)">
+        <span>Medio</span>
+        <span id="mid-size-label">1.00×</span>
+      </label>
+      <input id="mid-size-range" type="range" min="0.7" max="1.6" step="0.05" value="1" oninput="setTextSizeScale('mid', this.value)">
+      <label style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;font-size:0.78rem;color:rgba(255,255,255,0.65)">
+        <span>Inferior</span>
+        <span id="bot-size-label">1.00×</span>
+      </label>
+      <input id="bot-size-range" type="range" min="0.7" max="1.6" step="0.05" value="1" oninput="setTextSizeScale('bot', this.value)">
+    </div>
 
     <!-- Repetidas -->
     <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between">
@@ -589,6 +650,10 @@ function makePage(pg,side){
   d.appendChild(pn); return d;
 }
 // ── FIT TEXT: escala s-code y s-name al ancho disponible de la lámina ──
+function getTextScale(name){
+  const val = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(`--${name}-size-scale`));
+  return Number.isFinite(val) ? val : 1;
+}
 function fitStickerText(el){
   const available = el.offsetWidth * 0.88;
   if(!available) return;
@@ -596,18 +661,38 @@ function fitStickerText(el){
   // Ajustar código (tercio inferior)
   const codeEl = el.querySelector('.s-code');
   if(codeEl){
-    let size=38;
-    codeEl.style.fontSize=size+'px';
-    while(codeEl.scrollWidth>available && size>7){ size-=0.5; codeEl.style.fontSize=size+'px'; }
+    const base = 18 * getTextScale('bot');
+    let size = base;
+    codeEl.style.fontSize = size + 'px';
+    while(codeEl.scrollWidth > available && size > 7){ size -= 0.5; codeEl.style.fontSize = size + 'px'; }
   }
 
   // Ajustar nombre o especial (tercio medio)
   const nameEl = el.querySelector('.s-name, .s-special');
   if(nameEl){
-    let size=32;
-    nameEl.style.fontSize=size+'px';
-    while(nameEl.scrollWidth>available && size>6){ size-=0.5; nameEl.style.fontSize=size+'px'; }
+    const base = 18 * getTextScale('mid');
+    let size = base;
+    nameEl.style.fontSize = size + 'px';
+    while(nameEl.scrollWidth > available && size > 6){ size -= 0.5; nameEl.style.fontSize = size + 'px'; }
   }
+}
+function setTextSizeScale(kind, value){
+  const num = Math.max(0.7, Math.min(1.6, parseFloat(value) || 1));
+  document.documentElement.style.setProperty(`--${kind}-size-scale`, String(num));
+  document.getElementById(`${kind === 'top' ? 'top' : kind === 'mid' ? 'mid' : 'bot'}-size-label`).textContent = `${num.toFixed(2)}×`;
+  document.querySelectorAll('.sticker').forEach(el => fitStickerText(el));
+}
+function resetTextSizeControls(){
+  document.documentElement.style.setProperty('--top-size-scale', '1');
+  document.documentElement.style.setProperty('--mid-size-scale', '1');
+  document.documentElement.style.setProperty('--bot-size-scale', '1');
+  document.getElementById('top-size-range').value = '1';
+  document.getElementById('mid-size-range').value = '1';
+  document.getElementById('bot-size-range').value = '1';
+  document.getElementById('top-size-label').textContent = '1.00×';
+  document.getElementById('mid-size-label').textContent = '1.00×';
+  document.getElementById('bot-size-label').textContent = '1.00×';
+  document.querySelectorAll('.sticker').forEach(el => fitStickerText(el));
 }
 
 // También re-ajustar al cambiar tamaño de ventana
@@ -649,7 +734,8 @@ function makeSticker(code){
       const p=PLAYERS[code];
       if(p){
         const nm=document.createElement('div'); nm.className='s-name';
-        nm.innerHTML=(p.n?`${p.n} `:'')+'<strong>'+p.a+'</strong>';
+        nm.innerHTML=(p.n?`<span class="s-name-line">${p.n}</span>`:'')+
+          (p.a?`<span class="s-name-line"><strong>${p.a}</strong></span>`:'');
         mid.appendChild(nm);
       }
     }
