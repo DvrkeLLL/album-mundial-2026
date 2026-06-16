@@ -921,7 +921,7 @@ function copyList(arr, btn){
 // ── FONDO LOW-POLY ─────────────────────────────────────────────
 (function(){
   const LP_COLORS=["#37bc64","#2d5baa","#bdd42c","#f1e56c","#f81a10","#9a0715","#fa6506","#b4cce0","#f7ebd4","#6e86bb","#056e5a","#119c88","#c2f2e4","#df5456","#1098db","#6dad74","#1a7846","#a4a3d3","#5c54a1","#7d8a49","#d1d1e1","#c4ce9e","#9c90c5","#082c98"];
-  const LP_COLS=6, LP_ROWS=4, LP_JITTER=120;
+  const LP_CELL=130, LP_JITTER_RATIO=0.38;
   function lpColor(){ return LP_COLORS[Math.floor(Math.random()*LP_COLORS.length)]; }
   function lpClamp(v,mn,mx){ return Math.max(mn,Math.min(mx,v)); }
   function lpGenerate(){
@@ -930,7 +930,9 @@ function copyList(arr, btn){
     const W=window.innerWidth, H=window.innerHeight;
     svg.innerHTML='';
     svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+    const LP_COLS=Math.round(W/LP_CELL), LP_ROWS=Math.round(H/LP_CELL);
     const cw=W/LP_COLS, ch=H/LP_ROWS;
+    const jx=cw*LP_JITTER_RATIO, jy=ch*LP_JITTER_RATIO;
     const pts=[];
     for(let r=0;r<=LP_ROWS;r++){
       pts[r]=[];
@@ -938,8 +940,8 @@ function copyList(arr, btn){
         let x=c*cw, y=r*ch;
         const border=r===0||r===LP_ROWS||c===0||c===LP_COLS;
         if(!border){
-          x+=(Math.random()*2-1)*LP_JITTER;
-          y+=(Math.random()*2-1)*LP_JITTER;
+          x+=(Math.random()*2-1)*jx;
+          y+=(Math.random()*2-1)*jy;
           x=lpClamp(x,c*cw-cw*0.45,c*cw+cw*0.45);
           y=lpClamp(y,r*ch-ch*0.45,r*ch+ch*0.45);
         }
@@ -947,7 +949,7 @@ function copyList(arr, btn){
       }
     }
     for(let r=0;r<LP_ROWS;r++){
-      for(let c=0;c<LP_COLS;c++){
+      for(let c=0;c<LP_COLS;c++){ // eslint-disable-line no-shadow
         const p1=pts[r][c],p2=pts[r][c+1],p3=pts[r+1][c],p4=pts[r+1][c+1];
         const flip=(r+c)%2===0;
         function tri(a,b,d){
