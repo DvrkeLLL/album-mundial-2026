@@ -7,9 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-height:100vh; overflow-x:hidden; }
-.bg { position:fixed; inset:0; z-index:0; background:linear-gradient(135deg,#0a0a1a 0%,#001a5c 40%,#8b0000 70%,#0a0a1a 100%); }
-.bg::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 15% 25%,rgba(0,61,165,0.4) 0%,transparent 50%), radial-gradient(circle at 85% 75%,rgba(200,16,46,0.4) 0%,transparent 50%); }
+body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:100vh; overflow-x:hidden; }
+.bg { position:fixed; inset:0; z-index:0; }
+.bg svg { display:block; width:100%; height:100%; }
 
 /* HEADER */
 .header { position:sticky; top:0; z-index:100; background:rgba(10,10,26,0.92); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.1); padding:0.6rem 1rem; display:flex; align-items:center; gap:0.8rem; }
@@ -241,7 +241,7 @@ body { font-family:'Barlow',sans-serif; background:#0a0a1a; color:#fff; min-heig
 </style>
 </head>
 <body>
-<div class="bg"></div>
+<div class="bg"><svg id="lp-background"></svg></div>
 
 <div class="header">
   <div class="header-title">⚽ MUNDIAL 2026</div>
@@ -917,6 +917,52 @@ function copyList(arr, btn){
     setTimeout(()=>btn.textContent=orig, 2000);
   });
 }
+
+// ── FONDO LOW-POLY ─────────────────────────────────────────────
+(function(){
+  const LP_COLORS=["#37bc64","#2d5baa","#bdd42c","#f1e56c","#f81a10","#9a0715","#fa6506","#b4cce0","#f7ebd4","#6e86bb","#056e5a","#119c88","#c2f2e4","#df5456","#1098db","#6dad74","#1a7846","#a4a3d3","#5c54a1","#7d8a49","#d1d1e1","#c4ce9e","#9c90c5","#082c98"];
+  const LP_COLS=6, LP_ROWS=4, LP_JITTER=120;
+  function lpColor(){ return LP_COLORS[Math.floor(Math.random()*LP_COLORS.length)]; }
+  function lpClamp(v,mn,mx){ return Math.max(mn,Math.min(mx,v)); }
+  function lpGenerate(){
+    const svg=document.getElementById('lp-background');
+    if(!svg) return;
+    const W=window.innerWidth, H=window.innerHeight;
+    svg.innerHTML='';
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+    const cw=W/LP_COLS, ch=H/LP_ROWS;
+    const pts=[];
+    for(let r=0;r<=LP_ROWS;r++){
+      pts[r]=[];
+      for(let c=0;c<=LP_COLS;c++){
+        let x=c*cw, y=r*ch;
+        const border=r===0||r===LP_ROWS||c===0||c===LP_COLS;
+        if(!border){
+          x+=(Math.random()*2-1)*LP_JITTER;
+          y+=(Math.random()*2-1)*LP_JITTER;
+          x=lpClamp(x,c*cw-cw*0.45,c*cw+cw*0.45);
+          y=lpClamp(y,r*ch-ch*0.45,r*ch+ch*0.45);
+        }
+        pts[r][c]={x,y};
+      }
+    }
+    for(let r=0;r<LP_ROWS;r++){
+      for(let c=0;c<LP_COLS;c++){
+        const p1=pts[r][c],p2=pts[r][c+1],p3=pts[r+1][c],p4=pts[r+1][c+1];
+        const flip=(r+c)%2===0;
+        function tri(a,b,d){
+          const el=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+          el.setAttribute('points',`${a.x},${a.y} ${b.x},${b.y} ${d.x},${d.y}`);
+          el.setAttribute('fill',lpColor()); svg.appendChild(el);
+        }
+        if(flip){tri(p1,p2,p4);tri(p1,p4,p3);}
+        else{tri(p1,p2,p3);tri(p2,p4,p3);}
+      }
+    }
+  }
+  lpGenerate();
+  window.addEventListener('resize',lpGenerate);
+})();
 
 // ── MODAL NAVEGACIÓN RÁPIDA ────────────────────────────────────
 function buildNavModal(){
