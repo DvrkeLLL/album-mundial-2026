@@ -92,7 +92,12 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 /* Botón − : esquina superior izquierda */
 .s-minus {
   position:absolute; top:8%; left:6%;
-  width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
+  width:calc(3.8cqw * var(--top-size-scale));
+  height:calc(3.8cqw * var(--top-size-scale));
+  min-width:calc(11px * var(--top-size-scale));
+  min-height:calc(11px * var(--top-size-scale));
+  max-width:calc(20px * var(--top-size-scale));
+  max-height:calc(20px * var(--top-size-scale));
   border-radius:50%; background:rgba(0,0,0,0.6); color:#fff;
   font-size:calc(0.78rem * var(--top-size-scale)); font-weight:900;
   border:1.5px solid rgba(255,255,255,0.35);
@@ -108,7 +113,12 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 /* Contador: esquina superior derecha, mismo tamaño que botón − */
 .s-cnt {
   position:absolute; top:8%; right:6%;
-  width:3.8cqw; height:3.8cqw; min-width:11px; min-height:11px; max-width:20px; max-height:20px;
+  width:calc(3.8cqw * var(--top-size-scale));
+  height:calc(3.8cqw * var(--top-size-scale));
+  min-width:calc(11px * var(--top-size-scale));
+  min-height:calc(11px * var(--top-size-scale));
+  max-width:calc(20px * var(--top-size-scale));
+  max-height:calc(20px * var(--top-size-scale));
   border-radius:50%; background:rgba(0,0,0,0.5); color:#fff;
   font-size:calc(0.78rem * var(--top-size-scale)); font-weight:700;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
