@@ -710,12 +710,12 @@ function makeSticker(code){
     if(!isFWC && num===1){
       const sp=document.createElement('div'); sp.className='s-special';
       const nombrePais=NOMBRES[pais]||pais;
-      sp.innerHTML=`<span>Escudo</span> <strong>${nombrePais}</strong>`;
+      sp.innerHTML=`<span>Escudo</span><br><strong>${nombrePais}</strong>`;
       mid.appendChild(sp);
     } else if(!isFWC && num===13){
       const sp=document.createElement('div'); sp.className='s-special';
       const nombrePais=NOMBRES[pais]||pais;
-      sp.innerHTML=`<span>Foto</span> <strong>${nombrePais}</strong>`;
+      sp.innerHTML=`<span>Foto</span><br><strong>${nombrePais}</strong>`;
       mid.appendChild(sp);
     } else {
       const p=PLAYERS[code];
