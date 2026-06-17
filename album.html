@@ -131,7 +131,7 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
   justify-content:center;
   gap:0.1em;
 }
-.s-name .s-name-line { display:block; }
+.s-name .s-name-line { display:block; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .s-name strong { font-weight:800; color:rgba(0,0,0,0.78); }
 .s-special {
   font-family:'Bebas Neue',sans-serif;
@@ -142,6 +142,9 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
   width:100%;
   display:block;
   letter-spacing:0.5px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
 }
 
 /* Código — tercio inferior, un poco más pequeño que el nombre */
@@ -157,6 +160,7 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
   display:block;
   overflow:hidden;
   white-space:nowrap;
+  text-overflow:ellipsis;
 }
 
 /* s-label ya no se usa pero lo dejamos vacío por si acaso */
