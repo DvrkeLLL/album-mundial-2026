@@ -191,10 +191,14 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .btn-sm.green:hover { background:rgba(46,204,113,0.35); }
 #search-result { margin-top:0.6rem; font-size:0.82rem; display:flex; flex-direction:column; gap:4px; }
 .sr-row { display:flex; align-items:center; gap:0.5rem; }
+.sr-results { display:flex; flex-direction:column; gap:0.5rem; }
+.sr-group { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.5rem; }
+.sr-group-header { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.35rem; }
+.sr-group-title { font-family:'Bebas Neue',sans-serif; font-size:0.72rem; letter-spacing:1.3px; color:rgba(255,255,255,0.6); }
+.sr-group-copy { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; font-size:0.72rem; padding:0.25rem 0.45rem; border-radius:6px; cursor:pointer; }
 .sr-badge { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:1px; padding:2px 7px; border-radius:4px; flex-shrink:0; }
-.sr-badge.miss { background:#a8a8b0; color:rgba(0,0,0,0.6); }
-.sr-badge.have { background:#2ecc71; color:rgba(0,0,0,0.7); }
-.sr-badge.rep  { background:#f1c40f; color:rgba(0,0,0,0.7); }
+.sr-badge.need { background:#c8102e; color:#fff; }
+.sr-badge.have { background:#2ecc71; color:#0d3d1f; }
 .sr-text { font-size:0.8rem; color:rgba(255,255,255,0.6); }
 .sr-error { font-size:0.82rem; color:#ff6b6b; }
 .chips { display:flex; flex-wrap:wrap; gap:5px; }
@@ -240,13 +244,14 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .nav-modal-search { width:100%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); border-radius:10px; padding:0.7rem 1rem; color:#fff; font-family:'Barlow',sans-serif; font-size:0.95rem; outline:none; margin-bottom:1rem; }
 .nav-modal-search:focus { border-color:#F5A623; }
 .nav-modal-search::placeholder { color:rgba(255,255,255,0.35); }
-.nav-grupos { display:flex; flex-direction:column; gap:0.6rem; }
-.nav-grupo-row { display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; }
-.nav-grupo-label { font-family:'Bebas Neue',sans-serif; font-size:0.85rem; letter-spacing:2px; color:rgba(255,255,255,0.4); min-width:60px; }
-.nav-pais-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0.3rem 0.7rem; border-radius:6px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:600; transition:all 0.18s; letter-spacing:0.5px; }
+.nav-grupos { display:flex; flex-direction:column; gap:0.7rem; }
+.nav-grupo-row { display:grid; grid-template-columns:58px minmax(0,1fr); gap:0.55rem; align-items:start; }
+.nav-grupo-label { font-family:'Bebas Neue',sans-serif; font-size:0.8rem; letter-spacing:1.8px; color:rgba(255,255,255,0.4); padding-top:0.28rem; }
+.nav-pais-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0.3rem 0.7rem; border-radius:6px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:600; transition:all 0.18s; letter-spacing:0.5px; white-space:nowrap; }
 .nav-pais-btn:hover { background:rgba(245,166,35,0.2); border-color:#F5A623; color:#F5A623; }
 .nav-pais-btn.fwc { background:rgba(0,61,165,0.2); border-color:rgba(0,61,165,0.5); color:#7ab3ff; }
 .nav-pais-btn.fwc:hover { background:rgba(0,61,165,0.4); border-color:#7ab3ff; }
+.nav-pais-wrap { display:flex; flex-wrap:wrap; gap:0.35rem; }
 .nav-page-input-row { display:flex; gap:0.5rem; align-items:center; margin-bottom:1rem; }
 .nav-page-input-row input { width:80px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); border-radius:8px; padding:0.5rem 0.7rem; color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:1rem; outline:none; text-align:center; }
 .nav-page-input-row input:focus { border-color:#F5A623; }
@@ -725,10 +730,40 @@ function renderModal(){
 }
 
 // ── BUSCAR UNIFICADO — detecta formato propio y externo ────────
+function groupByAlbumPrefix(codes){
+  const groups = {};
+  codes.forEach(c => {
+    const m = c.match(/^([A-Z]+)(\d+)$/);
+    const key = m ? m[1] : 'OTROS';
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(m ? parseInt(m[2]) : c);
+  });
+  return Object.keys(groups)
+    .sort((a,b)=>{
+      const ia = ALL_CODES.findIndex(code => code.startsWith(a));
+      const ib = ALL_CODES.findIndex(code => code.startsWith(b));
+      return (ia===-1?9999:ia) - (ib===-1?9999:ib);
+    })
+    .map(k => ({key:k, nums:groups[k].sort((a,b)=>a-b)}));
+}
+function formatCopyText(codes){
+  return groupByAlbumPrefix(codes)
+    .map(({key, nums}) => `${key}: ${nums.join(', ')}`)
+    .join('\n');
+}
+function copySearchGroup(codes, btn){
+  const text = formatCopyText(codes);
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    setTimeout(()=>btn.textContent = orig, 2000);
+  });
+}
 function buscar(){
   const raw = document.getElementById('sinput').value.trim();
   const el  = document.getElementById('search-result');
   el.innerHTML = '';
+  el.className = 'sr-results';
   if(!raw) return;
 
   const codesSet = new Set(ALL_CODES);
@@ -772,48 +807,44 @@ function buscar(){
   const invalid = parsedCodes.filter(c=>!codesSet.has(c));
   valid.sort((a,b)=>(albumOrder[a]??999)-(albumOrder[b]??999));
 
-  // Separar en dos grupos: no tengo (gris) y ya tengo (amarillo/verde)
+  // Separar en dos grupos: no tengo (rojo) y ya tengo (verde)
   const missing = valid.filter(c=>(album[c]||0)===0);
   const have    = valid.filter(c=>(album[c]||0)>=1);
 
-  // Render grupo "me sirven" (gris → no las tengo)
+  // Render grupo "necesito" (rojo)
   if(missing.length>0){
-    const sec=document.createElement('div');
-    sec.style.cssText='margin-bottom:0.5rem';
-    const lbl=document.createElement('div');
-    lbl.style.cssText='font-size:0.72rem;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:0.3rem;font-family:"Bebas Neue",sans-serif';
-    lbl.textContent=`ME SIRVEN (${missing.length})`;
-    sec.appendChild(lbl);
-    const wrap=document.createElement('div');
-    wrap.style.cssText='display:flex;flex-wrap:wrap;gap:4px';
+    const sec=document.createElement('div'); sec.className='sr-group';
+    const hdr=document.createElement('div'); hdr.className='sr-group-header';
+    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`NECESITO (${missing.length})`;
+    const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
+    btn.onclick=()=>copySearchGroup(missing, btn);
+    hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
+    const wrap=document.createElement('div'); wrap.className='sr-group-chips';
     missing.forEach(c=>{
       const ch=document.createElement('span');
-      ch.className='sr-badge miss'; ch.textContent=c;
+      ch.className='sr-badge need'; ch.textContent=c;
       wrap.appendChild(ch);
     });
-    sec.appendChild(wrap);
-    el.appendChild(sec);
+    sec.appendChild(wrap); el.appendChild(sec);
   }
 
-  // Render grupo "ya tengo" (amarillo)
+  // Render grupo "ya tengo" (verde)
   if(have.length>0){
-    const sec=document.createElement('div');
-    sec.style.cssText='margin-bottom:0.5rem';
-    const lbl=document.createElement('div');
-    lbl.style.cssText='font-size:0.72rem;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:0.3rem;font-family:"Bebas Neue",sans-serif';
-    lbl.textContent=`YA TENGO (${have.length})`;
-    sec.appendChild(lbl);
-    const wrap=document.createElement('div');
-    wrap.style.cssText='display:flex;flex-wrap:wrap;gap:4px';
+    const sec=document.createElement('div'); sec.className='sr-group';
+    const hdr=document.createElement('div'); hdr.className='sr-group-header';
+    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`YA TENGO (${have.length})`;
+    const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
+    btn.onclick=()=>copySearchGroup(have, btn);
+    hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
+    const wrap=document.createElement('div'); wrap.className='sr-group-chips';
     have.forEach(c=>{
       const v=album[c]||0;
       const ch=document.createElement('span');
-      ch.className='sr-badge rep';
+      ch.className='sr-badge have';
       ch.textContent=v>=2?`${c} ×${v}`:c;
       wrap.appendChild(ch);
     });
-    sec.appendChild(wrap);
-    el.appendChild(sec);
+    sec.appendChild(wrap); el.appendChild(sec);
   }
 
   // Inválidos
@@ -1106,21 +1137,23 @@ function buildNavModal(){
   const container=document.getElementById('nav-grupos'); container.innerHTML='';
   const fwcRow=document.createElement('div'); fwcRow.className='nav-grupo-row'; fwcRow.dataset.filter='fwc copa del mundo';
   const fwcLabel=document.createElement('div'); fwcLabel.className='nav-grupo-label'; fwcLabel.textContent='FWC';
-  fwcRow.appendChild(fwcLabel);
+  const fwcWrap=document.createElement('div'); fwcWrap.className='nav-pais-wrap';
   const fwcBtn=document.createElement('button'); fwcBtn.className='nav-pais-btn fwc'; fwcBtn.textContent='Copa del Mundo';
-  fwcBtn.onclick=()=>{spreadIdx=0;render();closeNavModal();}; fwcRow.appendChild(fwcBtn); container.appendChild(fwcRow);
+  fwcBtn.onclick=()=>{spreadIdx=0;render();closeNavModal();};
+  fwcWrap.appendChild(fwcBtn);
+  fwcRow.appendChild(fwcLabel); fwcRow.appendChild(fwcWrap); container.appendChild(fwcRow);
   for(const [g,paises] of GRUPOS){
     const row=document.createElement('div'); row.className='nav-grupo-row';
     row.dataset.filter=`grupo ${g} ${paises.map(c=>NOMBRES[c]||c).join(' ')} ${paises.join(' ')}`.toLowerCase();
     const label=document.createElement('div'); label.className='nav-grupo-label'; label.textContent=`GRP ${g}`;
-    row.appendChild(label);
+    const wrap=document.createElement('div'); wrap.className='nav-pais-wrap';
     for(const cod of paises){
       const btn=document.createElement('button'); btn.className='nav-pais-btn';
       btn.textContent=NOMBRES[cod]||cod; btn.title=cod;
       btn.onclick=()=>{const si=PAIS_TO_SPREAD[cod]; if(si!==undefined){spreadIdx=si;mobileTab='left';render();} closeNavModal();};
-      row.appendChild(btn);
+      wrap.appendChild(btn);
     }
-    container.appendChild(row);
+    row.appendChild(label); row.appendChild(wrap); container.appendChild(row);
   }
 }
 function filterNavPaises(){
