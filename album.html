@@ -407,7 +407,10 @@ CAN: 1,2,3,5,6,8,9,10,11,12,13,14,15"></textarea>
     <!-- Llenar álbum completo -->
     <button class="tool-toggle" id="toggle-peligro" data-label="Peligro" onclick="toggleToolSection('peligro')" type="button">Peligro</button>
     <div id="panel-peligro" style="display:none">
-      <button class="btn-sm green" style="width:100%;padding:0.65rem;font-size:0.88rem" onclick="openFillModal()">✅ Llenar álbum completo</button>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn-sm green" style="flex:1;padding:0.65rem;font-size:0.88rem" onclick="openFillModal()">Llenar álbum completo</button>
+        <button class="btn-sm" style="flex:1;padding:0.65rem;font-size:0.88rem;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)" onclick="openEmptyModal()">Vaciar álbum completo</button>
+      </div>
     </div>
   </div>
 </div>
@@ -415,7 +418,7 @@ CAN: 1,2,3,5,6,8,9,10,11,12,13,14,15"></textarea>
 <!-- ── MODAL LLENAR ÁLBUM ── -->
 <div class="overlay hidden" id="overlay-fill">
   <div class="fill-modal">
-    <h3>✅ Llenar álbum</h3>
+    <h3>Llenar álbum</h3>
     <p>Esto marcará <strong>todas las láminas</strong> como obtenidas (valor 1). Las que ya tengas repetidas no se tocan.<br><br>Mantén presionado el botón verde 5 segundos para confirmar.</p>
     <div class="fill-modal-btns">
       <button class="btn-fill-cancel" onclick="closeFillModal()">✕ Cancelar</button>
@@ -424,6 +427,23 @@ CAN: 1,2,3,5,6,8,9,10,11,12,13,14,15"></textarea>
         ontouchstart="startFillHold(event)" ontouchend="cancelFillHold()" ontouchcancel="cancelFillHold()">
         <div class="btn-fill-hold-progress" id="fill-hold-progress"></div>
         <span id="fill-hold-label">Mantener 5s</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL VACIAR ÁLBUM ── -->
+<div class="overlay hidden" id="overlay-empty">
+  <div class="fill-modal" style="border-color:rgba(255,255,255,0.2)">
+    <h3 style="color:#aaa">Vaciar álbum</h3>
+    <p>Esto pondrá <strong>todas las láminas</strong> en cero. Se perderá todo el progreso.<br><br>Mantén presionado el botón gris 5 segundos para confirmar.</p>
+    <div class="fill-modal-btns">
+      <button class="btn-fill-cancel" onclick="closeEmptyModal()">✕ Cancelar</button>
+      <button class="btn-fill-hold" id="btn-empty-hold" style="background:rgba(255,255,255,0.08);color:#ccc;border-color:rgba(255,255,255,0.25)"
+        onmousedown="startEmptyHold()" onmouseup="cancelEmptyHold()" onmouseleave="cancelEmptyHold()"
+        ontouchstart="startEmptyHold(event)" ontouchend="cancelEmptyHold()" ontouchcancel="cancelEmptyHold()">
+        <div class="btn-fill-hold-progress" id="empty-hold-progress" style="background:rgba(255,255,255,0.25)"></div>
+        <span id="empty-hold-label">Mantener 5s</span>
       </button>
     </div>
   </div>
@@ -1183,13 +1203,67 @@ function cancelFillHold(){
 function fillAlbum(){
   for(const c of ALL_CODES){ if(!(album[c]>=1)) album[c]=1; }
   updateStats();
-  // Refrescar visualmente los stickers visibles
   document.querySelectorAll('.sticker[data-code]').forEach(el=>{
     const code=el.dataset.code; const v=album[code]||0;
     el.className='sticker '+(v===0?'miss':v===1?'have':'rep');
   });
   scheduleSave();
   setTimeout(()=>{ closeFillModal(); },700);
+}
+
+let emptyHoldTimer=null, emptyHoldRAF=null, emptyHoldStart=null;
+function openEmptyModal(){
+  closeModal();
+  resetEmptyHoldUI();
+  document.getElementById('overlay-empty').classList.remove('hidden');
+}
+function closeEmptyModal(){
+  cancelEmptyHold();
+  document.getElementById('overlay-empty').classList.add('hidden');
+}
+document.getElementById('overlay-empty').addEventListener('click',e=>{
+  if(e.target===e.currentTarget) closeEmptyModal();
+});
+function resetEmptyHoldUI(){
+  const btn=document.getElementById('btn-empty-hold');
+  const bar=document.getElementById('empty-hold-progress');
+  const lbl=document.getElementById('empty-hold-label');
+  btn.classList.remove('filling','done');
+  bar.style.transition='none';
+  bar.style.transform='scaleX(0)';
+  lbl.textContent='Mantener 5s';
+}
+function startEmptyHold(e){ if(e) e.preventDefault();
+  const btn=document.getElementById('btn-empty-hold');
+  const bar=document.getElementById('empty-hold-progress');
+  const lbl=document.getElementById('empty-hold-label');
+  btn.classList.add('filling');
+  emptyHoldStart=performance.now();
+  function tick(now){
+    const elapsed=now-emptyHoldStart;
+    const pct=Math.min(elapsed/FILL_HOLD_MS,1);
+    bar.style.transform=`scaleX(${pct})`;
+    const rem=Math.ceil((FILL_HOLD_MS-elapsed)/1000);
+    lbl.textContent=pct<1?`Mantener ${rem}s…`:'✓ Listo';
+    if(pct<1){ emptyHoldRAF=requestAnimationFrame(tick); }
+    else{ btn.classList.add('done'); emptyAlbum(); }
+  }
+  emptyHoldRAF=requestAnimationFrame(tick);
+}
+function cancelEmptyHold(){
+  if(emptyHoldRAF){ cancelAnimationFrame(emptyHoldRAF); emptyHoldRAF=null; }
+  clearTimeout(emptyHoldTimer);
+  const btn=document.getElementById('btn-empty-hold');
+  if(btn&&!btn.classList.contains('done')) resetEmptyHoldUI();
+}
+function emptyAlbum(){
+  for(const c of ALL_CODES){ album[c]=0; }
+  updateStats();
+  document.querySelectorAll('.sticker[data-code]').forEach(el=>{
+    el.className='sticker miss';
+  });
+  scheduleSave();
+  setTimeout(()=>{ closeEmptyModal(); },700);
 }
 
 function normalizeParseText(raw){
