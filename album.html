@@ -809,9 +809,26 @@ function buscar(){
   const invalid = parsedCodes.filter(c=>!codesSet.has(c));
   valid.sort((a,b)=>(albumOrder[a]??999)-(albumOrder[b]??999));
 
-  // Separar en dos grupos: repetidas (rojo) y las que me sirven (verde)
-  const repeated = valid.filter(c=>(album[c]||0)>=2);
+  // Separar en dos grupos: primero lo que me sirve y luego las repetidas
   const needed   = valid.filter(c=>(album[c]||0)===0);
+  const repeated = valid.filter(c=>(album[c]||0)>=2);
+
+  // Render grupo "me sirven" (verde)
+  if(needed.length>0){
+    const sec=document.createElement('div'); sec.className='sr-group';
+    const hdr=document.createElement('div'); hdr.className='sr-group-header';
+    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`ME SIRVEN (${needed.length})`;
+    const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
+    btn.onclick=()=>copySearchGroup(needed, btn);
+    hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
+    const wrap=document.createElement('div'); wrap.className='sr-group-chips';
+    needed.forEach(c=>{
+      const ch=document.createElement('span');
+      ch.className='sr-badge have'; ch.textContent=c;
+      wrap.appendChild(ch);
+    });
+    sec.appendChild(wrap); el.appendChild(sec);
+  }
 
   // Render grupo "repetidas" (rojo)
   if(repeated.length>0){
@@ -827,23 +844,6 @@ function buscar(){
       const ch=document.createElement('span');
       ch.className='sr-badge need';
       ch.textContent=v>=2?`${c} ×${v}`:c;
-      wrap.appendChild(ch);
-    });
-    sec.appendChild(wrap); el.appendChild(sec);
-  }
-
-  // Render grupo "me sirven" (verde)
-  if(needed.length>0){
-    const sec=document.createElement('div'); sec.className='sr-group';
-    const hdr=document.createElement('div'); hdr.className='sr-group-header';
-    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`ME SIRVEN (${needed.length})`;
-    const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
-    btn.onclick=()=>copySearchGroup(needed, btn);
-    hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
-    const wrap=document.createElement('div'); wrap.className='sr-group-chips';
-    needed.forEach(c=>{
-      const ch=document.createElement('span');
-      ch.className='sr-badge have'; ch.textContent=c;
       wrap.appendChild(ch);
     });
     sec.appendChild(wrap); el.appendChild(sec);
