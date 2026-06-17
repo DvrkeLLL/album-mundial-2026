@@ -356,7 +356,7 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
     </div>
 
     <!-- Buscar láminas -->
-    <button class="tool-toggle" id="toggle-buscar" data-label="Buscar láminas" onclick="toggleToolSection('buscar')" type="button">Ocultar Buscar láminas</button>
+    <button class="tool-toggle" id="toggle-buscar" data-label="Buscar láminas" onclick="toggleToolSection('buscar')" type="button">Buscar láminas</button>
     <div id="panel-buscar">
       <div class="search-row">
         <textarea id="sinput" rows="2" placeholder="ej: MEX7  o  MEX7,ARG3  o pega formato externo con saltos de línea" style="resize:vertical;min-height:42px;line-height:1.4"></textarea>
@@ -367,27 +367,24 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
     </div>
 
     <!-- Repetidas -->
-    <button class="tool-toggle" id="toggle-repetidas" data-label="Láminas repetidas" onclick="toggleToolSection('repetidas')" type="button">Mostrar Láminas repetidas</button>
+    <button class="tool-toggle" id="toggle-repetidas" data-label="Láminas repetidas" onclick="toggleToolSection('repetidas')" type="button">Láminas repetidas</button>
     <div id="panel-repetidas" style="display:none; margin-top:0.5rem">
       <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between; margin-top:0">
-        <span>Láminas repetidas</span>
         <button class="btn-sm red" onclick="copiarRepetidas()" style="padding:0.3rem 0.7rem;font-size:0.78rem">Copiar lista</button>
       </div>
       <div class="chips" id="chips"><div class="empty">No tienes láminas repetidas</div></div>
     </div>
 
     <!-- Comparar con otros usuarios -->
-    <button class="tool-toggle" id="toggle-comparar" data-label="Comparar con otros usuarios" onclick="toggleToolSection('comparar')" type="button">Mostrar Comparar con otros usuarios</button>
+    <button class="tool-toggle" id="toggle-comparar" data-label="Comparar con otros usuarios" onclick="toggleToolSection('comparar')" type="button">Comparar con otros usuarios</button>
     <div id="panel-comparar" style="display:none">
-      <div class="sec-title" style="margin-top:0">Comparar con otros usuarios</div>
       <div id="compare-users-row" class="compare-user-select"><div class="compare-loading">Cargando usuarios...</div></div>
       <div class="compare-block" id="compare-block"></div>
     </div>
 
     <!-- Rellenar láminas por lista -->
-    <button class="tool-toggle" id="toggle-rellenar" data-label="Rellenar láminas" onclick="toggleToolSection('rellenar')" type="button">Mostrar Rellenar láminas</button>
+    <button class="tool-toggle" id="toggle-rellenar" data-label="Rellenar láminas" onclick="toggleToolSection('rellenar')" type="button">Rellenar láminas</button>
     <div id="panel-rellenar" style="display:none">
-      <div class="sec-title" style="margin-top:0">Rellenar láminas</div>
       <div class="fill-list-help">Formato: MEX: 1,2,7,7,9  o  CAN: 1,2,3,5,6</div>
       <div class="fill-mode-row">
         <button class="btn-sm fill-mode-btn" id="fillModeNormal" onclick="setFillMode('normal')">Normal</button>
@@ -406,9 +403,8 @@ CAN: 1,2,3,5,6,8,9,10,11,12,13,14,15"></textarea>
     </div>
 
     <!-- Llenar álbum completo -->
-    <button class="tool-toggle" id="toggle-peligro" data-label="Peligro" onclick="toggleToolSection('peligro')" type="button">Mostrar Peligro</button>
+    <button class="tool-toggle" id="toggle-peligro" data-label="Peligro" onclick="toggleToolSection('peligro')" type="button">Peligro</button>
     <div id="panel-peligro" style="display:none">
-      <div class="sec-title" style="margin-top:0">Peligro</div>
       <button class="btn-sm green" style="width:100%;padding:0.65rem;font-size:0.88rem" onclick="openFillModal()">✅ Llenar álbum completo</button>
     </div>
   </div>
@@ -777,7 +773,6 @@ function toggleToolSection(key){
   if(!panel || !btn) return;
   const open=panel.style.display !== 'none';
   panel.style.display = open ? 'none' : 'block';
-  btn.textContent = open ? `Mostrar ${btn.dataset.label}` : `Ocultar ${btn.dataset.label}`;
 }
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
 
