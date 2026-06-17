@@ -224,8 +224,9 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .compare-section-title.yellow { color:#f1c40f; }
 .compare-chips { display:flex; flex-wrap:wrap; gap:4px; }
 .cchip { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:4px; letter-spacing:0.4px; }
-.cchip.give { background:#2ecc71; color:rgba(0,0,0,0.7); }
-.cchip.get  { background:#7ab3ff; color:rgba(0,0,0,0.7); }
+.cchip.give { background:#F5A623; color:rgba(0,0,0,0.7); }
+.cchip.get  { background:#2ecc71; color:rgba(0,0,0,0.7); }
+.compare-section-title.orange { color:#F5A623; }
 .compare-loading { color:rgba(255,255,255,0.4); font-size:0.82rem; font-style:italic; }
 .compare-copy-row { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.5rem; flex-wrap:wrap; }
 
@@ -1020,7 +1021,7 @@ async function selectCompareUser(u, others){
 
   // Sección: él me da (primero)
   const s2=document.createElement('div'); s2.className='compare-section';
-  s2.innerHTML=`<div class="compare-section-title yellow">🔵 Láminas que me sirven (${iGet.length})</div>`;
+  s2.innerHTML=`<div class="compare-section-title green">Láminas que me sirven (${iGet.length})</div>`;
   const chips2=document.createElement('div'); chips2.className='compare-chips';
   if(iGet.length===0) chips2.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna</span>';
   else iGet.forEach(c=>{const ch=document.createElement('span');ch.className='cchip get';ch.textContent=c;chips2.appendChild(ch);});
@@ -1035,7 +1036,7 @@ async function selectCompareUser(u, others){
 
   // Sección: yo le doy (segundo)
   const s1=document.createElement('div'); s1.className='compare-section';
-  s1.innerHTML=`<div class="compare-section-title green">✅ Láminas que le sirven a ${u} (${iGive.length})</div>`;
+  s1.innerHTML=`<div class="compare-section-title orange">Láminas que le sirven a ${u} (${iGive.length})</div>`;
   const chips1=document.createElement('div'); chips1.className='compare-chips';
   if(iGive.length===0) chips1.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna</span>';
   else iGive.forEach(c=>{const ch=document.createElement('span');ch.className='cchip give';ch.textContent=c;chips1.appendChild(ch);});
