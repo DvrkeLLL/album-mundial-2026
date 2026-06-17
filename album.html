@@ -192,13 +192,15 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 #search-result { margin-top:0.6rem; font-size:0.82rem; display:flex; flex-direction:column; gap:4px; }
 .sr-row { display:flex; align-items:center; gap:0.5rem; }
 .sr-results { display:flex; flex-direction:column; gap:0.5rem; }
-.sr-group { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.5rem; }
+.sr-group { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.5rem; }
 .sr-group-header { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.35rem; }
 .sr-group-title { font-family:'Bebas Neue',sans-serif; font-size:0.72rem; letter-spacing:1.3px; color:rgba(255,255,255,0.6); }
-.sr-group-copy { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; font-size:0.72rem; padding:0.25rem 0.45rem; border-radius:6px; cursor:pointer; }
-.sr-badge { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:1px; padding:2px 7px; border-radius:4px; flex-shrink:0; }
-.sr-badge.need { background:#c8102e; color:#fff; }
-.sr-badge.have { background:#2ecc71; color:#0d3d1f; }
+.sr-group-copy { background:linear-gradient(135deg,#f1c40f,#e0a900); color:#1c1200; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; border:1px solid rgba(255,255,255,0.12); transition:transform 0.12s, filter 0.12s; }
+.sr-group-copy:hover { filter:brightness(1.06); transform:translateY(-1px); }
+.sr-group-chips { display:flex; flex-wrap:wrap; gap:0.35rem; align-content:flex-start; }
+.sr-badge { display:inline-flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:1px; padding:2px 7px; border-radius:4px; flex-shrink:0; white-space:nowrap; }
+.sr-badge.need { background:#b95c61; color:#fff; }
+.sr-badge.have { background:#2d8c5a; color:#fff; }
 .sr-text { font-size:0.8rem; color:rgba(255,255,255,0.6); }
 .sr-error { font-size:0.82rem; color:#ff6b6b; }
 .chips { display:flex; flex-wrap:wrap; gap:5px; }
@@ -807,41 +809,41 @@ function buscar(){
   const invalid = parsedCodes.filter(c=>!codesSet.has(c));
   valid.sort((a,b)=>(albumOrder[a]??999)-(albumOrder[b]??999));
 
-  // Separar en dos grupos: no tengo (rojo) y ya tengo (verde)
-  const missing = valid.filter(c=>(album[c]||0)===0);
-  const have    = valid.filter(c=>(album[c]||0)>=1);
+  // Separar en dos grupos: repetidas (rojo) y las que me sirven (verde)
+  const repeated = valid.filter(c=>(album[c]||0)>=2);
+  const needed   = valid.filter(c=>(album[c]||0)===0);
 
-  // Render grupo "necesito" (rojo)
-  if(missing.length>0){
+  // Render grupo "repetidas" (rojo)
+  if(repeated.length>0){
     const sec=document.createElement('div'); sec.className='sr-group';
     const hdr=document.createElement('div'); hdr.className='sr-group-header';
-    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`NECESITO (${missing.length})`;
+    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`REPETIDAS (${repeated.length})`;
     const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
-    btn.onclick=()=>copySearchGroup(missing, btn);
+    btn.onclick=()=>copySearchGroup(repeated, btn);
     hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
     const wrap=document.createElement('div'); wrap.className='sr-group-chips';
-    missing.forEach(c=>{
+    repeated.forEach(c=>{
+      const v=album[c]||0;
       const ch=document.createElement('span');
-      ch.className='sr-badge need'; ch.textContent=c;
+      ch.className='sr-badge need';
+      ch.textContent=v>=2?`${c} ×${v}`:c;
       wrap.appendChild(ch);
     });
     sec.appendChild(wrap); el.appendChild(sec);
   }
 
-  // Render grupo "ya tengo" (verde)
-  if(have.length>0){
+  // Render grupo "me sirven" (verde)
+  if(needed.length>0){
     const sec=document.createElement('div'); sec.className='sr-group';
     const hdr=document.createElement('div'); hdr.className='sr-group-header';
-    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`YA TENGO (${have.length})`;
+    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`ME SIRVEN (${needed.length})`;
     const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
-    btn.onclick=()=>copySearchGroup(have, btn);
+    btn.onclick=()=>copySearchGroup(needed, btn);
     hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
     const wrap=document.createElement('div'); wrap.className='sr-group-chips';
-    have.forEach(c=>{
-      const v=album[c]||0;
+    needed.forEach(c=>{
       const ch=document.createElement('span');
-      ch.className='sr-badge have';
-      ch.textContent=v>=2?`${c} ×${v}`:c;
+      ch.className='sr-badge have'; ch.textContent=c;
       wrap.appendChild(ch);
     });
     sec.appendChild(wrap); el.appendChild(sec);
