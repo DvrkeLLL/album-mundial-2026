@@ -1018,24 +1018,9 @@ async function selectCompareUser(u, others){
 
   block.innerHTML='';
 
-  // Sección: yo le doy
-  const s1=document.createElement('div'); s1.className='compare-section';
-  s1.innerHTML=`<div class="compare-section-title green">✅ Mis repetidas que le sirven a ${u} (${iGive.length})</div>`;
-  const chips1=document.createElement('div'); chips1.className='compare-chips';
-  if(iGive.length===0) chips1.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna</span>';
-  else iGive.forEach(c=>{const ch=document.createElement('span');ch.className='cchip give';ch.textContent=c;chips1.appendChild(ch);});
-  s1.appendChild(chips1);
-  if(iGive.length>0){
-    const cr=document.createElement('div'); cr.className='compare-copy-row';
-    const btn=document.createElement('button'); btn.className='btn-sm green';
-    btn.textContent='Copiar lista'; btn.onclick=()=>copyList(iGive, btn);
-    cr.appendChild(btn); s1.appendChild(cr);
-  }
-  block.appendChild(s1);
-
-  // Sección: él me da
+  // Sección: él me da (primero)
   const s2=document.createElement('div'); s2.className='compare-section';
-  s2.innerHTML=`<div class="compare-section-title yellow">🔵 Repetidas de ${u} que me sirven a mí (${iGet.length})</div>`;
+  s2.innerHTML=`<div class="compare-section-title yellow">🔵 Láminas que me sirven (${iGet.length})</div>`;
   const chips2=document.createElement('div'); chips2.className='compare-chips';
   if(iGet.length===0) chips2.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna</span>';
   else iGet.forEach(c=>{const ch=document.createElement('span');ch.className='cchip get';ch.textContent=c;chips2.appendChild(ch);});
@@ -1047,10 +1032,26 @@ async function selectCompareUser(u, others){
     cr.appendChild(btn); s2.appendChild(cr);
   }
   block.appendChild(s2);
+
+  // Sección: yo le doy (segundo)
+  const s1=document.createElement('div'); s1.className='compare-section';
+  s1.innerHTML=`<div class="compare-section-title green">✅ Láminas que le sirven a ${u} (${iGive.length})</div>`;
+  const chips1=document.createElement('div'); chips1.className='compare-chips';
+  if(iGive.length===0) chips1.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna</span>';
+  else iGive.forEach(c=>{const ch=document.createElement('span');ch.className='cchip give';ch.textContent=c;chips1.appendChild(ch);});
+  s1.appendChild(chips1);
+  if(iGive.length>0){
+    const cr=document.createElement('div'); cr.className='compare-copy-row';
+    const btn=document.createElement('button'); btn.className='btn-sm green';
+    btn.textContent='Copiar lista'; btn.onclick=()=>copyList(iGive, btn);
+    cr.appendChild(btn); s1.appendChild(cr);
+  }
+  block.appendChild(s1);
 }
 
 function copyList(arr, btn){
-  navigator.clipboard.writeText(arr.join(', ')).then(()=>{
+  const text = formatCopyText(arr);
+  navigator.clipboard.writeText(text).then(()=>{
     const orig=btn.textContent; btn.textContent='✓ Copiado!';
     setTimeout(()=>btn.textContent=orig, 2000);
   });
