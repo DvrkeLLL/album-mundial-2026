@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --top-size-scale: 1.6;
-  --mid-size-scale: 1.2;
+  --top-size-scale: 1.05;
+  --mid-size-scale: 1.23;
   --bot-size-scale: 1.2;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -92,10 +92,10 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 /* Botón − : esquina superior izquierda */
 .s-minus {
   position:absolute; top:8%; left:6%;
-  width:clamp(14px, calc(3.8cqw * var(--top-size-scale)), 44px);
-  height:clamp(14px, calc(3.8cqw * var(--top-size-scale)), 44px);
+  width:clamp(14px, calc(3.8cqw * var(--top-size-scale)), calc(28px * var(--top-size-scale)));
+  height:clamp(14px, calc(3.8cqw * var(--top-size-scale)), calc(28px * var(--top-size-scale)));
   border-radius:50%; background:rgba(0,0,0,0.6); color:#fff;
-  font-size:calc(0.78rem * var(--top-size-scale)); font-weight:900;
+  font-size:calc(0.72rem * var(--top-size-scale)); font-weight:900;
   border:1.5px solid rgba(255,255,255,0.35);
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   z-index:20; line-height:1; flex-shrink:0;
@@ -109,10 +109,10 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 /* Contador: esquina superior derecha, mismo tamaño que botón − */
 .s-cnt {
   position:absolute; top:8%; right:6%;
-  width:clamp(14px, calc(3.8cqw * var(--top-size-scale)), 44px);
-  height:clamp(14px, calc(3.8cqw * var(--top-size-scale)), 44px);
+  width:clamp(14px, calc(3.8cqw * var(--top-size-scale)), calc(28px * var(--top-size-scale)));
+  height:clamp(14px, calc(3.8cqw * var(--top-size-scale)), calc(28px * var(--top-size-scale)));
   border-radius:50%; background:rgba(0,0,0,0.5); color:#fff;
-  font-size:calc(0.78rem * var(--top-size-scale)); font-weight:700;
+  font-size:calc(0.72rem * var(--top-size-scale)); font-weight:700;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
   line-height:1;
 }
