@@ -664,10 +664,14 @@ function makeSticker(code){
   if(m){
     const pais=m[1], num=parseInt(m[2]), isFWC=pais==='FWC';
     if(!isFWC && num===1){
-      const sp=document.createElement('div'); sp.className='s-special'; sp.innerHTML='<b>Escudo</b>';
+      const sp=document.createElement('div'); sp.className='s-special';
+      const nombrePais=NOMBRES[pais]||pais;
+      sp.innerHTML=`<span>Escudo</span> <strong>${nombrePais}</strong>`;
       mid.appendChild(sp);
     } else if(!isFWC && num===13){
-      const sp=document.createElement('div'); sp.className='s-special'; sp.innerHTML='<b>Foto</b>';
+      const sp=document.createElement('div'); sp.className='s-special';
+      const nombrePais=NOMBRES[pais]||pais;
+      sp.innerHTML=`<span>Foto</span> <strong>${nombrePais}</strong>`;
       mid.appendChild(sp);
     } else {
       const p=PLAYERS[code];
