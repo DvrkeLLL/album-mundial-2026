@@ -906,9 +906,9 @@ function buscar(){
   const invalid = parsedCodes.filter(c=>!codesSet.has(c));
   valid.sort((a,b)=>(albumOrder[a]??999)-(albumOrder[b]??999));
 
-  // Separar en dos grupos: primero lo que me sirve y luego las repetidas
+  // Separar en dos grupos: primero lo que me sirve y luego lo que ya tengo (1 vez o más)
   const needed   = valid.filter(c=>(album[c]||0)===0);
-  const repeated = valid.filter(c=>(album[c]||0)>=2);
+  const repeated = valid.filter(c=>(album[c]||0)>=1);
 
   // Render grupo "me sirven" (verde)
   if(needed.length>0){
@@ -927,11 +927,11 @@ function buscar(){
     sec.appendChild(wrap); el.appendChild(sec);
   }
 
-  // Render grupo "repetidas" (rojo)
+  // Render grupo "ya la tengo" (rojo)
   if(repeated.length>0){
     const sec=document.createElement('div'); sec.className='sr-group';
     const hdr=document.createElement('div'); hdr.className='sr-group-header';
-    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`REPETIDAS (${repeated.length})`;
+    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`YA LA TENGO (${repeated.length})`;
     const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
     btn.onclick=()=>copySearchGroup(repeated, btn);
     hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
