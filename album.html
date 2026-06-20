@@ -206,13 +206,13 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .sr-group-copy { background:linear-gradient(135deg,#f1c40f,#e0a900); color:#1c1200; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; border:1px solid rgba(255,255,255,0.12); transition:transform 0.12s, filter 0.12s; }
 .sr-group-copy:hover { filter:brightness(1.06); transform:translateY(-1px); }
 .sr-group-chips { display:flex; flex-wrap:wrap; gap:0.35rem; align-content:flex-start; }
-.sr-badge { display:inline-flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:1px; padding:2px 7px; border-radius:4px; flex-shrink:0; white-space:nowrap; }
+.sr-badge { display:inline-flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:1px; padding:2px 7px; border-radius:4px; flex-shrink:0; white-space:nowrap; box-sizing:border-box; }
 .sr-badge.need { background:#b95c61; color:#fff; }
 .sr-badge.have { background:#2d8c5a; color:#fff; }
 .sr-text { font-size:0.8rem; color:rgba(255,255,255,0.6); }
 .sr-error { font-size:0.82rem; color:#ff6b6b; }
 .chips { display:flex; flex-wrap:wrap; gap:5px; }
-.chip { background:#f1c40f; color:rgba(0,0,0,0.75); font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; padding:2px 7px; border-radius:4px; letter-spacing:0.4px; }
+.chip { background:#f1c40f; color:rgba(0,0,0,0.75); font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; padding:2px 7px; border-radius:4px; letter-spacing:0.4px; box-sizing:border-box; text-align:center; }
 .chip .x { opacity:0.6; }
 .export-box { background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0.7rem 0.8rem; font-family:'Barlow Condensed',monospace; font-size:0.78rem; color:rgba(255,255,255,0.65); word-break:break-all; line-height:1.6; max-height:130px; overflow-y:auto; white-space:pre-wrap; }
 .copy-row { display:flex; justify-content:flex-end; margin-top:0.4rem; }
@@ -229,7 +229,7 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .compare-section-title.green { color:#2ecc71; }
 .compare-section-title.yellow { color:#f1c40f; }
 .compare-chips { display:flex; flex-wrap:wrap; gap:4px; }
-.cchip { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:4px; letter-spacing:0.4px; }
+.cchip { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:4px; letter-spacing:0.4px; box-sizing:border-box; text-align:center; }
 .cchip.give { background:#F5A623; color:rgba(0,0,0,0.7); }
 .cchip.get  { background:#2ecc71; color:rgba(0,0,0,0.7); }
 .compare-section-title.orange { color:#F5A623; }
@@ -809,6 +809,7 @@ function renderModal(){
   document.getElementById('chips').innerHTML=reps.length===0
     ?'<div class="empty">No tienes láminas repetidas</div>'
     :reps.map(c=>`<div class="chip">${c} <span class="x">×${album[c]}</span></div>`).join('');
+  equalizeChipWidths(document.getElementById('chips'), '.chip');
   loadCompareUsers();
 }
 
@@ -841,6 +842,21 @@ function copySearchGroup(codes, btn){
     btn.textContent = '✓ Copiado';
     setTimeout(()=>btn.textContent = orig, 2000);
   });
+}
+// Iguala el ancho de todas las cajas encontradas dentro de un contenedor,
+// usando como referencia la más ancha de todas (para que se vean ordenadas en grilla).
+function equalizeChipWidths(container, selector){
+  if(!container) return;
+  const els = Array.from(container.querySelectorAll(selector));
+  if(els.length===0) return;
+  els.forEach(el=>{ el.style.minWidth=''; el.style.width=''; });
+  let max=0;
+  els.forEach(el=>{
+    const w=el.getBoundingClientRect().width;
+    if(w>max) max=w;
+  });
+  max=Math.ceil(max);
+  els.forEach(el=>{ el.style.minWidth=max+'px'; });
 }
 function buscar(){
   const raw = document.getElementById('sinput').value.trim();
@@ -940,6 +956,8 @@ function buscar(){
     });
     el.appendChild(sec);
   }
+
+  equalizeChipWidths(el, '.sr-badge');
 }
 
 // ── COPIAR REPETIDAS — formato resultado.txt ──────────────────
@@ -1075,6 +1093,8 @@ async function selectCompareUser(u, others){
     cr.appendChild(btn); s1.appendChild(cr);
   }
   block.appendChild(s1);
+
+  equalizeChipWidths(block, '.cchip');
 }
 
 function copyList(arr, btn){
