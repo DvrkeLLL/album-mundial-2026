@@ -848,6 +848,10 @@ function toggleToolSection(key){
   if(!panel || !btn) return;
   const open=panel.style.display !== 'none';
   panel.style.display = open ? 'none' : 'block';
+  // Al abrir repetidas, re-equalizar ahora que el panel es visible y se puede medir
+  if(!open && key==='repetidas'){
+    requestAnimationFrame(()=>equalizeChipWidths(document.getElementById('chips'), '.chip'));
+  }
 }
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
 
