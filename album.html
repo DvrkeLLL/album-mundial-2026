@@ -278,9 +278,10 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .nav-modal-search:focus { border-color:#F5A623; }
 .nav-modal-search::placeholder { color:rgba(255,255,255,0.35); }
 .nav-grupos { display:flex; flex-direction:column; gap:0.6rem; }
-.nav-grupo-row { display:flex; align-items:center; gap:0.55rem; }
+.nav-grupo-row { display:flex; align-items:flex-start; gap:0.55rem; }
 .nav-grupo-label { font-family:'Bebas Neue',sans-serif; font-size:0.72rem; letter-spacing:1.3px; color:rgba(255,255,255,0.45); flex-shrink:0; width:58px; text-align:right; }
-.nav-grupo-box { border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:0.3rem; display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; }
+.nav-grupo-label-inner { font-family:'Bebas Neue',sans-serif; font-size:0.72rem; letter-spacing:1.3px; color:rgba(255,255,255,0.45); grid-column:1/-1; padding-bottom:0.15rem; }
+.nav-grupo-box { border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:0.35rem 0.3rem 0.3rem; display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; }
 .nav-pais-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0.3rem 0.4rem; border-radius:6px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:600; transition:all 0.18s; letter-spacing:0.5px; white-space:nowrap; text-align:center; box-sizing:border-box; width:100%; }
 .nav-pais-btn:hover { background:rgba(245,166,35,0.2); border-color:#F5A623; color:#F5A623; }
 .nav-pais-btn.fwc { background:rgba(0,61,165,0.2); border-color:rgba(0,61,165,0.5); color:#7ab3ff; }
@@ -502,7 +503,7 @@ CAN: 1,2,3,5,6,8,9,10,11,12,13,14,15"></textarea>
 <div class="overlay hidden" id="overlay-nav">
   <div class="nav-modal">
     <div class="modal-hdr">
-      <div class="modal-tit">📖 IR A...</div>
+      <div class="modal-tit">IR A...</div>
       <button class="modal-cls" onclick="closeNavModal()">✕</button>
     </div>
     <div class="nav-page-input-row">
@@ -838,7 +839,17 @@ function makeSticker(code){
 }
 
 // ── MODAL HERRAMIENTAS ─────────────────────────────────────────
-function openModal(){ renderModal(); document.getElementById('overlay').classList.remove('hidden'); }
+function openModal(){
+  renderModal();
+  document.getElementById('overlay').classList.remove('hidden');
+  // Re-equalizar chips de todos los paneles que ya tengan contenido
+  requestAnimationFrame(()=>{
+    const cb=document.getElementById('compare-block');
+    if(cb && cb.children.length>0) equalizeChipWidths(cb, '.cchip');
+    const sr=document.getElementById('search-result');
+    if(sr && sr.children.length>0) equalizeChipWidths(sr, '.sr-badge');
+  });
+}
 function closeModal(){ document.getElementById('overlay').classList.add('hidden'); }
 function toggleToolSection(key){
   const panel=document.getElementById(`panel-${key}`);
@@ -1275,6 +1286,10 @@ function renderCompareBlock(iGetFull, iGiveFull, u){
   block.appendChild(s1);
 
   equalizeChipWidths(block, '.cchip');
+  // También re-equalizar buscar si el panel está visible
+  if(document.getElementById('panel-buscar').style.display !== 'none'){
+    requestAnimationFrame(()=>equalizeChipWidths(document.getElementById('search-result'), '.sr-badge'));
+  }
 }
 
 function copyList(arr, btn){
@@ -1706,29 +1721,29 @@ function applyFillList(){
 // ── MODAL NAVEGACIÓN RÁPIDA ────────────────────────────────────
 function buildNavModal(){
   const container=document.getElementById('nav-grupos'); container.innerHTML='';
-  // Fila FWC (fila especial, sin box 2x2)
+  // Fila FWC (especial, sin box 2x2)
   const fwcRow=document.createElement('div'); fwcRow.className='nav-grupo-row'; fwcRow.dataset.filter='fwc copa del mundo';
-  const fwcLabel=document.createElement('div'); fwcLabel.className='nav-grupo-label'; fwcLabel.textContent='FWC';
   const fwcWrap=document.createElement('div'); fwcWrap.className='nav-pais-wrap';
   const fwcBtn=document.createElement('button'); fwcBtn.className='nav-pais-btn fwc'; fwcBtn.textContent='Copa del Mundo';
   fwcBtn.onclick=()=>{spreadIdx=0;render();closeNavModal();};
   fwcWrap.appendChild(fwcBtn);
-  fwcRow.appendChild(fwcLabel); fwcRow.appendChild(fwcWrap); container.appendChild(fwcRow);
-  // Grupos con layout 2x2 en caja con borde
+  fwcRow.appendChild(fwcWrap); container.appendChild(fwcRow);
+  // Grupos: label DENTRO de la caja con borde
   for(const [g,paises] of GRUPOS){
     const row=document.createElement('div'); row.className='nav-grupo-row';
     row.dataset.filter=`grupo ${g} ${paises.map(c=>NOMBRES[c]||c).join(' ')} ${paises.join(' ')}`.toLowerCase();
-    const label=document.createElement('div'); label.className='nav-grupo-label'; label.textContent=`GRUPO ${g}`;
     const box=document.createElement('div'); box.className='nav-grupo-box';
+    // Label dentro de la caja, spanning las 2 columnas
+    const lbl=document.createElement('div'); lbl.className='nav-grupo-label-inner'; lbl.textContent=`GRUPO ${g}`;
+    box.appendChild(lbl);
     for(const cod of paises){
       const btn=document.createElement('button'); btn.className='nav-pais-btn';
       btn.textContent=NOMBRES[cod]||cod; btn.title=cod;
       btn.onclick=()=>{const si=PAIS_TO_SPREAD[cod]; if(si!==undefined){spreadIdx=si;mobileTab='left';render();} closeNavModal();};
       box.appendChild(btn);
     }
-    row.appendChild(label); row.appendChild(box); container.appendChild(row);
+    row.appendChild(box); container.appendChild(row);
   }
-  // Equalizar ancho de todos los botones de país al más ancho
   requestAnimationFrame(()=>equalizeChipWidths(container, '.nav-grupo-box .nav-pais-btn'));
 }
 function filterNavPaises(){
