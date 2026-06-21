@@ -862,7 +862,7 @@ function renderRepetidasChips(){
   // Actualizar título del bloque
   const titleEl=document.getElementById('rep-block-title');
   if(titleEl) titleEl.textContent=`REPETIDAS (${reps.length})`;
-  equalizeChipWidths(document.getElementById('chips'), '.chip');
+  requestAnimationFrame(()=>equalizeChipWidths(document.getElementById('chips'), '.chip'));
 }
 function renderModal(){
   renderRepetidasChips();
@@ -886,9 +886,38 @@ function groupByAlbumPrefix(codes){
     })
     .map(k => ({key:k, nums:groups[k].sort((a,b)=>a-b)}));
 }
+// Lista limpia: FWC: 1, 4, 5  (sin cantidades)
 function formatCopyText(codes){
   return groupByAlbumPrefix(codes)
     .map(({key, nums}) => `${key}: ${nums.join(', ')}`)
+    .join('\n');
+}
+// Lista con cantidades: MEX: 1, 9 (×2), 15 (×3)
+// countFn(code) → cantidad a mostrar (omite si ≤1)
+function formatCopyTextWithCounts(codes, countFn){
+  const groups = {};
+  codes.forEach(c => {
+    const m = c.match(/^([A-Z]+)(\d+)$/);
+    const key = m ? m[1] : 'OTROS';
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(m ? {n: parseInt(m[2]), code: c} : {n: c, code: c});
+  });
+  const prefixOrder = {};
+  ALL_CODES.forEach(c => {
+    const m = c.match(/^([A-Z]+)\d+$/);
+    if(m && !(m[1] in prefixOrder)) prefixOrder[m[1]] = ALL_CODES.indexOf(c);
+  });
+  return Object.keys(groups)
+    .sort((a,b) => (prefixOrder[a]??9999) - (prefixOrder[b]??9999))
+    .map(key => {
+      const parts = groups[key]
+        .sort((a,b) => (typeof a.n==='number' && typeof b.n==='number') ? a.n-b.n : 0)
+        .map(({n, code}) => {
+          const cnt = countFn(code);
+          return cnt > 1 ? `${n} (×${cnt})` : `${n}`;
+        });
+      return `${key}: ${parts.join(', ')}`;
+    })
     .join('\n');
 }
 function copySearchGroup(codes, btn){
@@ -1091,7 +1120,10 @@ function buscar(){
   // Render grupo "ya la tengo" (rojo)
   if(repeatedAll.length>0 || TOOL_FILTERS['buscar_tengo'].size>0){
     const sec=document.createElement('div'); sec.className='sr-group';
-    sec.appendChild(makeBuscarHeader(`YA LA TENGO (${repeated.length})`, 'buscar_tengo', btn=>copySearchGroup(repeated, btn)));
+    sec.appendChild(makeBuscarHeader(`YA LA TENGO (${repeated.length})`, 'buscar_tengo', btn=>{
+      const text = formatCopyTextWithCounts(repeated, c => album[c]||0);
+      navigator.clipboard.writeText(text).then(()=>{ const o=btn.textContent; btn.textContent='✓ Copiado'; setTimeout(()=>btn.textContent=o,2000); });
+    }));
     const wrap=document.createElement('div'); wrap.className='sr-group-chips';
     if(repeated.length===0) wrap.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna con el filtro activo</span>';
     else repeated.forEach(c=>{const v=album[c]||0;const ch=document.createElement('span');ch.className='sr-badge need';ch.textContent=v>=2?`${c} ×${v}`:c;wrap.appendChild(ch);});
@@ -1119,40 +1151,10 @@ function buscar(){
 
 // ── COPIAR REPETIDAS — formato resultado.txt ──────────────────
 function copiarRepetidas(){
-  // Agrupar repetidas por país/prefijo en orden de álbum
-  const grupos = {}; // cod -> { num -> cantidad_extra }
-  for(const c of ALL_CODES){
-    const v = album[c]||0;
-    if(v < 2) continue;
-    const m = c.match(/^([A-Z]+)(\d+)$/);
-    if(!m) continue;
-    const [, pais, num] = m;
-    if(!grupos[pais]) grupos[pais] = {};
-    grupos[pais][parseInt(num)] = v - 1; // extras
-  }
-
-  if(Object.keys(grupos).length === 0) return;
-
-  // Ordenar países por orden de aparición en el álbum
-  const paisOrder = {};
-  ALL_CODES.forEach(c => {
-    const m = c.match(/^([A-Z]+)\d+$/);
-    if(m && !(m[1] in paisOrder)) paisOrder[m[1]] = ALL_CODES.indexOf(c);
-  });
-
-  const lineas = Object.keys(grupos)
-    .sort((a,b) => (paisOrder[a]??999) - (paisOrder[b]??999))
-    .map(pais => {
-      const nums = Object.keys(grupos[pais]).map(Number).sort((a,b)=>a-b);
-      const partes = nums.map(n => {
-        const extra = grupos[pais][n];
-        return extra === 1 ? `${n}` : `${n} (×${extra})`;
-      });
-      return `${pais}: ${partes.join(', ')}`;
-    });
-
-  const texto = lineas.join('\n');
-  // Buscar el botón "Copiar lista" del bloque de repetidas
+  const reps = ALL_CODES.filter(c=>(album[c]||0)>=2);
+  if(reps.length===0) return;
+  // countFn: cantidad de extras (lo que puedo dar = total − 1)
+  const texto = formatCopyTextWithCounts(reps, c => (album[c]||0) - 1);
   const allBtns = document.querySelectorAll('#panel-repetidas .block-action-link');
   const btn = Array.from(allBtns).find(b=>b.textContent.trim()==='Copiar lista') || null;
   navigator.clipboard.writeText(texto).then(()=>{
