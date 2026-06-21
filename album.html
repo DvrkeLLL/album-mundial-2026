@@ -82,9 +82,9 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 /* Tercio superior: botón − y contador, mismo tamaño */
 .s-top { display:flex; align-items:center; justify-content:center; gap:3px; width:100%; padding:0 6%; }
 /* Tercio medio: nombre centrado */
-.s-mid { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; }
+.s-mid { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; overflow:hidden; min-width:0; }
 /* Tercio inferior: código */
-.s-bot { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; }
+.s-bot { display:flex; align-items:center; justify-content:center; width:100%; padding:0 4%; overflow:hidden; min-width:0; }
 
 /* Tercio superior: contenedor relativo para posicionar los círculos en esquinas */
 .s-top { position:relative; width:100%; height:100%; }
@@ -277,10 +277,11 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .nav-modal-search { width:100%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); border-radius:10px; padding:0.7rem 1rem; color:#fff; font-family:'Barlow',sans-serif; font-size:0.95rem; outline:none; margin-bottom:1rem; }
 .nav-modal-search:focus { border-color:#F5A623; }
 .nav-modal-search::placeholder { color:rgba(255,255,255,0.35); }
-.nav-grupos { display:flex; flex-direction:column; gap:0.7rem; }
-.nav-grupo-row { display:grid; grid-template-columns:58px minmax(0,1fr); gap:0.55rem; align-items:start; }
-.nav-grupo-label { font-family:'Bebas Neue',sans-serif; font-size:0.8rem; letter-spacing:1.8px; color:rgba(255,255,255,0.4); padding-top:0.28rem; }
-.nav-pais-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0.3rem 0.7rem; border-radius:6px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:600; transition:all 0.18s; letter-spacing:0.5px; white-space:nowrap; }
+.nav-grupos { display:flex; flex-direction:column; gap:0.6rem; }
+.nav-grupo-row { display:flex; align-items:center; gap:0.55rem; }
+.nav-grupo-label { font-family:'Bebas Neue',sans-serif; font-size:0.72rem; letter-spacing:1.3px; color:rgba(255,255,255,0.45); flex-shrink:0; width:58px; text-align:right; }
+.nav-grupo-box { border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:0.3rem; display:grid; grid-template-columns:1fr 1fr; gap:0.3rem; }
+.nav-pais-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:0.3rem 0.4rem; border-radius:6px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:600; transition:all 0.18s; letter-spacing:0.5px; white-space:nowrap; text-align:center; box-sizing:border-box; width:100%; }
 .nav-pais-btn:hover { background:rgba(245,166,35,0.2); border-color:#F5A623; color:#F5A623; }
 .nav-pais-btn.fwc { background:rgba(0,61,165,0.2); border-color:rgba(0,61,165,0.5); color:#7ab3ff; }
 .nav-pais-btn.fwc:hover { background:rgba(0,61,165,0.4); border-color:#7ab3ff; }
@@ -1705,6 +1706,7 @@ function applyFillList(){
 // ── MODAL NAVEGACIÓN RÁPIDA ────────────────────────────────────
 function buildNavModal(){
   const container=document.getElementById('nav-grupos'); container.innerHTML='';
+  // Fila FWC (fila especial, sin box 2x2)
   const fwcRow=document.createElement('div'); fwcRow.className='nav-grupo-row'; fwcRow.dataset.filter='fwc copa del mundo';
   const fwcLabel=document.createElement('div'); fwcLabel.className='nav-grupo-label'; fwcLabel.textContent='FWC';
   const fwcWrap=document.createElement('div'); fwcWrap.className='nav-pais-wrap';
@@ -1712,19 +1714,22 @@ function buildNavModal(){
   fwcBtn.onclick=()=>{spreadIdx=0;render();closeNavModal();};
   fwcWrap.appendChild(fwcBtn);
   fwcRow.appendChild(fwcLabel); fwcRow.appendChild(fwcWrap); container.appendChild(fwcRow);
+  // Grupos con layout 2x2 en caja con borde
   for(const [g,paises] of GRUPOS){
     const row=document.createElement('div'); row.className='nav-grupo-row';
     row.dataset.filter=`grupo ${g} ${paises.map(c=>NOMBRES[c]||c).join(' ')} ${paises.join(' ')}`.toLowerCase();
-    const label=document.createElement('div'); label.className='nav-grupo-label'; label.textContent=`GRP ${g}`;
-    const wrap=document.createElement('div'); wrap.className='nav-pais-wrap';
+    const label=document.createElement('div'); label.className='nav-grupo-label'; label.textContent=`GRUPO ${g}`;
+    const box=document.createElement('div'); box.className='nav-grupo-box';
     for(const cod of paises){
       const btn=document.createElement('button'); btn.className='nav-pais-btn';
       btn.textContent=NOMBRES[cod]||cod; btn.title=cod;
       btn.onclick=()=>{const si=PAIS_TO_SPREAD[cod]; if(si!==undefined){spreadIdx=si;mobileTab='left';render();} closeNavModal();};
-      wrap.appendChild(btn);
+      box.appendChild(btn);
     }
-    row.appendChild(label); row.appendChild(wrap); container.appendChild(row);
+    row.appendChild(label); row.appendChild(box); container.appendChild(row);
   }
+  // Equalizar ancho de todos los botones de país al más ancho
+  requestAnimationFrame(()=>equalizeChipWidths(container, '.nav-grupo-box .nav-pais-btn'));
 }
 function filterNavPaises(){
   const q=document.getElementById('nav-search').value.toLowerCase().trim();
@@ -1738,7 +1743,14 @@ function goToPage(){
   if(si!==undefined){spreadIdx=si;mobileTab='left';render();closeNavModal();}
   else{document.getElementById('page-input').style.borderColor='#ff6b6b';setTimeout(()=>document.getElementById('page-input').style.borderColor='',1000);}
 }
-function openNavModal(){ document.getElementById('nav-search').value=''; filterNavPaises(); document.getElementById('page-input').value=''; document.getElementById('overlay-nav').classList.remove('hidden'); }
+function openNavModal(){
+  document.getElementById('nav-search').value='';
+  filterNavPaises();
+  document.getElementById('page-input').value='';
+  document.getElementById('overlay-nav').classList.remove('hidden');
+  // Re-equalizar ahora que el modal es visible y se puede medir
+  requestAnimationFrame(()=>equalizeChipWidths(document.getElementById('nav-grupos'), '.nav-grupo-box .nav-pais-btn'));
+}
 function closeNavModal(){ document.getElementById('overlay-nav').classList.add('hidden'); }
 document.getElementById('overlay-nav').addEventListener('click',e=>{if(e.target===e.currentTarget)closeNavModal();});
 
