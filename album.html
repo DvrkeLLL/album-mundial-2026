@@ -241,6 +241,15 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
 .filtrar-btn { background:transparent; border:1px solid rgba(245,166,35,0.35); color:#f5a623; font-family:'Bebas Neue',sans-serif; font-size:0.78rem; letter-spacing:1.8px; cursor:pointer; padding:0.28rem 0.7rem; border-radius:6px; transition:all 0.18s; display:inline-flex; align-items:center; gap:0.45rem; }
 .filtrar-btn:hover { color:#ffd166; border-color:#ffd166; }
 .filtrar-btn.active { background:rgba(245,166,35,0.12); border-color:#f5a623; }
+/* Acciones de bloque como textos naranja separados por pipe */
+.block-actions { display:flex; align-items:center; gap:0; }
+.block-action-link { background:none; border:none; color:#F5A623; font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:0.8px; cursor:pointer; padding:0; transition:color 0.15s; text-decoration:none; line-height:1; display:inline-flex; align-items:center; gap:0.3rem; }
+.block-action-link:hover { color:#ffd166; }
+.block-action-link.active { color:#ffd166; }
+.block-action-sep { color:rgba(245,166,35,0.45); font-size:0.78rem; margin:0 0.45rem; line-height:1; user-select:none; }
+.block-header { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.35rem; }
+.compare-section .block-header { margin-bottom:0.5rem; }
+.compare-section-title { margin:0 !important; }
 .tool-filter-count { background:#F5A623; color:#1c1200; font-size:0.62rem; font-weight:800; border-radius:999px; padding:0 0.38rem; line-height:1.2rem; min-width:1.05rem; text-align:center; font-family:'Barlow Condensed',sans-serif; letter-spacing:normal; }
 .tf-row { display:grid; grid-template-columns:42px minmax(0,1fr); gap:0.5rem; align-items:start; margin-bottom:0.5rem; }
 .tf-row:last-of-type { margin-bottom:0; }
@@ -386,28 +395,28 @@ body { font-family:'Barlow',sans-serif; background:#111; color:#fff; min-height:
         <button class="btn-sm" onclick="buscar()">Buscar</button>
       </div>
       <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;margin-bottom:0.2rem">También acepta el formato externo con emojis y paréntesis</div>
-      <div class="filtrar-row">
-        <button class="filtrar-btn" id="filter-btn-buscar" type="button" onclick="openFilterModal('buscar')">Filtrar <span class="tool-filter-count" id="filter-count-buscar" style="display:none">0</span></button>
-      </div>
       <div id="search-result"></div>
     </div>
 
     <!-- Repetidas -->
     <button class="tool-toggle" id="toggle-repetidas" data-label="Láminas repetidas" onclick="toggleToolSection('repetidas')" type="button">Láminas repetidas</button>
     <div id="panel-repetidas" style="display:none; margin-top:0.5rem">
-      <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between; margin-top:0">
-        <button class="filtrar-btn" id="filter-btn-repetidas" type="button" onclick="openFilterModal('repetidas')">Filtrar <span class="tool-filter-count" id="filter-count-repetidas" style="display:none">0</span></button>
-        <button class="btn-sm red" onclick="copiarRepetidas()" style="padding:0.3rem 0.7rem;font-size:0.78rem">Copiar lista</button>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.5rem">
+        <div class="block-header">
+          <span class="sr-group-title" id="rep-block-title">REPETIDAS (0)</span>
+          <div class="block-actions">
+            <button class="block-action-link" id="filter-btn-repetidas" type="button" onclick="openFilterModal('repetidas')">Filtrar <span class="tool-filter-count" id="filter-count-repetidas" style="display:none">0</span></button>
+            <span class="block-action-sep">|</span>
+            <button class="block-action-link" type="button" onclick="copiarRepetidas()">Copiar lista</button>
+          </div>
+        </div>
+        <div class="chips" id="chips"><div class="empty">No tienes láminas repetidas</div></div>
       </div>
-      <div class="chips" id="chips"><div class="empty">No tienes láminas repetidas</div></div>
     </div>
 
     <!-- Comparar con otros usuarios -->
     <button class="tool-toggle" id="toggle-comparar" data-label="Comparar con otros usuarios" onclick="toggleToolSection('comparar')" type="button">Comparar con otros usuarios</button>
     <div id="panel-comparar" style="display:none">
-      <div class="filtrar-row">
-        <button class="filtrar-btn" id="filter-btn-comparar" type="button" onclick="openFilterModal('comparar')">Filtrar <span class="tool-filter-count" id="filter-count-comparar" style="display:none">0</span></button>
-      </div>
       <div id="compare-users-row" class="compare-user-select"><div class="compare-loading">Cargando usuarios...</div></div>
       <div class="compare-block" id="compare-block"></div>
     </div>
@@ -844,12 +853,15 @@ document.getElementById('overlay').addEventListener('click',e=>{if(e.target===e.
 
 function renderRepetidasChips(){
   const allReps=ALL_CODES.filter(c=>(album[c]||0)>=2);
-  const reps=filterByCountries(allReps, 'repetidas');
+  const reps=filterByCountriesBlock(allReps, 'repetidas');
   let html;
   if(allReps.length===0) html='<div class="empty">No tienes láminas repetidas</div>';
   else if(reps.length===0) html='<div class="empty">No tienes repetidas de las selecciones filtradas</div>';
   else html=reps.map(c=>`<div class="chip">${c} <span class="x">×${album[c]}</span></div>`).join('');
   document.getElementById('chips').innerHTML=html;
+  // Actualizar título del bloque
+  const titleEl=document.getElementById('rep-block-title');
+  if(titleEl) titleEl.textContent=`REPETIDAS (${reps.length})`;
   equalizeChipWidths(document.getElementById('chips'), '.chip');
 }
 function renderModal(){
@@ -903,7 +915,11 @@ function equalizeChipWidths(container, selector){
   els.forEach(el=>{ el.style.minWidth=max+'px'; });
 }
 // ── FILTRO POR SELECCIÓN (Buscar / Repetidas / Comparar) ───────
-const TOOL_FILTERS = { buscar:new Set(), repetidas:new Set(), comparar:new Set() };
+const TOOL_FILTERS = {
+  buscar_sirven:new Set(), buscar_tengo:new Set(),
+  repetidas:new Set(),
+  comparar_sirven:new Set(), comparar_dan:new Set()
+};
 
 function codePrefix(c){
   const m = c.match(/^([A-Z]+)(\d+)$/);
@@ -921,11 +937,27 @@ function updateFilterCount(key){
   if(span){ span.textContent=n; span.style.display = n>0 ? 'inline-flex' : 'none'; }
   if(btn) btn.classList.toggle('active', n>0);
 }
-const FILTER_LABELS = { buscar:'Buscar láminas', repetidas:'Láminas repetidas', comparar:'Comparar con otro usuario' };
+function filterCountForKey(key){
+  return TOOL_FILTERS[key] ? TOOL_FILTERS[key].size : 0;
+}
+function filterByCountriesBlock(codes, key){
+  const selected = TOOL_FILTERS[key];
+  if(!selected || selected.size===0) return codes;
+  return codes.filter(c=>selected.has(codePrefix(c)));
+}
+const FILTER_LABELS = {
+  buscar_sirven:'Buscar · Me sirven',
+  buscar_tengo:'Buscar · Ya la tengo',
+  repetidas:'Láminas repetidas',
+  comparar_sirven:'Comparar · Me sirven',
+  comparar_dan:'Comparar · Le sirven al otro'
+};
 const FILTER_ONCHANGE = {
-  buscar: ()=>buscar(),
+  buscar_sirven: ()=>buscar(),
+  buscar_tengo:  ()=>buscar(),
   repetidas: ()=>renderRepetidasChips(),
-  comparar: ()=>{ if(compareSelectedUser) renderCompareBlock(compareIGet, compareIGive, compareSelectedUser); }
+  comparar_sirven: ()=>{ if(compareSelectedUser) renderCompareBlock(compareIGet, compareIGive, compareSelectedUser); },
+  comparar_dan:    ()=>{ if(compareSelectedUser) renderCompareBlock(compareIGet, compareIGive, compareSelectedUser); }
 };
 let filterModalKey=null;
 let filterDraft=new Set();
@@ -1021,46 +1053,48 @@ function buscar(){
   const invalid = parsedCodes.filter(c=>!codesSet.has(c));
   valid.sort((a,b)=>(albumOrder[a]??999)-(albumOrder[b]??999));
 
-  // Aplicar filtro por selección, si hay alguna activa
-  const validFiltered = filterByCountries(valid, 'buscar');
+  // Separar base completa (sin filtrar) en dos grupos
+  const neededAll   = valid.filter(c=>(album[c]||0)===0);
+  const repeatedAll = valid.filter(c=>(album[c]||0)>=1);
 
-  // Separar en dos grupos: primero lo que me sirve y luego lo que ya tengo (1 vez o más)
-  const needed   = validFiltered.filter(c=>(album[c]||0)===0);
-  const repeated = validFiltered.filter(c=>(album[c]||0)>=1);
+  // Aplicar filtros independientes por bloque
+  const needed   = filterByCountriesBlock(neededAll,   'buscar_sirven');
+  const repeated = filterByCountriesBlock(repeatedAll, 'buscar_tengo');
+
+  // Helper: crear header con título + "Filtrar | Copiar lista"
+  function makeBuscarHeader(titleText, filterKey, copyFn){
+    const hdr=document.createElement('div'); hdr.className='block-header';
+    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=titleText;
+    const actions=document.createElement('div'); actions.className='block-actions';
+    const fBtn=document.createElement('button'); fBtn.className='block-action-link'+(TOOL_FILTERS[filterKey].size>0?' active':'');
+    fBtn.id=`filter-btn-${filterKey}`; fBtn.type='button';
+    fBtn.innerHTML=`Filtrar${TOOL_FILTERS[filterKey].size>0?' <span class="tool-filter-count" id="filter-count-'+filterKey+'" style="display:inline-flex">'+TOOL_FILTERS[filterKey].size+'</span>':` <span class="tool-filter-count" id="filter-count-${filterKey}" style="display:none">0</span>`}`;
+    fBtn.onclick=()=>openFilterModal(filterKey);
+    const sep=document.createElement('span'); sep.className='block-action-sep'; sep.textContent='|';
+    const cBtn=document.createElement('button'); cBtn.className='block-action-link'; cBtn.type='button'; cBtn.textContent='Copiar lista';
+    cBtn.onclick=()=>{ copyFn(cBtn); };
+    actions.appendChild(fBtn); actions.appendChild(sep); actions.appendChild(cBtn);
+    hdr.appendChild(lbl); hdr.appendChild(actions);
+    return hdr;
+  }
 
   // Render grupo "me sirven" (verde)
-  if(needed.length>0){
+  if(neededAll.length>0 || TOOL_FILTERS['buscar_sirven'].size>0){
     const sec=document.createElement('div'); sec.className='sr-group';
-    const hdr=document.createElement('div'); hdr.className='sr-group-header';
-    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`ME SIRVEN (${needed.length})`;
-    const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
-    btn.onclick=()=>copySearchGroup(needed, btn);
-    hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
+    sec.appendChild(makeBuscarHeader(`ME SIRVEN (${needed.length})`, 'buscar_sirven', btn=>copySearchGroup(needed, btn)));
     const wrap=document.createElement('div'); wrap.className='sr-group-chips';
-    needed.forEach(c=>{
-      const ch=document.createElement('span');
-      ch.className='sr-badge have'; ch.textContent=c;
-      wrap.appendChild(ch);
-    });
+    if(needed.length===0) wrap.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna con el filtro activo</span>';
+    else needed.forEach(c=>{const ch=document.createElement('span');ch.className='sr-badge have';ch.textContent=c;wrap.appendChild(ch);});
     sec.appendChild(wrap); el.appendChild(sec);
   }
 
   // Render grupo "ya la tengo" (rojo)
-  if(repeated.length>0){
+  if(repeatedAll.length>0 || TOOL_FILTERS['buscar_tengo'].size>0){
     const sec=document.createElement('div'); sec.className='sr-group';
-    const hdr=document.createElement('div'); hdr.className='sr-group-header';
-    const lbl=document.createElement('div'); lbl.className='sr-group-title'; lbl.textContent=`YA LA TENGO (${repeated.length})`;
-    const btn=document.createElement('button'); btn.className='sr-group-copy'; btn.textContent='Copiar';
-    btn.onclick=()=>copySearchGroup(repeated, btn);
-    hdr.appendChild(lbl); hdr.appendChild(btn); sec.appendChild(hdr);
+    sec.appendChild(makeBuscarHeader(`YA LA TENGO (${repeated.length})`, 'buscar_tengo', btn=>copySearchGroup(repeated, btn)));
     const wrap=document.createElement('div'); wrap.className='sr-group-chips';
-    repeated.forEach(c=>{
-      const v=album[c]||0;
-      const ch=document.createElement('span');
-      ch.className='sr-badge need';
-      ch.textContent=v>=2?`${c} ×${v}`:c;
-      wrap.appendChild(ch);
-    });
+    if(repeated.length===0) wrap.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna con el filtro activo</span>';
+    else repeated.forEach(c=>{const v=album[c]||0;const ch=document.createElement('span');ch.className='sr-badge need';ch.textContent=v>=2?`${c} ×${v}`:c;wrap.appendChild(ch);});
     sec.appendChild(wrap); el.appendChild(sec);
   }
 
@@ -1075,11 +1109,9 @@ function buscar(){
     el.appendChild(sec);
   }
 
-  // Si el filtro activo dejó todo oculto pero sí había códigos válidos, avisar
-  if(valid.length>0 && validFiltered.length===0){
-    const note=document.createElement('div'); note.className='sr-text';
-    note.textContent='Ningún código coincide con las selecciones filtradas.';
-    el.appendChild(note);
+  // Si no hubo ningún código válido en absoluto
+  if(valid.length===0 && parsedCodes.length>0 && invalid.length===parsedCodes.length){
+    // ya se muestran como inválidos arriba
   }
 
   equalizeChipWidths(el, '.sr-badge');
@@ -1120,7 +1152,9 @@ function copiarRepetidas(){
     });
 
   const texto = lineas.join('\n');
-  const btn = document.querySelector('.sec-title .btn-sm.red');
+  // Buscar el botón "Copiar lista" del bloque de repetidas
+  const allBtns = document.querySelectorAll('#panel-repetidas .block-action-link');
+  const btn = Array.from(allBtns).find(b=>b.textContent.trim()==='Copiar lista') || null;
   navigator.clipboard.writeText(texto).then(()=>{
     if(btn){ const orig=btn.textContent; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent=orig,2000); }
   });
@@ -1196,38 +1230,44 @@ function renderCompareBlock(iGetFull, iGiveFull, u){
   const block=document.getElementById('compare-block');
   block.innerHTML='';
 
-  // Aplicar filtro por selección, si hay alguna activa
-  const iGet  = filterByCountries(iGetFull, 'comparar');
-  const iGive = filterByCountries(iGiveFull, 'comparar');
+  // Aplicar filtros independientes por bloque
+  const iGet  = filterByCountriesBlock(iGetFull,  'comparar_sirven');
+  const iGive = filterByCountriesBlock(iGiveFull, 'comparar_dan');
+
+  // Helper: header con título + "Filtrar | Copiar lista"
+  function makeCompareHeader(titleText, titleClass, filterKey, copyFn){
+    const hdr=document.createElement('div'); hdr.className='block-header';
+    const lbl=document.createElement('div'); lbl.className=`compare-section-title ${titleClass}`; lbl.style.margin='0'; lbl.textContent=titleText;
+    const actions=document.createElement('div'); actions.className='block-actions';
+    const fBtn=document.createElement('button'); fBtn.className='block-action-link'+(TOOL_FILTERS[filterKey].size>0?' active':'');
+    fBtn.id=`filter-btn-${filterKey}`; fBtn.type='button';
+    const fc=TOOL_FILTERS[filterKey].size;
+    fBtn.innerHTML=`Filtrar <span class="tool-filter-count" id="filter-count-${filterKey}" style="display:${fc>0?'inline-flex':'none'}">${fc>0?fc:0}</span>`;
+    fBtn.onclick=()=>openFilterModal(filterKey);
+    const sep=document.createElement('span'); sep.className='block-action-sep'; sep.textContent='|';
+    const cBtn=document.createElement('button'); cBtn.className='block-action-link'; cBtn.type='button'; cBtn.textContent='Copiar lista';
+    cBtn.onclick=()=>copyFn(cBtn);
+    actions.appendChild(fBtn); actions.appendChild(sep); actions.appendChild(cBtn);
+    hdr.appendChild(lbl); hdr.appendChild(actions);
+    return hdr;
+  }
 
   // Sección: él me da (primero)
   const s2=document.createElement('div'); s2.className='compare-section';
-  s2.innerHTML=`<div class="compare-section-title green">Láminas que me sirven (${iGet.length})</div>`;
+  s2.appendChild(makeCompareHeader(`Láminas que me sirven (${iGet.length})`, 'green', 'comparar_sirven', btn=>copyList(iGet,btn)));
   const chips2=document.createElement('div'); chips2.className='compare-chips';
   if(iGet.length===0) chips2.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna</span>';
   else iGet.forEach(c=>{const ch=document.createElement('span');ch.className='cchip get';ch.textContent=c;chips2.appendChild(ch);});
   s2.appendChild(chips2);
-  if(iGet.length>0){
-    const cr=document.createElement('div'); cr.className='compare-copy-row';
-    const btn=document.createElement('button'); btn.className='btn-sm';
-    btn.textContent='Copiar lista'; btn.onclick=()=>copyList(iGet, btn);
-    cr.appendChild(btn); s2.appendChild(cr);
-  }
   block.appendChild(s2);
 
   // Sección: yo le doy (segundo)
   const s1=document.createElement('div'); s1.className='compare-section';
-  s1.innerHTML=`<div class="compare-section-title orange">Láminas que le sirven a ${u} (${iGive.length})</div>`;
+  s1.appendChild(makeCompareHeader(`Láminas que le sirven a ${u} (${iGive.length})`, 'orange', 'comparar_dan', btn=>copyList(iGive,btn)));
   const chips1=document.createElement('div'); chips1.className='compare-chips';
   if(iGive.length===0) chips1.innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:0.8rem">Ninguna</span>';
   else iGive.forEach(c=>{const ch=document.createElement('span');ch.className='cchip give';ch.textContent=c;chips1.appendChild(ch);});
   s1.appendChild(chips1);
-  if(iGive.length>0){
-    const cr=document.createElement('div'); cr.className='compare-copy-row';
-    const btn=document.createElement('button'); btn.className='btn-sm green';
-    btn.textContent='Copiar lista'; btn.onclick=()=>copyList(iGive, btn);
-    cr.appendChild(btn); s1.appendChild(cr);
-  }
   block.appendChild(s1);
 
   equalizeChipWidths(block, '.cchip');
@@ -1236,8 +1276,7 @@ function renderCompareBlock(iGetFull, iGiveFull, u){
 function copyList(arr, btn){
   const text = formatCopyText(arr);
   navigator.clipboard.writeText(text).then(()=>{
-    const orig=btn.textContent; btn.textContent='✓ Copiado!';
-    setTimeout(()=>btn.textContent=orig, 2000);
+    if(btn){ const orig=btn.textContent; btn.textContent='✓ Copiado!'; setTimeout(()=>btn.textContent=orig, 2000); }
   });
 }
 
