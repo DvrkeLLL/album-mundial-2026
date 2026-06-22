@@ -1593,8 +1593,11 @@ function parseExternalFormat(raw){
     if(repetidasIdx===-1 && cl.includes('repetidas')) repetidasIdx=i;
   }
 
-  // Si no detecta el formato externo, retornar null para que use el modo normal
+  // Si no detecta el formato externo completo (con Me faltan), ver si es solo Repetidas
   if(meFaltanIdx===-1) return null;
+
+  // Caso especial: solo tiene "Repetidas" sin "Me faltan" → formato normal externo
+  // Se maneja por separado en applyExternalFormatNormal
 
   const endOfFaltan = repetidasIdx!==-1 ? repetidasIdx : lines.length;
 
@@ -1696,6 +1699,52 @@ function applyExternalFormat(raw){
   return true;
 }
 
+function applyExternalFormatNormal(raw){
+  // Formato: solo tiene "Repetidas" sin "Me faltan"
+  // Países ausentes = no tiene ninguna (se ignoran)
+  // Países presentes = tiene las listadas como repetidas (base 1 + extras)
+  function cleanLine(l){
+    return l
+      .replace(/[\u{1F000}-\u{1FFFF}]/gu,'')
+      .replace(/[\u{2600}-\u{26FF}]/gu,'')
+      .replace(/[\u{2700}-\u{27BF}]/gu,'')
+      .replace(/[\u{1F3F4}]/gu,'')
+      .replace(/[^\x00-\x7F]/g,'')
+      .trim();
+  }
+  const lines = raw.split(/\n/).map(l=>l.trim());
+  let repetidasIdx = -1;
+  for(let i=0;i<lines.length;i++){
+    const cl=cleanLine(lines[i]).toLowerCase();
+    if(repetidasIdx===-1 && cl.includes('repetidas')) repetidasIdx=i;
+  }
+  if(repetidasIdx===-1) return false;
+
+  for(let i=repetidasIdx+1; i<lines.length; i++){
+    const cl=cleanLine(lines[i]);
+    if(!cl) continue;
+    const colonIdx=cl.indexOf(':');
+    if(colonIdx===-1) continue;
+    const rawPrefix=cl.substring(0,colonIdx).trim().toUpperCase().replace(/[^A-Z]/g,'');
+    if(!rawPrefix) continue;
+    const prefix=rawPrefix.startsWith('FWC')?'FWC':rawPrefix;
+    const after=cl.substring(colonIdx+1);
+    const tokens=after.split(',');
+    for(const tok of tokens){
+      const numM=tok.match(/(\d+)/);
+      if(!numM) continue;
+      const num=parseInt(numM[1],10);
+      const multM=tok.match(/[x×](\d+)/i);
+      const extra=multM?parseInt(multM[1],10):1;
+      const code=`${prefix}${num}`;
+      if(!ALL_CODES.includes(code)) continue;
+      // base 1 + extras
+      album[code]=Math.max(album[code]||0, 1)+extra;
+    }
+  }
+  return true;
+}
+
 function applyFillList(){
   const raw=document.getElementById('fill-list-input').value.trim();
   if(!raw){ return; }
@@ -1706,19 +1755,40 @@ function applyFillList(){
   } else {
     const entries=extractParseEntries(raw);
     if(entries.length===0){ return; }
-    for(const {prefix, nums} of entries){
-      const validCodes=ALL_CODES.filter(code=>code.startsWith(prefix));
-      if(validCodes.length===0) continue;
-      if(currentFillMode==='inverse'){
-        const set=new Set(nums.map(n=>`${prefix}${n}`));
-        for(const code of validCodes){
-          if(!set.has(code) && (!album[code] || album[code] < 1)) album[code]=1;
+    if(currentFillMode==='inverse'){
+      // Prefijos que SÍ aparecen en la lista (tienen láminas faltantes)
+      const prefixesEnLista = new Set(entries.map(e=>e.prefix));
+      // Todos los prefijos del álbum
+      const allPrefixes = new Set(ALL_CODES.map(c=>{ const m=c.match(/^([A-Z]+)\d+$/); return m?m[1]:null; }).filter(Boolean));
+      for(const prefix of allPrefixes){
+        const validCodes = ALL_CODES.filter(code=>code.startsWith(prefix));
+        if(prefixesEnLista.has(prefix)){
+          // Tiene algunas faltantes → lógica inversa normal
+          const entry = entries.find(e=>e.prefix===prefix);
+          const set = new Set(entry.nums.map(n=>`${prefix}${n}`));
+          for(const code of validCodes){
+            if(!set.has(code) && (!album[code] || album[code]<1)) album[code]=1;
+          }
+        } else {
+          // No aparece en la lista → está completo, marcar todas en 1
+          for(const code of validCodes){
+            if(!album[code] || album[code]<1) album[code]=1;
+          }
         }
+      }
+    } else {
+      // Modo normal: detectar si es formato externo de Repetidas
+      const isExternalNormal = raw.includes('Repetidas') && !raw.includes('Me faltan');
+      if(isExternalNormal){
+        applyExternalFormatNormal(raw);
       } else {
-        for(const n of nums){
-          const code=`${prefix}${n}`;
-          if(ALL_CODES.includes(code)){
-            album[code]=(album[code]||0)+1;
+        // Formato propio: sumar las láminas indicadas
+        for(const {prefix, nums} of entries){
+          for(const n of nums){
+            const code=`${prefix}${n}`;
+            if(ALL_CODES.includes(code)){
+              album[code]=(album[code]||0)+1;
+            }
           }
         }
       }
