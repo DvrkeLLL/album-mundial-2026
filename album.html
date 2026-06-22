@@ -1669,6 +1669,19 @@ function applyExternalFormat(raw){
     }
   }
 
+  // 1b. Países que NO aparecen en "Me faltan" pero sí en "Repetidas"
+  //     → están completos (tiene todas sus láminas), marcar todas en 1
+  const prefixesEnFaltan = new Set(Object.keys(faltanByPrefix));
+  const prefixesEnRepetidas = new Set(repetidasEntries.map(e=>e.prefix));
+  for(const prefix of prefixesEnRepetidas){
+    if(prefixesEnFaltan.has(prefix)) continue; // ya procesado arriba
+    const validCodes = ALL_CODES.filter(code=>code.startsWith(prefix));
+    if(validCodes.length===0) continue;
+    for(const code of validCodes){
+      if(!album[code] || album[code]<1) album[code]=1;
+    }
+  }
+
   // 2. Aplicar "Repetidas": sumar extras encima de la base 1
   for(const {prefix, num, extra} of repetidasEntries){
     const code = `${prefix}${num}`;
