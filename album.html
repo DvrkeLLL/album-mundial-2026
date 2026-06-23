@@ -1735,11 +1735,11 @@ function applyExternalFormatNormal(raw){
       if(!numM) continue;
       const num=parseInt(numM[1],10);
       const multM=tok.match(/[x×](\d+)/i);
-      const extra=multM?parseInt(multM[1],10):1;
+      const extras=multM?parseInt(multM[1],10):1;
       const code=`${prefix}${num}`;
       if(!ALL_CODES.includes(code)) continue;
-      // base 1 + extras
-      album[code]=Math.max(album[code]||0, 1)+extra;
+      // total = 1 (base, la tiene) + extras indicados por ×n (o 1 si no hay ×n)
+      album[code]=(album[code]||0)+(1+extras);
     }
   }
   return true;
